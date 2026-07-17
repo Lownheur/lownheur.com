@@ -19,3 +19,7 @@ Le projet avance par versions validées. La V1 est actuellement en **spécificat
 
 `V1 — BROUILLON À VALIDER`
 
+
+## Dashboard humain
+
+Ouvrir `dashboard_human_developper.html` pour consulter, rechercher et parcourir toutes les sources Markdown du projet. Après une modification documentaire, le régénérer avec `node scripts/generate-doc-dashboard.mjs`.

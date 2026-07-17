@@ -17,6 +17,7 @@ Ces règles s'appliquent à tout humain ou agent IA travaillant dans ce dépôt.
 - Toute décision qui change le périmètre, les données, la sécurité ou l'architecture va dans `docs/DECISIONS.md`.
 - Tout changement visible par l'utilisateur va dans `docs/CHANGELOG.md`.
 - Les jalons seulement vont dans `docs/JOURNAL.md`; ne pas y recopier chaque commande.
+- Après toute modification d'un fichier Markdown, régénérer `dashboard_human_developper.html` avec `node scripts/generate-doc-dashboard.mjs`.
 - Chaque commit doit être atomique et référencer la tâche : `type(V1-xxx): description`.
 
 ## Qualité

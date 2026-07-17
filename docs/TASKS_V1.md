@@ -8,6 +8,9 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
   - Acceptation : les cinq décisions de `docs/versions/V1.md` sont tranchées et le statut devient `APPROUVÉE`.
 - [ ] **V1-002 — Approuver architecture et modèle de données** — `À FAIRE`
   - Acceptation : stack, hébergement, auth MCP et schéma sont cohérents avec le contrat approuvé.
+- [x] **V1-003 — Créer le dashboard documentaire humain** — `TERMINÉ`
+  - Acceptation : tous les Markdown du dépôt sont consultables et recherchables dans une interface locale responsive, avec génération reproductible.
+  - Preuve : génération de 10 documents, validation syntaxique automatique du JavaScript client et contrôle responsive prévu dans les styles.
 
 ## P1 — Fondation
 
