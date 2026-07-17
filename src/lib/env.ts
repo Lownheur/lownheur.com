@@ -10,13 +10,11 @@ export function hasSupabaseEnv() {
 export function getSupabaseEnv() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-
   if (!url || !publishableKey) {
     throw new Error(
       "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY."
     );
   }
-
   return { url, publishableKey };
 }
 
@@ -34,4 +32,34 @@ export function getAppUrl() {
     /\/$/,
     ""
   );
+}
+
+export function hasStripeEnv() {
+  return [
+    "STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET",
+    "STRIPE_PRO_PRICE_ID",
+    "STRIPE_MAX_PRICE_ID"
+  ].every((key) => Boolean(process.env[key]));
+}
+
+export function getStripeEnv() {
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  const proPriceId = process.env.STRIPE_PRO_PRICE_ID;
+  const maxPriceId = process.env.STRIPE_MAX_PRICE_ID;
+  if (!secretKey || !webhookSecret || !proPriceId || !maxPriceId) {
+    throw new Error(
+      "Stripe is not configured. Set STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRO_PRICE_ID and STRIPE_MAX_PRICE_ID."
+    );
+  }
+  return {
+    secretKey,
+    webhookSecret,
+    priceIds: { pro: proPriceId, max: maxPriceId }
+  } as const;
+}
+
+export function isStripeAutomaticTaxEnabled() {
+  return process.env.STRIPE_AUTOMATIC_TAX === "true";
 }

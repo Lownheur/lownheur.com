@@ -4,7 +4,8 @@
     "pricing": "Tarifs",
     "connect": "Connecter le MCP",
     "login": "Connexion",
-    "signup": "Commencer"
+    "signup": "Commencer",
+    "label": "Navigation principale"
   },
   "Landing": {
     "skip": "Aller au contenu",
@@ -297,5 +298,180 @@
     "avatarAlt": "Photo de profil",
     "avatarHint": "JPEG, PNG, WebP ou AVIF · 10 Mo maximum.",
     "removeAvatar": "Retirer la photo"
+  },
+  "Usage": {
+    "eyebrow": "Facturation",
+    "title": "Usage et offre",
+    "description": "Suivez vos limites et gérez votre abonnement Lownheur depuis un seul endroit.",
+    "stripeSetup": "Les paiements seront disponibles dès que les identifiants Stripe auront été configurés.",
+    "currentTitle": "Offre active",
+    "manage": "Gérer la facturation",
+    "cancelsAtPeriodEnd": "résiliation programmée",
+    "renews": "Prochaine échéance : {date}.",
+    "usageTitle": "Utilisation des quotas",
+    "mcpCalls": "appels MCP",
+    "storage": "de stockage",
+    "monthlyReset": "Le compteur MCP est réinitialisé chaque mois calendaire UTC.",
+    "storageLive": "Le stockage est recalculé après chaque ajout ou suppression d'image.",
+    "offersTitle": "Choisir une offre",
+    "offersDescription": "Le changement et la résiliation sont ensuite gérés dans le portail sécurisé Stripe.",
+    "month": "mois",
+    "dashboardIncluded": "Dashboard web et connexions IA",
+    "current": "Offre actuelle",
+    "freeIncluded": "Incluse",
+    "choose": "Choisir {plan}",
+    "plans": {
+      "free": {
+        "name": "Gratuit"
+      },
+      "pro": {
+        "name": "Pro"
+      },
+      "max": {
+        "name": "Max"
+      }
+    },
+    "statuses": {
+      "active": "Actif",
+      "trialing": "Période d'essai",
+      "past_due": "Paiement en retard",
+      "cancelled": "Résilié",
+      "incomplete": "Paiement incomplet"
+    },
+    "messages": {
+      "checkoutSuccess": "Paiement confirmé. L'offre sera actualisée dès réception du webhook Stripe.",
+      "checkoutCancelled": "Le paiement a été annulé, aucun changement n'a été appliqué."
+    },
+    "errors": {
+      "invalid_plan": "Cette offre n'est pas valide.",
+      "not_configured": "Stripe doit encore être configuré par le propriétaire.",
+      "billing_failed": "La facturation n'a pas pu être ouverte. Réessayez.",
+      "no_customer": "Aucun compte de facturation Stripe n'est encore associé."
+    }
+  },
+  "Footer": {
+    "copyright": "© {year} Lownheur. Tous droits réservés.",
+    "label": "Informations légales",
+    "privacy": "Confidentialité",
+    "terms": "CGU",
+    "legal": "Mentions légales",
+    "support": "Support"
+  },
+  "InfoPages": {
+    "eyebrow": "Informations",
+    "updated": "Dernière mise à jour : 17 juillet 2026",
+    "notConfigured": "À renseigner avant publication",
+    "privacy": {
+      "title": "Confidentialité",
+      "description": "Comment Lownheur collecte, utilise et protège vos données.",
+      "sections": {
+        "controller": {
+          "title": "Responsable du traitement",
+          "body": "Le responsable du traitement est {legalName}, situé à {legalAddress}. Contact : {supportEmail}."
+        },
+        "data": {
+          "title": "Données traitées",
+          "body": "Nous traitons les données de compte et de profil, les catégories, événements, objectifs, planifications et images que vous fournissez, les identifiants de facturation Stripe et des journaux techniques limités. Lownheur ne stocke pas les numéros de carte bancaire."
+        },
+        "purposes": {
+          "title": "Finalités",
+          "body": "Ces données servent à fournir et sécuriser le service, isoler les espaces utilisateurs, appliquer les quotas, gérer la facturation, répondre au support et diagnostiquer les incidents."
+        },
+        "legalBases": {
+          "title": "Bases légales",
+          "body": "Les traitements nécessaires au compte et au service reposent sur l'exécution du contrat. La sécurité et la prévention des abus reposent sur notre intérêt légitime. La facturation et la conservation comptable répondent à nos obligations légales."
+        },
+        "retention": {
+          "title": "Conservation",
+          "body": "Les données fonctionnelles sont conservées pendant la vie du compte puis supprimées lorsque vous supprimez celui-ci, sous réserve des délais techniques de sauvegarde et des obligations légales applicables aux factures, litiges et journaux de sécurité."
+        },
+        "rights": {
+          "title": "Vos droits",
+          "body": "Selon le RGPD, vous pouvez demander accès, rectification, effacement, limitation, opposition ou portabilité en contactant {supportEmail}. Vous pouvez aussi saisir votre autorité de contrôle, notamment la CNIL en France."
+        },
+        "security": {
+          "title": "Sécurité et sous-traitants",
+          "body": "Lownheur utilise notamment Supabase pour l'authentification, la base et le stockage, Stripe pour les paiements et Vercel pour l'hébergement web. Les accès sont contrôlés par utilisateur, les médias sont privés et les secrets restent côté serveur."
+        }
+      }
+    },
+    "terms": {
+      "title": "Conditions d'utilisation",
+      "description": "Les règles d'utilisation du service Lownheur.",
+      "sections": {
+        "service": {
+          "title": "Service",
+          "body": "Lownheur fournit une interface web et un serveur MCP permettant d'organiser des catégories, événements, objectifs et planifications. Le service peut évoluer pour des raisons de sécurité, de conformité ou d'amélioration."
+        },
+        "account": {
+          "title": "Compte",
+          "body": "Vous devez fournir une adresse email valide, protéger vos moyens d'authentification et rester responsable des actions effectuées depuis votre compte et des applications MCP que vous autorisez."
+        },
+        "acceptableUse": {
+          "title": "Usage acceptable",
+          "body": "Il est interdit de contourner les quotas ou la sécurité, d'accéder aux données d'autrui, de perturber le service ou d'y stocker un contenu illégal. Un accès peut être suspendu en cas de risque grave ou d'abus."
+        },
+        "subscriptions": {
+          "title": "Offres et paiement",
+          "body": "Les offres payantes sont mensuelles et renouvelées automatiquement jusqu'à résiliation. Le prix, la devise et les taxes applicables sont affichés avant validation dans Stripe Checkout. Politique de remboursement : {refundPolicy}."
+        },
+        "cancellation": {
+          "title": "Résiliation et rétractation",
+          "body": "Vous pouvez gérer ou résilier l'abonnement depuis le portail Stripe. La date d'effet est affichée dans votre espace. La suppression du compte entraîne l'arrêt de l'abonnement. Les droits impératifs du consommateur, dont un éventuel droit de rétractation, restent applicables."
+        },
+        "liability": {
+          "title": "Disponibilité et responsabilité",
+          "body": "Nous cherchons à maintenir un service fiable, sans garantir une disponibilité ininterrompue. Vous restez responsable de la vérification des actions demandées à une IA et de vos propres sauvegardes importantes. Aucune clause ne limite un droit qui ne peut l'être légalement."
+        },
+        "changes": {
+          "title": "Modification des conditions",
+          "body": "Les changements importants seront signalés avant leur entrée en vigueur lorsque la loi l'exige. Contact contractuel : {supportEmail}."
+        }
+      }
+    },
+    "legal": {
+      "title": "Mentions légales",
+      "description": "Identification de l'éditeur et de l'hébergement de Lownheur.",
+      "sections": {
+        "publisher": {
+          "title": "Éditeur",
+          "body": "Lownheur est édité par {legalName}, {legalAddress}. Immatriculation ou identifiant : {registration}."
+        },
+        "hosting": {
+          "title": "Hébergement",
+          "body": "Informations d'hébergement : {hostingDetails}."
+        },
+        "intellectualProperty": {
+          "title": "Propriété intellectuelle",
+          "body": "La marque, l'interface et les contenus propres à Lownheur sont protégés. Vous conservez les droits sur les données et images que vous ajoutez et nous accordez uniquement les droits techniques nécessaires à la fourniture du service."
+        },
+        "contact": {
+          "title": "Contact",
+          "body": "Pour toute question juridique ou de support : {supportEmail}."
+        }
+      }
+    },
+    "support": {
+      "title": "Support",
+      "description": "Obtenir de l'aide ou signaler un problème concernant Lownheur.",
+      "sections": {
+        "contact": {
+          "title": "Nous contacter",
+          "body": "Envoyez votre demande à {supportEmail} depuis l'adresse associée au compte. Ne transmettez jamais votre mot de passe, une clé secrète Supabase ou Stripe."
+        },
+        "response": {
+          "title": "Informations utiles",
+          "body": "Indiquez la page concernée, l'heure approximative, le comportement attendu et le message d'erreur. Évitez d'inclure des données personnelles ou le contenu privé de vos ressources."
+        },
+        "security": {
+          "title": "Incident de sécurité",
+          "body": "Pour une vulnérabilité ou un accès suspect, utilisez {supportEmail} avec l'objet SECURITE. N'exploitez pas le problème au-delà de ce qui est nécessaire pour le décrire."
+        },
+        "accountDeletion": {
+          "title": "Suppression du compte",
+          "body": "La suppression autonome se trouve dans Dashboard > Paramètres. Elle supprime le compte, ses ressources et ses médias, révoque les sessions et arrête l'abonnement Stripe associé."
+        }
+      }
+    }
   }
 }

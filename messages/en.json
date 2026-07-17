@@ -4,7 +4,8 @@
     "pricing": "Pricing",
     "connect": "Connect MCP",
     "login": "Log in",
-    "signup": "Get started"
+    "signup": "Get started",
+    "label": "Main navigation"
   },
   "Landing": {
     "skip": "Skip to content",
@@ -297,5 +298,180 @@
     "avatarAlt": "Profile picture",
     "avatarHint": "JPEG, PNG, WebP or AVIF · 10 MB maximum.",
     "removeAvatar": "Remove picture"
+  },
+  "Usage": {
+    "eyebrow": "Billing",
+    "title": "Usage and plan",
+    "description": "Track your limits and manage your Lownheur subscription in one place.",
+    "stripeSetup": "Payments will be available as soon as the Stripe credentials are configured.",
+    "currentTitle": "Active plan",
+    "manage": "Manage billing",
+    "cancelsAtPeriodEnd": "cancellation scheduled",
+    "renews": "Next billing date: {date}.",
+    "usageTitle": "Quota usage",
+    "mcpCalls": "MCP calls",
+    "storage": "storage",
+    "monthlyReset": "The MCP counter resets every UTC calendar month.",
+    "storageLive": "Storage is recalculated after every image upload or deletion.",
+    "offersTitle": "Choose a plan",
+    "offersDescription": "Plan changes and cancellations are then managed in the secure Stripe portal.",
+    "month": "month",
+    "dashboardIncluded": "Web dashboard and AI connections",
+    "current": "Current plan",
+    "freeIncluded": "Included",
+    "choose": "Choose {plan}",
+    "plans": {
+      "free": {
+        "name": "Free"
+      },
+      "pro": {
+        "name": "Pro"
+      },
+      "max": {
+        "name": "Max"
+      }
+    },
+    "statuses": {
+      "active": "Active",
+      "trialing": "Trialing",
+      "past_due": "Payment past due",
+      "cancelled": "Cancelled",
+      "incomplete": "Payment incomplete"
+    },
+    "messages": {
+      "checkoutSuccess": "Payment confirmed. The plan will update as soon as the Stripe webhook is received.",
+      "checkoutCancelled": "Checkout was cancelled and no change was applied."
+    },
+    "errors": {
+      "invalid_plan": "This plan is invalid.",
+      "not_configured": "Stripe still needs to be configured by the owner.",
+      "billing_failed": "Billing could not be opened. Try again.",
+      "no_customer": "No Stripe billing customer is associated yet."
+    }
+  },
+  "Footer": {
+    "copyright": "© {year} Lownheur. All rights reserved.",
+    "label": "Legal information",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "legal": "Legal notice",
+    "support": "Support"
+  },
+  "InfoPages": {
+    "eyebrow": "Information",
+    "updated": "Last updated: July 17, 2026",
+    "notConfigured": "Must be provided before launch",
+    "privacy": {
+      "title": "Privacy",
+      "description": "How Lownheur collects, uses and protects your data.",
+      "sections": {
+        "controller": {
+          "title": "Data controller",
+          "body": "The data controller is {legalName}, located at {legalAddress}. Contact: {supportEmail}."
+        },
+        "data": {
+          "title": "Data we process",
+          "body": "We process account and profile data, the categories, events, goals, schedules and images you provide, Stripe billing identifiers and limited technical logs. Lownheur does not store payment card numbers."
+        },
+        "purposes": {
+          "title": "Purposes",
+          "body": "This data is used to provide and secure the service, isolate user workspaces, enforce quotas, manage billing, answer support requests and diagnose incidents."
+        },
+        "legalBases": {
+          "title": "Legal bases",
+          "body": "Account and service processing is necessary to perform the contract. Security and abuse prevention rely on our legitimate interests. Billing and accounting retention meet legal obligations."
+        },
+        "retention": {
+          "title": "Retention",
+          "body": "Functional data is kept for the life of the account and deleted when you delete it, subject to technical backup windows and legal retention requirements for invoices, disputes and security logs."
+        },
+        "rights": {
+          "title": "Your rights",
+          "body": "Under applicable data protection law, you may request access, correction, deletion, restriction, objection or portability by contacting {supportEmail}. You may also complain to your supervisory authority."
+        },
+        "security": {
+          "title": "Security and processors",
+          "body": "Lownheur uses Supabase for authentication, database and storage, Stripe for payments and Vercel for web hosting. Access is scoped per user, media is private and secrets stay server-side."
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of use",
+      "description": "The rules governing use of the Lownheur service.",
+      "sections": {
+        "service": {
+          "title": "Service",
+          "body": "Lownheur provides a web interface and MCP server for organizing categories, events, goals and schedules. The service may change for security, compliance or improvement reasons."
+        },
+        "account": {
+          "title": "Account",
+          "body": "You must provide a valid email address, protect your authentication methods and remain responsible for actions taken from your account and for MCP applications you authorize."
+        },
+        "acceptableUse": {
+          "title": "Acceptable use",
+          "body": "You may not bypass quotas or security, access another person's data, disrupt the service or store unlawful content. Access may be suspended in case of serious risk or abuse."
+        },
+        "subscriptions": {
+          "title": "Plans and payment",
+          "body": "Paid plans are monthly and renew automatically until cancelled. The price, currency and applicable taxes are shown before confirmation in Stripe Checkout. Refund policy: {refundPolicy}."
+        },
+        "cancellation": {
+          "title": "Cancellation and withdrawal",
+          "body": "You can manage or cancel the subscription in the Stripe portal. Its effective date is shown in your workspace. Deleting the account stops the subscription. Any mandatory consumer rights, including a statutory withdrawal right where applicable, remain unaffected."
+        },
+        "liability": {
+          "title": "Availability and liability",
+          "body": "We aim to provide a reliable service but do not guarantee uninterrupted availability. You remain responsible for reviewing actions requested from an AI and for your own important backups. Nothing limits a right that cannot legally be limited."
+        },
+        "changes": {
+          "title": "Changes to these terms",
+          "body": "Material changes will be announced before they take effect where required by law. Contract contact: {supportEmail}."
+        }
+      }
+    },
+    "legal": {
+      "title": "Legal notice",
+      "description": "Identification of Lownheur's publisher and hosting.",
+      "sections": {
+        "publisher": {
+          "title": "Publisher",
+          "body": "Lownheur is published by {legalName}, {legalAddress}. Registration or identifier: {registration}."
+        },
+        "hosting": {
+          "title": "Hosting",
+          "body": "Hosting information: {hostingDetails}."
+        },
+        "intellectualProperty": {
+          "title": "Intellectual property",
+          "body": "The Lownheur name, interface and original content are protected. You retain rights to the data and images you add and grant us only the technical rights necessary to provide the service."
+        },
+        "contact": {
+          "title": "Contact",
+          "body": "For legal or support questions: {supportEmail}."
+        }
+      }
+    },
+    "support": {
+      "title": "Support",
+      "description": "Get help or report a problem with Lownheur.",
+      "sections": {
+        "contact": {
+          "title": "Contact us",
+          "body": "Send your request to {supportEmail} from the email address associated with the account. Never send your password or a Supabase or Stripe secret key."
+        },
+        "response": {
+          "title": "Useful information",
+          "body": "Include the affected page, approximate time, expected behavior and error message. Avoid including personal data or private resource content."
+        },
+        "security": {
+          "title": "Security incident",
+          "body": "For a vulnerability or suspicious access, use {supportEmail} with subject SECURITY. Do not exploit the issue beyond what is needed to describe it."
+        },
+        "accountDeletion": {
+          "title": "Account deletion",
+          "body": "Self-service deletion is available under Dashboard > Settings. It deletes the account, resources and media, revokes sessions and stops the associated Stripe subscription."
+        }
+      }
+    }
   }
 }

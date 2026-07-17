@@ -6,6 +6,7 @@ import { requireUser } from "@/lib/auth";
 import { redirectTo } from "@/lib/navigation";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { cancelStripeSubscriptionForUser } from "@/server/billing";
 import { deleteAllUserMedia, MediaError, readImageFiles, removeAvatar, uploadAvatar } from "@/server/media";
 
 function localeFrom(formData: FormData): AppLocale { return formData.get("locale") === "en" ? "en" : "fr"; }
@@ -38,7 +39,12 @@ export async function deleteAccountAction(formData: FormData) {
   if (formData.get("confirmation") !== expected) redirectTo(path(locale, "?error=confirmation_failed"));
   const user = await requireUser(locale);
   const client = await createSupabaseServerClient();
-  try { await deleteAllUserMedia(user.id); } catch { redirectTo(path(locale, "?error=delete_failed")); }
+  try {
+    await cancelStripeSubscriptionForUser(user.id);
+    await deleteAllUserMedia(user.id);
+  } catch {
+    redirectTo(path(locale, "?error=delete_failed"));
+  }
   await client.auth.signOut({ scope: "global" });
   const admin = createSupabaseAdminClient();
   const { error } = await admin.auth.admin.deleteUser(user.id);
