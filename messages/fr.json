@@ -19,10 +19,22 @@
     "featuresTitle": "Une seule source de vérité",
     "featuresSubtitle": "Ce que vous organisez visuellement reste immédiatement disponible pour les outils que vous autorisez.",
     "features": {
-      "categories": {"title": "Catégories", "description": "Structurez chaque domaine de votre vie dans un espace clair et illustré."},
-      "events": {"title": "Événements", "description": "Conservez ce qui doit arriver avec le contexte nécessaire, sans surcharge."},
-      "goals": {"title": "Objectifs", "description": "Suivez vos intentions de l'idée initiale jusqu'au résultat atteint."},
-      "schedules": {"title": "Planifications", "description": "Placez un événement ou un objectif dans le temps et voyez la suite immédiatement."}
+      "categories": {
+        "title": "Catégories",
+        "description": "Structurez chaque domaine de votre vie dans un espace clair et illustré."
+      },
+      "events": {
+        "title": "Événements",
+        "description": "Conservez ce qui doit arriver avec le contexte nécessaire, sans surcharge."
+      },
+      "goals": {
+        "title": "Objectifs",
+        "description": "Suivez vos intentions de l'idée initiale jusqu'au résultat atteint."
+      },
+      "schedules": {
+        "title": "Planifications",
+        "description": "Placez un événement ou un objectif dans le temps et voyez la suite immédiatement."
+      }
     },
     "pricingEyebrow": "Trois offres",
     "pricingTitle": "Des limites claires, sans surprise",
@@ -53,5 +65,140 @@
     "current": "Offre actuelle",
     "choose": "Choisir",
     "free": "Commencer avec"
+  },
+  "Auth": {
+    "fields": {
+      "displayName": "Nom affiché",
+      "email": "Email",
+      "password": "Mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "passwordHint": "10 caractères minimum, avec minuscules, majuscules et chiffres."
+    },
+    "login": {
+      "title": "Bienvenue",
+      "description": "Retrouvez votre organisation et vos connexions IA.",
+      "noAccount": "Pas encore de compte ?",
+      "signup": "Créer un espace",
+      "forgot": "Mot de passe oublié ?",
+      "submit": "Se connecter"
+    },
+    "signup": {
+      "title": "Créer votre espace",
+      "description": "Commencez gratuitement, sans carte bancaire.",
+      "hasAccount": "Déjà un compte ?",
+      "login": "Se connecter",
+      "submit": "Créer mon compte"
+    },
+    "forgot": {
+      "title": "Réinitialiser le mot de passe",
+      "description": "Nous enverrons un lien sécurisé si ce compte existe.",
+      "back": "Retour à la connexion",
+      "submit": "Envoyer le lien"
+    },
+    "reset": {
+      "title": "Nouveau mot de passe",
+      "description": "Choisissez un mot de passe robuste pour votre compte.",
+      "footer": "Votre session de récupération est protégée par Supabase Auth.",
+      "submit": "Mettre à jour"
+    },
+    "errors": {
+      "not_configured": "Le service Auth doit encore être configuré par le propriétaire.",
+      "invalid_input": "Vérifiez les informations saisies.",
+      "invalid_credentials": "Email ou mot de passe incorrect.",
+      "signup_failed": "Impossible de créer le compte pour le moment.",
+      "callback_failed": "Le lien de connexion est invalide ou expiré.",
+      "update_failed": "Impossible de modifier le mot de passe."
+    },
+    "status": {
+      "check_email": "Consultez votre boîte email pour confirmer le compte.",
+      "email_sent": "Si ce compte existe, un email de récupération a été envoyé."
+    }
+  },
+  "Dashboard": {
+    "navigationLabel": "Navigation du dashboard",
+    "logout": "Se déconnecter",
+    "workspace": "Espace personnel",
+    "viewAll": "Tout voir",
+    "nav": {
+      "overview": "Vue d’ensemble",
+      "schedules": "Planifications",
+      "categories": "Catégories",
+      "events": "Événements",
+      "goals": "Objectifs",
+      "connections": "Connexions IA",
+      "usage": "Usage et offre",
+      "settings": "Paramètres"
+    },
+    "overview": {
+      "eyebrow": "Aujourd’hui",
+      "title": "Votre organisation en un regard",
+      "description": "Retrouvez ce qui compte et la prochaine action à mener.",
+      "statsLabel": "Résumé des ressources",
+      "upcoming": "À venir",
+      "upcomingDescription": "Vos cinq prochaines planifications.",
+      "emptyTitle": "Rien de planifié",
+      "emptyDescription": "Créez un événement ou un objectif, puis placez-le dans le temps."
+    },
+    "statuses": {
+      "scheduled": "Planifié",
+      "completed": "Terminé",
+      "cancelled": "Annulé",
+      "todo": "À faire",
+      "in_progress": "En cours",
+      "achieved": "Atteint",
+      "abandoned": "Abandonné"
+    },
+    "resources": {
+      "eyebrow": "Organisation",
+      "categories": {
+        "title": "Catégories",
+        "description": "Structurez les domaines qui comptent pour vous.",
+        "empty": "Aucune catégorie pour le moment."
+      },
+      "events": {
+        "title": "Événements",
+        "description": "Conservez chaque événement avec son contexte.",
+        "empty": "Aucun événement pour le moment."
+      },
+      "goals": {
+        "title": "Objectifs",
+        "description": "Suivez vos objectifs jusqu’au résultat.",
+        "empty": "Aucun objectif pour le moment."
+      },
+      "schedules": {
+        "title": "Planifications",
+        "description": "Placez vos événements et objectifs dans le temps.",
+        "empty": "Aucune planification pour le moment."
+      }
+    },
+    "actions": {
+      "create": "Créer",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "save": "Enregistrer",
+      "search": "Rechercher",
+      "searchPlaceholder": "Rechercher par titre…",
+      "next": "Page suivante"
+    },
+    "fields": {
+      "title": "Titre",
+      "description": "Description",
+      "category": "Catégorie",
+      "target": "Événement ou objectif",
+      "startsAt": "Début",
+      "endsAt": "Fin (facultative)",
+      "status": "Statut"
+    },
+    "errors": {
+      "invalid_input": "Vérifiez les informations saisies.",
+      "not_found": "Cet élément n’existe plus.",
+      "conflict": "Un élément identique existe déjà.",
+      "database_error": "La modification n’a pas pu être enregistrée."
+    },
+    "status": {
+      "created": "Élément créé.",
+      "updated": "Modifications enregistrées.",
+      "deleted": "Élément supprimé."
+    }
   }
 }

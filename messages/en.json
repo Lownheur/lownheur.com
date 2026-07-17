@@ -19,10 +19,22 @@
     "featuresTitle": "One source of truth",
     "featuresSubtitle": "What you organize visually is immediately available to the tools you authorize.",
     "features": {
-      "categories": {"title": "Categories", "description": "Structure every area of your life in a clear, illustrated space."},
-      "events": {"title": "Events", "description": "Keep what needs to happen with the right context and no clutter."},
-      "goals": {"title": "Goals", "description": "Track your intentions from the first idea to the achieved result."},
-      "schedules": {"title": "Schedules", "description": "Place an event or goal in time and see what comes next immediately."}
+      "categories": {
+        "title": "Categories",
+        "description": "Structure every area of your life in a clear, illustrated space."
+      },
+      "events": {
+        "title": "Events",
+        "description": "Keep what needs to happen with the right context and no clutter."
+      },
+      "goals": {
+        "title": "Goals",
+        "description": "Track your intentions from the first idea to the achieved result."
+      },
+      "schedules": {
+        "title": "Schedules",
+        "description": "Place an event or goal in time and see what comes next immediately."
+      }
     },
     "pricingEyebrow": "Three plans",
     "pricingTitle": "Clear limits, no surprises",
@@ -53,5 +65,140 @@
     "current": "Current plan",
     "choose": "Choose",
     "free": "Start with"
+  },
+  "Auth": {
+    "fields": {
+      "displayName": "Display name",
+      "email": "Email",
+      "password": "Password",
+      "newPassword": "New password",
+      "passwordHint": "At least 10 characters with lowercase, uppercase and numbers."
+    },
+    "login": {
+      "title": "Welcome back",
+      "description": "Return to your organization and AI connections.",
+      "noAccount": "No account yet?",
+      "signup": "Create a workspace",
+      "forgot": "Forgot your password?",
+      "submit": "Log in"
+    },
+    "signup": {
+      "title": "Create your workspace",
+      "description": "Start for free, with no payment card.",
+      "hasAccount": "Already have an account?",
+      "login": "Log in",
+      "submit": "Create my account"
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "description": "We will send a secure link if this account exists.",
+      "back": "Back to login",
+      "submit": "Send the link"
+    },
+    "reset": {
+      "title": "New password",
+      "description": "Choose a strong password for your account.",
+      "footer": "Your recovery session is protected by Supabase Auth.",
+      "submit": "Update password"
+    },
+    "errors": {
+      "not_configured": "Authentication still needs to be configured by the owner.",
+      "invalid_input": "Check the information you entered.",
+      "invalid_credentials": "Incorrect email or password.",
+      "signup_failed": "The account cannot be created right now.",
+      "callback_failed": "The login link is invalid or expired.",
+      "update_failed": "The password cannot be changed."
+    },
+    "status": {
+      "check_email": "Check your inbox to confirm your account.",
+      "email_sent": "If this account exists, a recovery email has been sent."
+    }
+  },
+  "Dashboard": {
+    "navigationLabel": "Dashboard navigation",
+    "logout": "Log out",
+    "workspace": "Personal workspace",
+    "viewAll": "View all",
+    "nav": {
+      "overview": "Overview",
+      "schedules": "Schedules",
+      "categories": "Categories",
+      "events": "Events",
+      "goals": "Goals",
+      "connections": "AI connections",
+      "usage": "Usage and plan",
+      "settings": "Settings"
+    },
+    "overview": {
+      "eyebrow": "Today",
+      "title": "Your organization at a glance",
+      "description": "See what matters and the next action to take.",
+      "statsLabel": "Resource summary",
+      "upcoming": "Coming up",
+      "upcomingDescription": "Your next five schedules.",
+      "emptyTitle": "Nothing scheduled",
+      "emptyDescription": "Create an event or goal, then place it in time."
+    },
+    "statuses": {
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "todo": "To do",
+      "in_progress": "In progress",
+      "achieved": "Achieved",
+      "abandoned": "Abandoned"
+    },
+    "resources": {
+      "eyebrow": "Organization",
+      "categories": {
+        "title": "Categories",
+        "description": "Structure the areas that matter to you.",
+        "empty": "No categories yet."
+      },
+      "events": {
+        "title": "Events",
+        "description": "Keep each event with the context it needs.",
+        "empty": "No events yet."
+      },
+      "goals": {
+        "title": "Goals",
+        "description": "Track your goals through to the result.",
+        "empty": "No goals yet."
+      },
+      "schedules": {
+        "title": "Schedules",
+        "description": "Place your events and goals in time.",
+        "empty": "No schedules yet."
+      }
+    },
+    "actions": {
+      "create": "Create",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "search": "Search",
+      "searchPlaceholder": "Search by title…",
+      "next": "Next page"
+    },
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "category": "Category",
+      "target": "Event or goal",
+      "startsAt": "Start",
+      "endsAt": "End (optional)",
+      "status": "Status"
+    },
+    "errors": {
+      "invalid_input": "Check the information you entered.",
+      "not_found": "This item no longer exists.",
+      "conflict": "An identical item already exists.",
+      "database_error": "The change could not be saved."
+    },
+    "status": {
+      "created": "Item created.",
+      "updated": "Changes saved.",
+      "deleted": "Item deleted."
+    }
   }
 }
