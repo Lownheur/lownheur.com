@@ -21,6 +21,10 @@ Les changements sont regroupés par version selon Keep a Changelog, sans recopie
 
 - Écran de consentement OAuth, page Connexions IA, guides FR/EN et révocation des applications.
 
+- Paramètres de profil, langue, fuseau horaire, avatar privé et suppression définitive du compte.
+
+- Galeries d’images privées pour catégories, événements et objectifs avec quotas, URL signées et confirmations.
+
 ### Documentation
 
 - Création du contrat, de l'architecture proposée, du workflow et du plan de réalisation de la V1.

@@ -30,3 +30,9 @@
 - Endpoint Streamable HTTP protégé par OAuth Supabase, consentement et révocation ajoutés.
 - 21 outils V1 branchés sur la couche métier partagée et le quota atomique.
 - 12 tests, chaîne verify, build production et smoke test protocolaire local verts; validation clients réels reportée à l’environnement déployé.
+
+## 2026-07-17 — Profil et médias privés intégrés
+
+- Profil, langue, fuseau, avatar et suppression de compte ajoutés.
+- Uploads d’images validés côté serveur, réservés dans le quota et servis par URL signées.
+- Nettoyage des médias partagé avec les suppressions web/MCP; 16 tests et build production verts.

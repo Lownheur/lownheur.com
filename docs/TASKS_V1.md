@@ -29,13 +29,15 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 - [ ] **V1-020 — Implémenter inscription, connexion et récupération** — `EN COURS`
   - Acceptation : inscription, connexion, récupération, renouvellement de session et déconnexion validés contre un projet Supabase réel.
   - Preuve actuelle : routes FR/EN et build de production verts; validation distante restante.
-- [ ] **V1-021 — Implémenter profil, paramètres et suppression de compte** — `À FAIRE`
+- [ ] **V1-021 — Implémenter profil, paramètres et suppression de compte** — `EN COURS`
+  - Acceptation : profil, avatar, révocation des sessions et suppression complète des données validés sur Supabase réel.
+  - Preuve actuelle : page Paramètres FR/EN, username unique, fuseau, avatar privé et suppression avec confirmation implémentés; recette distante restante.
 - [ ] **V1-022 — Créer migrations, contraintes et politiques RLS** — `EN COURS`
   - Acceptation : migration appliquée, contraintes et RLS testées avec deux utilisateurs isolés.
   - Preuve actuelle : migration initiale, index, contraintes et politiques écrits; exécution locale restante car le moteur Docker n’est pas démarré.
 - [ ] **V1-023 — Configurer médias privés et quotas de stockage** — `EN COURS`
   - Acceptation : uploads privés, quotas atomiques et suppression des médias testés.
-  - Preuve actuelle : bucket privé, tables média et RPC atomiques écrits; flux upload restant.
+  - Preuve actuelle : validation MIME/taille, réservation atomique, Storage privé, URL signées, remplacement, nettoyage et 4 tests unitaires; test Supabase réel restant.
 
 ## P3 — Dashboard
 
@@ -44,13 +46,13 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
   - Preuve actuelle : types, lint, 6 tests et build de production verts; recette connectée restante.
 - [ ] **V1-031 — CRUD catégories** — `EN COURS`
   - Acceptation : CRUD catégories et recherche vérifiés avec RLS.
-  - Preuve actuelle : interface et cas d’usage partagés implémentés; test d’intégration restant.
+  - Preuve actuelle : interface, cas d’usage partagés, image privée et confirmation de suppression implémentés; test d’intégration restant.
 - [ ] **V1-032 — CRUD événements et médias** — `EN COURS`
   - Acceptation : CRUD événements et médias privés vérifiés.
-  - Preuve actuelle : CRUD texte implémenté; médias et test d’intégration restants.
+  - Preuve actuelle : CRUD, galerie privée multi-images, quota, retrait et nettoyage en cascade implémentés; test d’intégration restant.
 - [ ] **V1-033 — CRUD objectifs et médias** — `EN COURS`
   - Acceptation : CRUD objectifs, statuts et médias privés vérifiés.
-  - Preuve actuelle : CRUD et statuts implémentés; médias et test d’intégration restants.
+  - Preuve actuelle : CRUD, statuts, galerie privée multi-images, quota, retrait et nettoyage en cascade implémentés; test d’intégration restant.
 - [ ] **V1-034 — CRUD planifications et agenda à venir** — `EN COURS`
   - Acceptation : planifications UTC et agenda à venir vérifiés.
   - Preuve actuelle : formulaires horaires locaux convertis en UTC, CRUD et agenda implémentés; test d’intégration restant.
