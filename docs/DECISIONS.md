@@ -12,4 +12,5 @@
 - **D-004 — 2026-07-17 — ACCEPTÉE — Partager les cas d'usage entre interface et MCP.** Raison : mêmes validations, autorisations et quotas sur les deux surfaces. Conséquence : aucun CRUD direct spécifique à un contrôleur.
 - **D-005 — 2026-07-17 — ACCEPTÉE — Limiter le profil V1 aux données utiles.** Raison : minimisation des données et absence d'usage des informations sensibles demandées initialement. Conséquence : profil étendu reporté.
 - **D-006 — 2026-07-17 — ACCEPTÉE — Offres Pro 10 Go/50 000 appels et Max 50 Go/250 000 appels.** Raison : rendre les offres testables; les limites pourront évoluer avant publication selon coûts et bêta.
-
+- **D-007 — 2026-07-17 — ACCEPTÉE — Utiliser le serveur OAuth 2.1 de Supabase pour l’autorisation MCP.** Raison : obtenir PKCE, découverte OIDC et enregistrement dynamique liés aux comptes existants. Conséquence : activer le serveur OAuth, utiliser une clé de signature asymétrique et tester chaque client annoncé; la fonctionnalité Supabase étant en bêta, ce risque reste suivi.
+- **D-008 — 2026-07-17 — ACCEPTÉE — Appliquer les quotas par fonctions PostgreSQL atomiques réservées au serveur.** Raison : empêcher le dépassement par concurrence et le contournement depuis le client. Conséquence : les appels MCP et octets de stockage sont réservés avant mutation, sous rôle privilégié uniquement.

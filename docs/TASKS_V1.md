@@ -7,8 +7,9 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 - [x] **V1-001 — Approuver le contrat V1** — `TERMINÉ`
   - Acceptation : les cinq décisions de `docs/versions/V1.md` sont tranchées et le statut devient `APPROUVÉE`.
   - Preuve : demande explicite du propriétaire de réaliser la V1 complète le 2026-07-17.
-- [ ] **V1-002 — Approuver architecture et modèle de données** — `À FAIRE`
+- [x] **V1-002 — Approuver architecture et modèle de données** — `TERMINÉ`
   - Acceptation : stack, hébergement, auth MCP et schéma sont cohérents avec le contrat approuvé.
+  - Preuve : architecture monolithique modulaire, schéma PostgreSQL versionné, choix OAuth Supabase et règles métier partagées consignés.
 - [x] **V1-003 — Créer le dashboard documentaire humain** — `TERMINÉ`
   - Acceptation : tous les Markdown du dépôt sont consultables et recherchables dans une interface locale responsive, avec génération reproductible.
   - Preuve : génération de 10 documents, validation syntaxique automatique du JavaScript client et contrôle responsive prévu dans les styles.
@@ -25,24 +26,41 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 
 ## P2 — Identité et données
 
-- [ ] **V1-020 — Implémenter inscription, connexion et récupération** — `À FAIRE`
+- [ ] **V1-020 — Implémenter inscription, connexion et récupération** — `EN COURS`
+  - Acceptation : inscription, connexion, récupération, renouvellement de session et déconnexion validés contre un projet Supabase réel.
+  - Preuve actuelle : routes FR/EN et build de production verts; validation distante restante.
 - [ ] **V1-021 — Implémenter profil, paramètres et suppression de compte** — `À FAIRE`
-- [ ] **V1-022 — Créer migrations, contraintes et politiques RLS** — `À FAIRE`
-- [ ] **V1-023 — Configurer médias privés et quotas de stockage** — `À FAIRE`
+- [ ] **V1-022 — Créer migrations, contraintes et politiques RLS** — `EN COURS`
+  - Acceptation : migration appliquée, contraintes et RLS testées avec deux utilisateurs isolés.
+  - Preuve actuelle : migration initiale, index, contraintes et politiques écrits; exécution locale restante car le moteur Docker n’est pas démarré.
+- [ ] **V1-023 — Configurer médias privés et quotas de stockage** — `EN COURS`
+  - Acceptation : uploads privés, quotas atomiques et suppression des médias testés.
+  - Preuve actuelle : bucket privé, tables média et RPC atomiques écrits; flux upload restant.
 
 ## P3 — Dashboard
 
-- [ ] **V1-030 — Construire shell, sidebar et vue d'ensemble** — `À FAIRE`
-- [ ] **V1-031 — CRUD catégories** — `À FAIRE`
-- [ ] **V1-032 — CRUD événements et médias** — `À FAIRE`
-- [ ] **V1-033 — CRUD objectifs et médias** — `À FAIRE`
-- [ ] **V1-034 — CRUD planifications et agenda à venir** — `À FAIRE`
+- [ ] **V1-030 — Construire shell, sidebar et vue d'ensemble** — `EN COURS`
+  - Acceptation : shell responsive, sidebar et vue d’ensemble fonctionnent avec des données réelles.
+  - Preuve actuelle : types, lint, 6 tests et build de production verts; recette connectée restante.
+- [ ] **V1-031 — CRUD catégories** — `EN COURS`
+  - Acceptation : CRUD catégories et recherche vérifiés avec RLS.
+  - Preuve actuelle : interface et cas d’usage partagés implémentés; test d’intégration restant.
+- [ ] **V1-032 — CRUD événements et médias** — `EN COURS`
+  - Acceptation : CRUD événements et médias privés vérifiés.
+  - Preuve actuelle : CRUD texte implémenté; médias et test d’intégration restants.
+- [ ] **V1-033 — CRUD objectifs et médias** — `EN COURS`
+  - Acceptation : CRUD objectifs, statuts et médias privés vérifiés.
+  - Preuve actuelle : CRUD et statuts implémentés; médias et test d’intégration restants.
+- [ ] **V1-034 — CRUD planifications et agenda à venir** — `EN COURS`
+  - Acceptation : planifications UTC et agenda à venir vérifiés.
+  - Preuve actuelle : formulaires horaires locaux convertis en UTC, CRUD et agenda implémentés; test d’intégration restant.
 
 ## P4 — MCP
 
 - [ ] **V1-040 — Valider auth/transport sur les clients ciblés** — `À FAIRE`
 - [ ] **V1-041 — Implémenter serveur MCP et schémas d'outils** — `À FAIRE`
-- [ ] **V1-042 — Partager règles métier et erreurs avec le web** — `À FAIRE`
+- [ ] **V1-042 — Partager règles métier et erreurs avec le web** — `EN COURS`
+  - Preuve actuelle : couche server/domain unique avec validation Zod, pagination curseur, erreurs stables et 4 tests unitaires; branchement MCP restant.
 - [ ] **V1-043 — Tester isolation, concurrence, pagination et compatibilité** — `À FAIRE`
 
 ## P5 — Offres et facturation

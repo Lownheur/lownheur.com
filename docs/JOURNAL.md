@@ -18,3 +18,9 @@
 - Next.js 16, React 19, TypeScript strict, Supabase SSR, Stripe, MCP SDK et next-intl installés avec versions épinglées.
 - Page d'accueil FR/EN et thèmes clair/sombre créés.
 - Lint, types, tests et build de production validés; contrôle visuel navigateur reporté au lot E2E car le navigateur intégré est indisponible.
+
+## 2026-07-17 — Identité, données et dashboard intégrés
+
+- Authentification Supabase SSR et pages FR/EN intégrées.
+- Migration V1 écrite avec isolation RLS, stockage privé et quotas atomiques; application locale en attente du moteur Docker.
+- CRUD web des quatre ressources relié à une couche métier partagée, avec lint, types, 6 tests et build de production verts.
