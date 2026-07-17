@@ -22,19 +22,20 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
   - Preuve : tokens sémantiques, thèmes clair/sombre sans flash et composants globaux responsive.
 - [x] **V1-012 — Mettre en place i18n FR/EN** — `TERMINÉ`
   - Preuve : routes FR/EN, catalogues typés et changement de langue via next-intl.
-- [ ] **V1-013 — Configurer environnements, logs et suivi d'erreurs** — `À FAIRE`
+- [ ] **V1-013 — Configurer environnements, logs et suivi d'erreurs** — `EN COURS`
+  - Preuve : healthcheck, logs JSON, en-têtes de sécurité, robots/sitemap et cron de réconciliation implémentés; alertes externes de production encore à configurer.
 
 ## P2 — Identité et données
 
 - [ ] **V1-020 — Implémenter inscription, connexion et récupération** — `EN COURS`
   - Acceptation : inscription, connexion, récupération, renouvellement de session et déconnexion validés contre un projet Supabase réel.
-  - Preuve actuelle : routes FR/EN et build de production verts; validation distante restante.
+  - Preuve : projet Supabase réel connecté, inscription email active, compte gratuit créé et routes accueil/inscription/connexion en HTTP 200; récupération et révocation de session restent à recetter.
 - [ ] **V1-021 — Implémenter profil, paramètres et suppression de compte** — `EN COURS`
   - Acceptation : profil, avatar, révocation des sessions et suppression complète des données validés sur Supabase réel.
   - Preuve actuelle : page Paramètres FR/EN, username unique, fuseau, avatar privé et suppression avec confirmation implémentés; recette distante restante.
-- [ ] **V1-022 — Créer migrations, contraintes et politiques RLS** — `EN COURS`
+- [x] **V1-022 — Créer migrations, contraintes et politiques RLS** — `TERMINÉ`
   - Acceptation : migration appliquée, contraintes et RLS testées avec deux utilisateurs isolés.
-  - Preuve actuelle : migration initiale, index, contraintes et politiques écrits; exécution locale restante car le moteur Docker n’est pas démarré.
+  - Preuve : quatre migrations appliquées au projet Supabase réel; 12 tables avec RLS; isolation lecture/mise à jour/suppression prouvée avec deux utilisateurs temporaires dans une transaction annulée; corrections des advisors appliquées.
 - [ ] **V1-023 — Configurer médias privés et quotas de stockage** — `EN COURS`
   - Acceptation : uploads privés, quotas atomiques et suppression des médias testés.
   - Preuve actuelle : validation MIME/taille, réservation atomique, Storage privé, URL signées, remplacement, nettoyage et 4 tests unitaires; test Supabase réel restant.
@@ -75,21 +76,27 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 
 - [ ] **V1-050 — Implémenter comptage atomique et application des limites** — `EN COURS`
   - Acceptation : quota mensuel atomique refusant tout dépassement sous concurrence.
-  - Preuve actuelle : chaque tools/call est compté avant validation via RPC service-role; test concurrent sur PostgreSQL réel restant.
-- [ ] **V1-051 — Implémenter Checkout, portail et webhooks idempotents** — `À FAIRE`
-- [ ] **V1-052 — Construire écrans offre et utilisation** — `À FAIRE`
+  - Preuve : RPC atomiques appliquées au PostgreSQL réel et droits payants limités aux statuts active/trialing; épreuve multi-session concurrente restante.
+- [ ] **V1-051 — Implémenter Checkout, portail et webhooks idempotents** — `EN COURS`
+  - Preuve : Checkout, portail, quatre événements webhook signés, journal idempotent, synchronisation convergente et résiliation avant suppression implémentés; clés Stripe et recette test/live restantes.
+- [x] **V1-052 — Construire écrans offre et utilisation** — `TERMINÉ`
+  - Preuve : écran FR/EN d'offre et d'utilisation, compteurs MCP/stockage, états d'abonnement, trois offres et accès portail intégrés; lint, types, tests et build verts.
 
 ## P6 — Acquisition et conformité
 
-- [ ] **V1-060 — Construire accueil responsive et pricing** — `À FAIRE`
+- [x] **V1-060 — Construire accueil responsive et pricing** — `TERMINÉ`
+  - Preuve : accueil, pricing, thèmes et changement FR/EN vérifiés par 4 E2E Playwright verts sur Chromium desktop et mobile.
 - [ ] **V1-061 — Publier guides de connexion vérifiés** — `EN COURS`
   - Preuve actuelle : guides FR/EN intégrés pour ChatGPT, Claude et client générique; validation réelle de chaque parcours restante.
-- [ ] **V1-062 — Ajouter confidentialité, CGU, mentions et support** — `À FAIRE`
+- [ ] **V1-062 — Ajouter confidentialité, CGU, mentions et support** — `EN COURS`
+  - Preuve : pages confidentialité, CGU, mentions et support publiées en FR/EN; identité légale, politique de remboursement et relecture professionnelle restent à fournir.
 
 ## P7 — Sortie
 
-- [ ] **V1-070 — Finaliser tests E2E, accessibilité et sécurité** — `À FAIRE`
-- [ ] **V1-071 — Prouver sauvegarde, restauration, monitoring et rollback** — `À FAIRE`
+- [ ] **V1-070 — Finaliser tests E2E, accessibilité et sécurité** — `EN COURS`
+  - Preuve : 18 tests unitaires et 4 E2E publics desktop/mobile verts, CSP et en-têtes de sécurité ajoutés; E2E authentifié, audit accessibilité complet, clients MCP réels et protection Supabase contre les mots de passe divulgués restent à valider.
+- [ ] **V1-071 — Prouver sauvegarde, restauration, monitoring et rollback** — `EN COURS`
+  - Preuve : réconciliation stockage testée sur la base réelle, synchronisation Stripe et cron quotidien Vercel configurés, runbook écrit; export Storage et restauration complète restent à prouver.
 - [ ] **V1-072 — Déployer la release candidate et effectuer la recette** — `À FAIRE`
 - [ ] **V1-073 — Publier V1 et réaliser le smoke test production** — `À FAIRE`
 

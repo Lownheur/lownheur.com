@@ -36,3 +36,10 @@
 - Profil, langue, fuseau, avatar et suppression de compte ajoutés.
 - Uploads d’images validés côté serveur, réservés dans le quota et servis par URL signées.
 - Nettoyage des médias partagé avec les suppressions web/MCP; 16 tests et build production verts.
+
+## 2026-07-17 — Supabase réel et préparation marché
+
+- Projet Supabase réel connecté; quatre migrations appliquées et isolation RLS prouvée avec deux identités temporaires.
+- Compte gratuit réel créé; accueil, inscription et connexion répondent en HTTP 200.
+- Stripe, offre/usage, pages légales, santé, sécurité, réconciliation et E2E desktop/mobile intégrés.
+- Publication encore conditionnée aux secrets serveur, à Stripe, aux informations légales, au déploiement et à la recette MCP.
