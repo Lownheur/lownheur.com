@@ -15,12 +15,11 @@ function readLocale(formData: FormData): AppLocale {
 
 function safeNext(formData: FormData, locale: AppLocale) {
   const next = formData.get("next");
-  if (
-    typeof next === "string" &&
-    next.startsWith("/" + locale + "/") &&
-    !next.startsWith("//")
-  ) {
-    return next;
+  if (typeof next === "string" && next.startsWith("/") && !next.startsWith("//") && !next.includes("\\")) {
+    const parsed = new URL(next, "http://lownheur.local");
+    const isLocalePath = parsed.pathname.startsWith("/" + locale + "/");
+    const isConsentPath = parsed.pathname === "/oauth/consent" && Boolean(parsed.searchParams.get("authorization_id"));
+    if (parsed.origin === "http://lownheur.local" && (isLocalePath || isConsentPath)) return parsed.pathname + parsed.search;
   }
   return "/" + locale + "/dashboard";
 }

@@ -200,5 +200,62 @@
       "updated": "Modifications enregistrées.",
       "deleted": "Élément supprimé."
     }
+  },
+  "OAuth": {
+    "eyebrow": "Autorisation sécurisée",
+    "title": "Autoriser {client} ?",
+    "description": "Cette application demande l’accès à votre espace Lownheur.",
+    "permissionsTitle": "Cette connexion pourra :",
+    "permissions": {
+      "resources": "Consulter vos catégories, événements, objectifs et planifications.",
+      "mutate": "Créer, modifier et supprimer ces mêmes données quand vous le demandez."
+    },
+    "scope": "Recevoir l’autorisation OAuth : {scope}",
+    "warning": "N’autorisez que les applications que vous connaissez. Vous pourrez révoquer cet accès à tout moment depuis Connexions IA.",
+    "deny": "Refuser",
+    "approve": "Autoriser",
+    "account": "Connecté avec {email}",
+    "errors": {
+      "invalid_request": "La demande d’autorisation est invalide ou expirée.",
+      "decision_failed": "La décision n’a pas pu être enregistrée. Réessayez."
+    }
+  },
+  "Mcp": {
+    "title": "Connectez vos IA à Lownheur",
+    "description": "Un endpoint MCP distant, les mêmes règles métier que le dashboard et un accès révocable par application.",
+    "endpointLabel": "Endpoint distant",
+    "endpointTitle": "URL du serveur MCP",
+    "oauthReady": "Le serveur OAuth répond pour votre compte. La compatibilité finale sera confirmée après déploiement.",
+    "oauthSetup": "Le propriétaire doit encore activer le serveur OAuth Supabase et appliquer la migration avant la première connexion.",
+    "revoked": "La connexion a été révoquée.",
+    "guides": {
+      "chatgpt": {
+        "title": "ChatGPT",
+        "step1": "Dans ChatGPT web, activez le mode développeur disponible pour votre offre et votre espace de travail.",
+        "step2": "Dans Paramètres > Apps > Créer, indiquez {endpoint}, choisissez OAuth puis lancez l’analyse des outils.",
+        "step3": "Connectez votre compte Lownheur, vérifiez les 21 outils et confirmez les actions d’écriture quand ChatGPT le demande."
+      },
+      "claude": {
+        "title": "Claude",
+        "step1": "Ouvrez les intégrations de votre client Claude compatible avec les serveurs MCP distants.",
+        "step2": "Ajoutez {endpoint} comme serveur HTTP distant avec authentification OAuth.",
+        "step3": "Autorisez Lownheur dans la fenêtre ouverte puis testez d’abord une opération de lecture."
+      },
+      "generic": {
+        "title": "Client MCP",
+        "step1": "Choisissez un client compatible Streamable HTTP et OAuth 2.1 avec PKCE.",
+        "step2": "Ajoutez l’URL {endpoint}; la découverte OAuth est automatique.",
+        "step3": "Autorisez votre compte puis contrôlez les permissions avant toute mutation."
+      }
+    },
+    "grantsTitle": "Applications autorisées",
+    "grantsDescription": "Révoquer un accès invalide ses jetons de renouvellement et ses sessions OAuth.",
+    "revoke": "Révoquer",
+    "emptyTitle": "Aucune application autorisée",
+    "emptyDescription": "Vos connexions apparaîtront ici après leur première autorisation.",
+    "errors": {
+      "invalid_input": "Cette connexion est invalide.",
+      "revoke_failed": "La connexion n’a pas pu être révoquée."
+    }
   }
 }

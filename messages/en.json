@@ -200,5 +200,62 @@
       "updated": "Changes saved.",
       "deleted": "Item deleted."
     }
+  },
+  "OAuth": {
+    "eyebrow": "Secure authorization",
+    "title": "Authorize {client}?",
+    "description": "This application is requesting access to your Lownheur workspace.",
+    "permissionsTitle": "This connection will be able to:",
+    "permissions": {
+      "resources": "Read your categories, events, goals and schedules.",
+      "mutate": "Create, update and delete the same data when you ask it to."
+    },
+    "scope": "Receive OAuth permission: {scope}",
+    "warning": "Only authorize applications you trust. You can revoke this access at any time from AI connections.",
+    "deny": "Deny",
+    "approve": "Authorize",
+    "account": "Signed in as {email}",
+    "errors": {
+      "invalid_request": "The authorization request is invalid or expired.",
+      "decision_failed": "Your decision could not be saved. Try again."
+    }
+  },
+  "Mcp": {
+    "title": "Connect your AIs to Lownheur",
+    "description": "One remote MCP endpoint, the same business rules as the dashboard and revocable access for every application.",
+    "endpointLabel": "Remote endpoint",
+    "endpointTitle": "MCP server URL",
+    "oauthReady": "The OAuth server is responding for your account. Final compatibility will be confirmed after deployment.",
+    "oauthSetup": "The owner still needs to enable the Supabase OAuth server and apply the migration before the first connection.",
+    "revoked": "The connection was revoked.",
+    "guides": {
+      "chatgpt": {
+        "title": "ChatGPT",
+        "step1": "In ChatGPT web, enable developer mode when it is available for your plan and workspace.",
+        "step2": "In Settings > Apps > Create, enter {endpoint}, select OAuth and scan the tools.",
+        "step3": "Connect your Lownheur account, review the 21 tools and confirm write actions when ChatGPT asks."
+      },
+      "claude": {
+        "title": "Claude",
+        "step1": "Open integrations in a Claude client that supports remote MCP servers.",
+        "step2": "Add {endpoint} as a remote HTTP server with OAuth authentication.",
+        "step3": "Authorize Lownheur in the window that opens, then test a read operation first."
+      },
+      "generic": {
+        "title": "MCP client",
+        "step1": "Use a client compatible with Streamable HTTP and OAuth 2.1 with PKCE.",
+        "step2": "Add {endpoint}; OAuth discovery is automatic.",
+        "step3": "Authorize your account and review permissions before any mutation."
+      }
+    },
+    "grantsTitle": "Authorized applications",
+    "grantsDescription": "Revoking access invalidates its refresh tokens and OAuth sessions.",
+    "revoke": "Revoke",
+    "emptyTitle": "No authorized applications",
+    "emptyDescription": "Your connections will appear here after their first authorization.",
+    "errors": {
+      "invalid_input": "This connection is invalid.",
+      "revoke_failed": "The connection could not be revoked."
+    }
   }
 }
