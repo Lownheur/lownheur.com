@@ -1,17 +1,18 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import type { AppLocale } from "@/i18n/routing";
 import { LanguageSwitcher } from "./language-switcher";
 import { Logo } from "./logo";
 import { ThemeToggle } from "./theme-toggle";
 
-export async function SiteHeader() {
-  const t = await getTranslations("Navigation");
+export async function SiteHeader({ locale }: { locale: AppLocale }) {
+  const t = await getTranslations({ locale, namespace: "Navigation" });
 
   return (
     <header className="site-header">
       <div className="container header-inner">
         <Logo />
-        <nav className="desktop-nav" aria-label="Navigation principale">
+        <nav className="desktop-nav" aria-label={t("label")}>
           <a href="#features">{t("features")}</a>
           <a href="#pricing">{t("pricing")}</a>
           <a href="#connect">{t("connect")}</a>

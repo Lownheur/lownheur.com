@@ -3,21 +3,27 @@ import { Link } from "@/i18n/navigation";
 import { PLAN_LIMITS, type PlanId } from "@/lib/plans";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import type { AppLocale } from "@/i18n/routing";
 
 const featureKeys = ["categories", "events", "goals", "schedules"] as const;
 const clients = ["ChatGPT", "Claude", "MCP"] as const;
 const plans: PlanId[] = ["free", "pro", "max"];
 
-export default async function LandingPage() {
-  const t = await getTranslations("Landing");
-  const common = await getTranslations("Common");
+export default async function LandingPage({
+  params
+}: {
+  params: Promise<{ locale: AppLocale }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Landing" });
+  const common = await getTranslations({ locale, namespace: "Common" });
 
   return (
     <>
       <a className="skip-link" href="#main-content">
         {t("skip")}
       </a>
-      <SiteHeader />
+      <SiteHeader locale={locale} />
       <main id="main-content">
         <section className="hero">
           <div className="container hero-grid">
@@ -156,7 +162,7 @@ export default async function LandingPage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <SiteFooter locale={locale} />
     </>
   );
 }
