@@ -2,7 +2,12 @@ import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { requireUser } from "@/lib/auth";
+import type { Metadata } from "next";
 import { DashboardShell } from "@/components/dashboard-shell";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false }
+};
 
 export const dynamic = "force-dynamic";
 

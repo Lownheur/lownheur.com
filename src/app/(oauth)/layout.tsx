@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 
 export default function OAuthLayout({ children }: { children: React.ReactNode }) {
   const themeScript = "(function(){try{var t=localStorage.getItem('lownheur-theme');if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t}catch(e){}})()";
-  return <html lang="fr" suppressHydrationWarning><body><script dangerouslySetInnerHTML={{ __html: themeScript }} />{children}</body></html>;
+  return <html lang="fr" suppressHydrationWarning data-scroll-behavior="smooth"><body><script dangerouslySetInnerHTML={{ __html: themeScript }} />{children}</body></html>;
 }
