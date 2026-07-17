@@ -16,8 +16,8 @@ function value(row: ResourceRecord | undefined, key: string) {
   return typeof field === "string" ? field : "";
 }
 
-async function ResourceFields({ resource, row, categories, events, goals }: { resource: ResourceName; row?: ResourceRecord; categories: Option[]; events: Option[]; goals: Option[] }) {
-  const t = await getTranslations("Dashboard");
+async function ResourceFields({ locale, resource, row, categories, events, goals }: { locale: AppLocale; resource: ResourceName; row?: ResourceRecord; categories: Option[]; events: Option[]; goals: Option[] }) {
+  const t = await getTranslations({ locale, namespace: "Dashboard" });
   if (resource === "schedules") {
     const target = value(row, "event_id") ? "event:" + value(row, "event_id") : value(row, "goal_id") ? "goal:" + value(row, "goal_id") : "";
     return <>
@@ -37,10 +37,10 @@ async function ResourceFields({ resource, row, categories, events, goals }: { re
 }
 
 export async function ResourceManager({ locale, resource, page, search, categories, events, goals, media, status, error }: { locale: AppLocale; resource: ResourceName; page: ResourcePage; search?: string; categories: Option[]; events: Option[]; goals: Option[]; media: Record<string, MediaView[]>; status?: string; error?: string }) {
-  const t = await getTranslations("Dashboard");
+  const t = await getTranslations({ locale, namespace: "Dashboard" });
   const isSearchable = resource !== "schedules";
   return <div className="resource-layout">
-    <section className="dashboard-panel resource-create"><h2>{t("actions.create")}</h2><form className="resource-form" action={createResourceAction} encType="multipart/form-data"><input type="hidden" name="locale" value={locale} /><input type="hidden" name="resource" value={resource} /><ResourceFields resource={resource} categories={categories} events={events} goals={goals} /><button className="button button-primary" type="submit">{t("actions.create")}</button></form></section>
+    <section className="dashboard-panel resource-create"><h2>{t("actions.create")}</h2><form className="resource-form" action={createResourceAction}><input type="hidden" name="locale" value={locale} /><input type="hidden" name="resource" value={resource} /><ResourceFields locale={locale} resource={resource} categories={categories} events={events} goals={goals} /><button className="button button-primary" type="submit">{t("actions.create")}</button></form></section>
     <section className="resource-list">
       {status && ["created", "updated", "deleted"].includes(status) ? <p className="form-notice form-success" role="status">{t("status." + status)}</p> : null}
       {error ? <p className="form-notice form-error" role="alert">{t("errors." + error)}</p> : null}
@@ -51,7 +51,7 @@ export async function ResourceManager({ locale, resource, page, search, categori
         return <article className="resource-card" key={row.id}>
           <div className="resource-card-summary"><div><h2>{label}</h2>{value(row, "description") ? <p>{value(row, "description")}</p> : null}</div>{state ? <span className="status-pill">{t("statuses." + state)}</span> : null}</div>
           {media[row.id]?.length ? <div className="media-gallery">{media[row.id].map((asset) => <figure key={asset.id}><PrivateImage src={asset.url} alt={asset.alt} /><form action={removeMediaAction}><input type="hidden" name="locale" value={locale} /><input type="hidden" name="resource" value={resource} /><input type="hidden" name="id" value={row.id} /><input type="hidden" name="assetId" value={asset.id} /><ConfirmSubmitButton className="media-remove" label="×" confirmation={t("actions.confirmRemoveImage")} /></form></figure>)}</div> : null}
-          <details><summary>{t("actions.edit")}</summary><form className="resource-form" action={updateResourceAction} encType="multipart/form-data"><input type="hidden" name="locale" value={locale} /><input type="hidden" name="resource" value={resource} /><input type="hidden" name="id" value={row.id} /><ResourceFields resource={resource} row={row} categories={categories} events={events} goals={goals} /><button className="button button-primary" type="submit">{t("actions.save")}</button></form></details>
+          <details><summary>{t("actions.edit")}</summary><form className="resource-form" action={updateResourceAction}><input type="hidden" name="locale" value={locale} /><input type="hidden" name="resource" value={resource} /><input type="hidden" name="id" value={row.id} /><ResourceFields locale={locale} resource={resource} row={row} categories={categories} events={events} goals={goals} /><button className="button button-primary" type="submit">{t("actions.save")}</button></form></details>
           <form action={deleteResourceAction}><input type="hidden" name="locale" value={locale} /><input type="hidden" name="resource" value={resource} /><input type="hidden" name="id" value={row.id} /><ConfirmSubmitButton label={t("actions.delete")} confirmation={t("actions.confirmDelete")} /></form>
         </article>;
       }) : <div className="empty-state"><strong>{t("resources." + resource + ".empty")}</strong></div>}

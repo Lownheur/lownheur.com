@@ -8,7 +8,7 @@ const resources = ["categories", "events", "goals", "schedules"] as const;
 
 export default async function DashboardPage({ params }: { params: Promise<{ locale: AppLocale }> }) {
   const { locale } = await params;
-  const t = await getTranslations("Dashboard");
+  const t = await getTranslations({ locale, namespace: "Dashboard" });
   const user = await requireUser(locale);
   const client = await createSupabaseServerClient();
   const [{ data: categories }, { data: events }, { data: goals }, { data: schedules }] =

@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ConnectionsPage({ params, searchParams }: { params: Promise<{ locale: AppLocale }>; searchParams: Promise<{ status?: string; error?: string }> }) {
   const [{ locale }, query] = await Promise.all([params, searchParams]);
-  const t = await getTranslations("Mcp");
+  const t = await getTranslations({ locale, namespace: "Mcp" });
   const endpoint = getAppUrl() + "/mcp";
   let grants: OAuthGrant[] = [];
   let oauthReady = false;

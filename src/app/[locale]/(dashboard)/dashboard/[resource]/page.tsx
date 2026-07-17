@@ -21,7 +21,7 @@ export default async function ResourcePage({
   const [{ locale, resource }, query] = await Promise.all([params, searchParams]);
   if (!isResource(resource)) notFound();
   const [t, user, client] = await Promise.all([
-    getTranslations("Dashboard"),
+    getTranslations({ locale, namespace: "Dashboard" }),
     requireUser(locale),
     createSupabaseServerClient()
   ]);

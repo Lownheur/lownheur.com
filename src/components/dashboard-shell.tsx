@@ -27,7 +27,7 @@ export async function DashboardShell({
   user: User;
   children: React.ReactNode;
 }) {
-  const t = await getTranslations("Dashboard");
+  const t = await getTranslations({ locale, namespace: "Dashboard" });
 
   return (
     <div className="dashboard-shell">
