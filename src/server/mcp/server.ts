@@ -4,7 +4,6 @@ import { z } from "zod";
 import {
   createResource,
   createSchemas,
-  deleteResource,
   DomainError,
   getResource,
   listResources,
@@ -14,6 +13,7 @@ import {
   updateSchemas
 } from "@/server/domain/resources";
 import { serializeResource } from "./serialization";
+import { deleteResourceAndMedia } from "@/server/media";
 
 type Context = { client: SupabaseClient; userId: string };
 const singular = { categories: "category", events: "event", goals: "goal", schedules: "schedule" } as const;
@@ -81,7 +81,7 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
     description: "Permanently delete a " + name + " owned by the authenticated user.",
     inputSchema: idSchema,
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
-  }, ({ id }) => safely(async () => { await deleteResource(context.client, context.userId, resource, id); return { deleted: true, id }; }));
+  }, ({ id }) => safely(async () => { await deleteResourceAndMedia(context.client, context.userId, resource, id); return { deleted: true, id }; }));
 }
 
 export function createLownheurMcpServer(context: Context) {

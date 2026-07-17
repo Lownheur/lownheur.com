@@ -55,6 +55,8 @@ export async function authenticateMcpRequest(request: Request): Promise<McpIdent
   const { data, error } = await client.auth.getClaims(token);
   const claims = claimsSchema.safeParse(data?.claims);
   if (error || !claims.success) throw new McpAuthError();
+  const { data: userData, error: userError } = await client.auth.getUser(token);
+  if (userError || userData.user?.id !== claims.data.sub) throw new McpAuthError();
 
   return {
     userId: claims.data.sub,

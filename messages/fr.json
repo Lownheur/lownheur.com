@@ -178,7 +178,9 @@
       "save": "Enregistrer",
       "search": "Rechercher",
       "searchPlaceholder": "Rechercher par titre…",
-      "next": "Page suivante"
+      "next": "Page suivante",
+      "confirmDelete": "Supprimer définitivement cet élément et ses données associées ?",
+      "confirmRemoveImage": "Supprimer cette image ?"
     },
     "fields": {
       "title": "Titre",
@@ -187,13 +189,18 @@
       "target": "Événement ou objectif",
       "startsAt": "Début",
       "endsAt": "Fin (facultative)",
-      "status": "Statut"
+      "status": "Statut",
+      "images": "Images",
+      "imageHint": "JPEG, PNG, WebP ou AVIF · 10 Mo maximum par image."
     },
     "errors": {
       "invalid_input": "Vérifiez les informations saisies.",
       "not_found": "Cet élément n’existe plus.",
       "conflict": "Un élément identique existe déjà.",
-      "database_error": "La modification n’a pas pu être enregistrée."
+      "database_error": "La modification n’a pas pu être enregistrée.",
+      "invalid_media": "Vérifiez le format, la taille ou le nombre d’images.",
+      "storage_quota": "Votre quota de stockage est atteint.",
+      "media_failed": "L’opération sur l’image n’a pas pu être terminée."
     },
     "status": {
       "created": "Élément créé.",
@@ -257,5 +264,38 @@
       "invalid_input": "Cette connexion est invalide.",
       "revoke_failed": "La connexion n’a pas pu être révoquée."
     }
+  },
+  "Settings": {
+    "eyebrow": "Compte",
+    "title": "Paramètres",
+    "description": "Gérez votre identité Lownheur, votre langue et vos données.",
+    "profileTitle": "Profil",
+    "profileDescription": "Ces informations servent à personnaliser votre espace.",
+    "fields": {
+      "displayName": "Nom affiché",
+      "username": "Nom d’utilisateur",
+      "language": "Langue",
+      "timezone": "Fuseau horaire",
+      "avatar": "Photo de profil"
+    },
+    "save": "Enregistrer le profil",
+    "updated": "Profil mis à jour.",
+    "deleteTitle": "Supprimer le compte",
+    "deleteDescription": "Cette action supprime définitivement votre compte et toutes ses données. Elle est irréversible.",
+    "deleteConfirmation": "Saisissez {word} pour confirmer.",
+    "deleteButton": "Supprimer définitivement",
+    "errors": {
+      "invalid_input": "Vérifiez les informations du profil.",
+      "username_taken": "Ce nom d’utilisateur est déjà utilisé.",
+      "update_failed": "Le profil n’a pas pu être mis à jour.",
+      "confirmation_failed": "Le mot de confirmation ne correspond pas.",
+      "delete_failed": "Le compte n’a pas pu être supprimé.",
+      "invalid_media": "Vérifiez le format ou la taille de l’image.",
+      "storage_quota": "Votre quota de stockage est atteint.",
+      "media_failed": "L’image n’a pas pu être enregistrée."
+    },
+    "avatarAlt": "Photo de profil",
+    "avatarHint": "JPEG, PNG, WebP ou AVIF · 10 Mo maximum.",
+    "removeAvatar": "Retirer la photo"
   }
 }

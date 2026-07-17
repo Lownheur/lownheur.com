@@ -5,6 +5,7 @@ import { requireUser } from "@/lib/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { ResourceManager } from "@/components/resource-manager";
 import { listResources, resourceNames, type ResourceName } from "@/server/domain/resources";
+import { getResourceMediaMap } from "@/server/media";
 
 function isResource(value: string): value is ResourceName {
   return resourceNames.includes(value as ResourceName);
@@ -31,8 +32,10 @@ export default async function ResourcePage({
     client.from("goals").select("id,title").eq("user_id", user.id).order("title")
   ]);
 
+  const media = await getResourceMediaMap(client, user.id, resource, page.items);
+
   return <div className="dashboard-page">
     <header className="dashboard-heading"><div><span className="eyebrow">{t("resources.eyebrow")}</span><h1>{t("resources." + resource + ".title")}</h1></div><p>{t("resources." + resource + ".description")}</p></header>
-    <ResourceManager locale={locale} resource={resource} page={page} search={query.search} categories={categories.data ?? []} events={events.data ?? []} goals={goals.data ?? []} status={query.status} error={query.error} />
+    <ResourceManager locale={locale} resource={resource} page={page} search={query.search} categories={categories.data ?? []} events={events.data ?? []} goals={goals.data ?? []} media={media} status={query.status} error={query.error} />
   </div>;
 }

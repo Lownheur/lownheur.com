@@ -14,6 +14,14 @@ import {
   type ResourceName,
   updateResource
 } from "@/server/domain/resources";
+import {
+  deleteResourceAndMedia,
+  MediaError,
+  readImageFiles,
+  removeResourceMedia,
+  uploadResourceMedia,
+  type MediaResource
+} from "@/server/media";
 
 function readLocale(formData: FormData): AppLocale {
   return formData.get("locale") === "en" ? "en" : "fr";
@@ -29,50 +37,29 @@ function nullable(value: FormDataEntryValue | null) {
 
 function resourceInput(resource: ResourceName, formData: FormData) {
   if (resource === "categories") {
-    return {
-      title: formData.get("title"),
-      description: nullable(formData.get("description"))
-    };
+    return { title: formData.get("title"), description: nullable(formData.get("description")) };
   }
-
   if (resource === "events") {
-    return {
-      categoryId: formData.get("categoryId"),
-      title: formData.get("title"),
-      description: nullable(formData.get("description"))
-    };
+    return { categoryId: formData.get("categoryId"), title: formData.get("title"), description: nullable(formData.get("description")) };
   }
-
   if (resource === "goals") {
-    return {
-      categoryId: formData.get("categoryId"),
-      title: formData.get("title"),
-      description: nullable(formData.get("description")),
-      status: formData.get("status")
-    };
+    return { categoryId: formData.get("categoryId"), title: formData.get("title"), description: nullable(formData.get("description")), status: formData.get("status") };
   }
-
   const target = String(formData.get("target") ?? "").split(":");
-  return {
-    targetType: target[0],
-    targetId: target[1],
-    startsAt: formData.get("startsAt"),
-    endsAt: nullable(formData.get("endsAt")),
-    status: formData.get("status")
-  };
+  return { targetType: target[0], targetId: target[1], startsAt: formData.get("startsAt"), endsAt: nullable(formData.get("endsAt")), status: formData.get("status") };
 }
 
 function resourcePath(locale: AppLocale, resource: ResourceName) {
   return "/" + locale + "/dashboard/" + resource;
 }
 
-function errorRedirect(
-  locale: AppLocale,
-  resource: ResourceName,
-  error: unknown
-): never {
-  const code = error instanceof DomainError ? error.code : "database_error";
+function errorRedirect(locale: AppLocale, resource: ResourceName, error: unknown): never {
+  const code = error instanceof DomainError || error instanceof MediaError ? error.code : "database_error";
   redirectTo(resourcePath(locale, resource) + "?error=" + code);
+}
+
+function isMediaResource(resource: ResourceName): resource is MediaResource {
+  return resource !== "schedules";
 }
 
 export async function createResourceAction(formData: FormData) {
@@ -80,13 +67,18 @@ export async function createResourceAction(formData: FormData) {
   const resource = readResource(formData);
   const user = await requireUser(locale);
   const client = await createSupabaseServerClient();
-
+  let createdId: string | null = null;
   try {
-    await createResource(client, user.id, resource, resourceInput(resource, formData));
+    const files = isMediaResource(resource) ? readImageFiles(formData) : [];
+    const created = await createResource(client, user.id, resource, resourceInput(resource, formData));
+    createdId = created.id;
+    if (isMediaResource(resource)) await uploadResourceMedia(client, user.id, resource, created.id, files);
   } catch (error) {
+    if (createdId) {
+      try { await deleteResource(client, user.id, resource, createdId); } catch { /* Preserve the original actionable error. */ }
+    }
     errorRedirect(locale, resource, error);
   }
-
   revalidatePath(resourcePath(locale, resource));
   redirectTo(resourcePath(locale, resource) + "?status=created");
 }
@@ -97,19 +89,13 @@ export async function updateResourceAction(formData: FormData) {
   const resourceId = String(formData.get("id") ?? "");
   const user = await requireUser(locale);
   const client = await createSupabaseServerClient();
-
   try {
-    await updateResource(
-      client,
-      user.id,
-      resource,
-      resourceId,
-      resourceInput(resource, formData)
-    );
+    const files = isMediaResource(resource) ? readImageFiles(formData) : [];
+    await updateResource(client, user.id, resource, resourceId, resourceInput(resource, formData));
+    if (isMediaResource(resource)) await uploadResourceMedia(client, user.id, resource, resourceId, files);
   } catch (error) {
     errorRedirect(locale, resource, error);
   }
-
   revalidatePath(resourcePath(locale, resource));
   redirectTo(resourcePath(locale, resource) + "?status=updated");
 }
@@ -120,13 +106,28 @@ export async function deleteResourceAction(formData: FormData) {
   const resourceId = String(formData.get("id") ?? "");
   const user = await requireUser(locale);
   const client = await createSupabaseServerClient();
-
   try {
-    await deleteResource(client, user.id, resource, resourceId);
+    await deleteResourceAndMedia(client, user.id, resource, resourceId);
   } catch (error) {
     errorRedirect(locale, resource, error);
   }
-
   revalidatePath(resourcePath(locale, resource));
   redirectTo(resourcePath(locale, resource) + "?status=deleted");
+}
+
+export async function removeMediaAction(formData: FormData) {
+  const locale = readLocale(formData);
+  const resource = readResource(formData);
+  if (!isMediaResource(resource)) errorRedirect(locale, resource, new MediaError("invalid_media", "Schedules do not have media."));
+  const resourceId = String(formData.get("id") ?? "");
+  const assetId = String(formData.get("assetId") ?? "");
+  const user = await requireUser(locale);
+  const client = await createSupabaseServerClient();
+  try {
+    await removeResourceMedia(client, user.id, resource, resourceId, assetId);
+  } catch (error) {
+    errorRedirect(locale, resource, error);
+  }
+  revalidatePath(resourcePath(locale, resource));
+  redirectTo(resourcePath(locale, resource) + "?status=updated");
 }

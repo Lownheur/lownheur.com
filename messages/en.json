@@ -178,7 +178,9 @@
       "save": "Save",
       "search": "Search",
       "searchPlaceholder": "Search by title…",
-      "next": "Next page"
+      "next": "Next page",
+      "confirmDelete": "Permanently delete this item and its related data?",
+      "confirmRemoveImage": "Delete this image?"
     },
     "fields": {
       "title": "Title",
@@ -187,13 +189,18 @@
       "target": "Event or goal",
       "startsAt": "Start",
       "endsAt": "End (optional)",
-      "status": "Status"
+      "status": "Status",
+      "images": "Images",
+      "imageHint": "JPEG, PNG, WebP or AVIF · 10 MB maximum per image."
     },
     "errors": {
       "invalid_input": "Check the information you entered.",
       "not_found": "This item no longer exists.",
       "conflict": "An identical item already exists.",
-      "database_error": "The change could not be saved."
+      "database_error": "The change could not be saved.",
+      "invalid_media": "Check the image format, size or count.",
+      "storage_quota": "Your storage quota has been reached.",
+      "media_failed": "The image operation could not be completed."
     },
     "status": {
       "created": "Item created.",
@@ -257,5 +264,38 @@
       "invalid_input": "This connection is invalid.",
       "revoke_failed": "The connection could not be revoked."
     }
+  },
+  "Settings": {
+    "eyebrow": "Account",
+    "title": "Settings",
+    "description": "Manage your Lownheur identity, language and data.",
+    "profileTitle": "Profile",
+    "profileDescription": "These details personalize your workspace.",
+    "fields": {
+      "displayName": "Display name",
+      "username": "Username",
+      "language": "Language",
+      "timezone": "Time zone",
+      "avatar": "Profile picture"
+    },
+    "save": "Save profile",
+    "updated": "Profile updated.",
+    "deleteTitle": "Delete account",
+    "deleteDescription": "This permanently deletes your account and all its data. It cannot be undone.",
+    "deleteConfirmation": "Type {word} to confirm.",
+    "deleteButton": "Delete permanently",
+    "errors": {
+      "invalid_input": "Check your profile information.",
+      "username_taken": "This username is already in use.",
+      "update_failed": "The profile could not be updated.",
+      "confirmation_failed": "The confirmation word does not match.",
+      "delete_failed": "The account could not be deleted.",
+      "invalid_media": "Check the image format or size.",
+      "storage_quota": "Your storage quota has been reached.",
+      "media_failed": "The image could not be saved."
+    },
+    "avatarAlt": "Profile picture",
+    "avatarHint": "JPEG, PNG, WebP or AVIF · 10 MB maximum.",
+    "removeAvatar": "Remove picture"
   }
 }

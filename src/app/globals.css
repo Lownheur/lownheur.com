@@ -2,6 +2,8 @@
 @import "../styles/auth.css";
 @import "../styles/dashboard.css";
 @import "../styles/mcp.css";
+@import "../styles/settings.css";
+@import "../styles/media.css";
 
 * {
   box-sizing: border-box;
