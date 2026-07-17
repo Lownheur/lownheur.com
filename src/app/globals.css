@@ -1,4 +1,6 @@
 @import "../styles/tokens.css";
+@import "../styles/auth.css";
+@import "../styles/dashboard.css";
 
 * {
   box-sizing: border-box;
