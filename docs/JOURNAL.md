@@ -24,3 +24,9 @@
 - Authentification Supabase SSR et pages FR/EN intégrées.
 - Migration V1 écrite avec isolation RLS, stockage privé et quotas atomiques; application locale en attente du moteur Docker.
 - CRUD web des quatre ressources relié à une couche métier partagée, avec lint, types, 6 tests et build de production verts.
+
+## 2026-07-17 — Serveur MCP et OAuth intégrés
+
+- Endpoint Streamable HTTP protégé par OAuth Supabase, consentement et révocation ajoutés.
+- 21 outils V1 branchés sur la couche métier partagée et le quota atomique.
+- 12 tests, chaîne verify, build production et smoke test protocolaire local verts; validation clients réels reportée à l’environnement déployé.

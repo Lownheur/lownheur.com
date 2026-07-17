@@ -57,22 +57,31 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 
 ## P4 — MCP
 
-- [ ] **V1-040 — Valider auth/transport sur les clients ciblés** — `À FAIRE`
-- [ ] **V1-041 — Implémenter serveur MCP et schémas d'outils** — `À FAIRE`
-- [ ] **V1-042 — Partager règles métier et erreurs avec le web** — `EN COURS`
+- [ ] **V1-040 — Valider auth/transport sur les clients ciblés** — `EN COURS`
+  - Acceptation : OAuth et transport validés de bout en bout sur ChatGPT, Claude et un client générique après déploiement.
+  - Preuve actuelle : découverte RFC 9728, défi Bearer, consentement et révocation implémentés; smoke test local 401/metadata/OPTIONS vert.
+- [x] **V1-041 — Implémenter serveur MCP et schémas d'outils** — `TERMINÉ`
+  - Preuve : endpoint Streamable HTTP et 21 outils V1 découverts par le client officiel SDK dans un test en mémoire.
+- [x] **V1-042 — Partager règles métier et erreurs avec le web** — `TERMINÉ`
   - Preuve actuelle : couche server/domain unique avec validation Zod, pagination curseur, erreurs stables et 4 tests unitaires; branchement MCP restant.
-- [ ] **V1-043 — Tester isolation, concurrence, pagination et compatibilité** — `À FAIRE`
+  - Preuve : dashboard et MCP appellent la même couche server/domain; validations, pagination, sérialisation sans user_id et erreurs stables testées.
+- [ ] **V1-043 — Tester isolation, concurrence, pagination et compatibilité** — `EN COURS`
+  - Acceptation : isolation à deux utilisateurs, concurrence, pagination et clients annoncés prouvés sur l’environnement connecté.
+  - Preuve actuelle : contrat SDK et sérialisation testés; tests Supabase réels et clients distants restants.
 
 ## P5 — Offres et facturation
 
-- [ ] **V1-050 — Implémenter comptage atomique et application des limites** — `À FAIRE`
+- [ ] **V1-050 — Implémenter comptage atomique et application des limites** — `EN COURS`
+  - Acceptation : quota mensuel atomique refusant tout dépassement sous concurrence.
+  - Preuve actuelle : chaque tools/call est compté avant validation via RPC service-role; test concurrent sur PostgreSQL réel restant.
 - [ ] **V1-051 — Implémenter Checkout, portail et webhooks idempotents** — `À FAIRE`
 - [ ] **V1-052 — Construire écrans offre et utilisation** — `À FAIRE`
 
 ## P6 — Acquisition et conformité
 
 - [ ] **V1-060 — Construire accueil responsive et pricing** — `À FAIRE`
-- [ ] **V1-061 — Publier guides de connexion vérifiés** — `À FAIRE`
+- [ ] **V1-061 — Publier guides de connexion vérifiés** — `EN COURS`
+  - Preuve actuelle : guides FR/EN intégrés pour ChatGPT, Claude et client générique; validation réelle de chaque parcours restante.
 - [ ] **V1-062 — Ajouter confidentialité, CGU, mentions et support** — `À FAIRE`
 
 ## P7 — Sortie
