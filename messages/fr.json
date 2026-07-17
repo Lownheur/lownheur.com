@@ -1,0 +1,57 @@
+{
+  "Navigation": {
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "connect": "Connecter le MCP",
+    "login": "Connexion",
+    "signup": "Commencer"
+  },
+  "Landing": {
+    "skip": "Aller au contenu",
+    "eyebrow": "Votre organisation, accessible à vos IA",
+    "title": "Passez de l'intention à l'action.",
+    "subtitle": "Lownheur réunit vos catégories, événements, objectifs et planifications. Gérez-les depuis un dashboard clair ou directement depuis votre IA grâce au MCP.",
+    "primaryCta": "Créer mon espace",
+    "secondaryCta": "Découvrir le produit",
+    "trust": "FR/EN · Clair/sombre · Données isolées",
+    "previewLabel": "Aperçu du dashboard Lownheur",
+    "featuresEyebrow": "Le cœur du produit",
+    "featuresTitle": "Une seule source de vérité",
+    "featuresSubtitle": "Ce que vous organisez visuellement reste immédiatement disponible pour les outils que vous autorisez.",
+    "features": {
+      "categories": {"title": "Catégories", "description": "Structurez chaque domaine de votre vie dans un espace clair et illustré."},
+      "events": {"title": "Événements", "description": "Conservez ce qui doit arriver avec le contexte nécessaire, sans surcharge."},
+      "goals": {"title": "Objectifs", "description": "Suivez vos intentions de l'idée initiale jusqu'au résultat atteint."},
+      "schedules": {"title": "Planifications", "description": "Placez un événement ou un objectif dans le temps et voyez la suite immédiatement."}
+    },
+    "pricingEyebrow": "Trois offres",
+    "pricingTitle": "Des limites claires, sans surprise",
+    "pricingSubtitle": "Commencez gratuitement. Passez à l'offre supérieure quand votre usage le justifie.",
+    "popular": "Le plus choisi",
+    "planFeatures": {
+      "dashboard": "Dashboard web complet",
+      "languages": "Français et anglais"
+    },
+    "mcpEyebrow": "Une interface pour les IA",
+    "mcpTitle": "Connectez votre IA en quelques minutes",
+    "mcpSubtitle": "Un endpoint MCP distant, des outils compacts et les mêmes permissions que dans votre dashboard.",
+    "clients": {
+      "chatgpt": "Connectez Lownheur puis gérez votre organisation directement dans une conversation.",
+      "claude": "Ajoutez le serveur distant à vos intégrations compatibles et gardez le contrôle.",
+      "mcp": "Utilisez tout client MCP compatible avec une authentification liée à votre compte."
+    },
+    "ctaTitle": "Votre prochaine action mérite un espace à sa hauteur."
+  },
+  "Common": {
+    "language": "Langue",
+    "theme": "Thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "monthly": "mois",
+    "storage": "de stockage",
+    "calls": "appels MCP",
+    "current": "Offre actuelle",
+    "choose": "Choisir",
+    "free": "Commencer avec"
+  }
+}

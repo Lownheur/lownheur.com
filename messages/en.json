@@ -1,0 +1,57 @@
+{
+  "Navigation": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "connect": "Connect MCP",
+    "login": "Log in",
+    "signup": "Get started"
+  },
+  "Landing": {
+    "skip": "Skip to content",
+    "eyebrow": "Your organization, available to your AIs",
+    "title": "Turn intention into action.",
+    "subtitle": "Lownheur brings your categories, events, goals and schedules together. Manage them from a clear dashboard or directly from your AI through MCP.",
+    "primaryCta": "Create my workspace",
+    "secondaryCta": "Explore the product",
+    "trust": "FR/EN · Light/dark · Isolated data",
+    "previewLabel": "Lownheur dashboard preview",
+    "featuresEyebrow": "The product core",
+    "featuresTitle": "One source of truth",
+    "featuresSubtitle": "What you organize visually is immediately available to the tools you authorize.",
+    "features": {
+      "categories": {"title": "Categories", "description": "Structure every area of your life in a clear, illustrated space."},
+      "events": {"title": "Events", "description": "Keep what needs to happen with the right context and no clutter."},
+      "goals": {"title": "Goals", "description": "Track your intentions from the first idea to the achieved result."},
+      "schedules": {"title": "Schedules", "description": "Place an event or goal in time and see what comes next immediately."}
+    },
+    "pricingEyebrow": "Three plans",
+    "pricingTitle": "Clear limits, no surprises",
+    "pricingSubtitle": "Start for free. Upgrade when your usage makes it worthwhile.",
+    "popular": "Most popular",
+    "planFeatures": {
+      "dashboard": "Complete web dashboard",
+      "languages": "French and English"
+    },
+    "mcpEyebrow": "An interface for AIs",
+    "mcpTitle": "Connect your AI in minutes",
+    "mcpSubtitle": "A remote MCP endpoint, compact tools and the same permissions as your dashboard.",
+    "clients": {
+      "chatgpt": "Connect Lownheur and manage your organization directly in a conversation.",
+      "claude": "Add the remote server to compatible integrations and keep control.",
+      "mcp": "Use any compatible MCP client with authentication tied to your account."
+    },
+    "ctaTitle": "Your next action deserves a space built for it."
+  },
+  "Common": {
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "monthly": "month",
+    "storage": "storage",
+    "calls": "MCP calls",
+    "current": "Current plan",
+    "choose": "Choose",
+    "free": "Start with"
+  }
+}

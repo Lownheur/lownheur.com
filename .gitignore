@@ -1,0 +1,21 @@
+# Dependencies and builds
+node_modules/
+.next/
+out/
+coverage/
+playwright-report/
+test-results/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+*.log
+.vercel/
+
+# TypeScript incremental cache
+*.tsbuildinfo

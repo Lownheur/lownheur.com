@@ -15,9 +15,12 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 
 ## P1 — Fondation
 
-- [ ] **V1-010 — Initialiser l'application et les contrôles CI** — `À FAIRE`
-- [ ] **V1-011 — Construire tokens, thèmes et composants globaux** — `À FAIRE`
-- [ ] **V1-012 — Mettre en place i18n FR/EN** — `À FAIRE`
+- [x] **V1-010 — Initialiser l'application et les contrôles CI** — `TERMINÉ`
+  - Preuve : dépendances épinglées, lockfile, CI GitHub Actions, lint, types, tests et build de production verts.
+- [x] **V1-011 — Construire tokens, thèmes et composants globaux** — `TERMINÉ`
+  - Preuve : tokens sémantiques, thèmes clair/sombre sans flash et composants globaux responsive.
+- [x] **V1-012 — Mettre en place i18n FR/EN** — `TERMINÉ`
+  - Preuve : routes FR/EN, catalogues typés et changement de langue via next-intl.
 - [ ] **V1-013 — Configurer environnements, logs et suivi d'erreurs** — `À FAIRE`
 
 ## P2 — Identité et données

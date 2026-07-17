@@ -12,3 +12,9 @@
 
 - Interface locale créée pour parcourir et rechercher toutes les sources Markdown.
 - Générateur reproductible ajouté; les futures modifications `.md` doivent déclencher sa régénération.
+
+## 2026-07-17 — Fondation applicative validée
+
+- Next.js 16, React 19, TypeScript strict, Supabase SSR, Stripe, MCP SDK et next-intl installés avec versions épinglées.
+- Page d'accueil FR/EN et thèmes clair/sombre créés.
+- Lint, types, tests et build de production validés; contrôle visuel navigateur reporté au lot E2E car le navigateur intégré est indisponible.
