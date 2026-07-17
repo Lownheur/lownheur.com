@@ -4,8 +4,9 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 
 ## P0 — Spécification
 
-- [ ] **V1-001 — Approuver le contrat V1** — `EN COURS`
+- [x] **V1-001 — Approuver le contrat V1** — `TERMINÉ`
   - Acceptation : les cinq décisions de `docs/versions/V1.md` sont tranchées et le statut devient `APPROUVÉE`.
+  - Preuve : demande explicite du propriétaire de réaliser la V1 complète le 2026-07-17.
 - [ ] **V1-002 — Approuver architecture et modèle de données** — `À FAIRE`
   - Acceptation : stack, hébergement, auth MCP et schéma sont cohérents avec le contrat approuvé.
 - [x] **V1-003 — Créer le dashboard documentaire humain** — `TERMINÉ`
