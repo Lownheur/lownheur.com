@@ -1,6 +1,8 @@
 # Dependencies and builds
 node_modules/
 .next/
+.open-next/
+dist/
 out/
 coverage/
 playwright-report/

@@ -39,6 +39,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 export default withNextIntl({
+  output: "standalone",
   poweredByHeader: false,
   reactStrictMode: true,
   typedRoutes: true,
