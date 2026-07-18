@@ -53,9 +53,12 @@ function resourcePath(locale: AppLocale, resource: ResourceName) {
   return "/" + locale + "/dashboard/" + resource;
 }
 
-function errorRedirect(locale: AppLocale, resource: ResourceName, error: unknown): never {
+function errorRedirect(locale: AppLocale, resource: ResourceName, error: unknown, dialog?: "create" | "edit", id?: string): never {
   const code = error instanceof DomainError || error instanceof MediaError ? error.code : "database_error";
-  redirectTo(resourcePath(locale, resource) + "?error=" + code);
+  const query = new URLSearchParams({ error: code });
+  if (dialog) query.set("dialog", dialog);
+  if (id) query.set("id", id);
+  redirectTo(resourcePath(locale, resource) + "?" + query.toString());
 }
 
 function isMediaResource(resource: ResourceName): resource is MediaResource {
@@ -77,7 +80,7 @@ export async function createResourceAction(formData: FormData) {
     if (createdId) {
       try { await deleteResource(client, user.id, resource, createdId); } catch { /* Preserve the original actionable error. */ }
     }
-    errorRedirect(locale, resource, error);
+    errorRedirect(locale, resource, error, "create");
   }
   revalidatePath(resourcePath(locale, resource));
   redirectTo(resourcePath(locale, resource) + "?status=created");
@@ -94,7 +97,7 @@ export async function updateResourceAction(formData: FormData) {
     await updateResource(client, user.id, resource, resourceId, resourceInput(resource, formData));
     if (isMediaResource(resource)) await uploadResourceMedia(client, user.id, resource, resourceId, files);
   } catch (error) {
-    errorRedirect(locale, resource, error);
+    errorRedirect(locale, resource, error, "edit", resourceId);
   }
   revalidatePath(resourcePath(locale, resource));
   redirectTo(resourcePath(locale, resource) + "?status=updated");
@@ -126,7 +129,7 @@ export async function removeMediaAction(formData: FormData) {
   try {
     await removeResourceMedia(client, user.id, resource, resourceId, assetId);
   } catch (error) {
-    errorRedirect(locale, resource, error);
+    errorRedirect(locale, resource, error, "edit", resourceId);
   }
   revalidatePath(resourcePath(locale, resource));
   redirectTo(resourcePath(locale, resource) + "?status=updated");

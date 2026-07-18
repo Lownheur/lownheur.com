@@ -16,7 +16,7 @@ export default async function ResourcePage({
   searchParams
 }: {
   params: Promise<{ locale: AppLocale; resource: string }>;
-  searchParams: Promise<{ cursor?: string; search?: string; status?: string; error?: string }>;
+  searchParams: Promise<{ cursor?: string; search?: string; status?: string; error?: string; dialog?: string; id?: string }>;
 }) {
   const [{ locale, resource }, query] = await Promise.all([params, searchParams]);
   if (!isResource(resource)) notFound();
@@ -36,6 +36,21 @@ export default async function ResourcePage({
 
   return <div className="dashboard-page">
     <header className="dashboard-heading"><div><span className="eyebrow">{t("resources.eyebrow")}</span><h1>{t("resources." + resource + ".title")}</h1></div><p>{t("resources." + resource + ".description")}</p></header>
-    <ResourceManager locale={locale} resource={resource} page={page} search={query.search} categories={categories.data ?? []} events={events.data ?? []} goals={goals.data ?? []} media={media} status={query.status} error={query.error} />
+    <ResourceManager
+      locale={locale}
+      resource={resource}
+      page={page}
+      search={query.search}
+      categories={categories.data ?? []}
+      events={events.data ?? []}
+      goals={goals.data ?? []}
+      media={media}
+      status={query.status}
+      error={query.error}
+      dialog={{
+        type: query.dialog === "create" || query.dialog === "edit" ? query.dialog : undefined,
+        id: query.id
+      }}
+    />
   </div>;
 }

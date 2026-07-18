@@ -153,35 +153,55 @@
       "eyebrow": "Organisation",
       "categories": {
         "title": "Catégories",
+        "singular": "catégorie",
         "description": "Structurez les domaines qui comptent pour vous.",
-        "empty": "Aucune catégorie pour le moment."
+        "empty": "Aucune catégorie pour le moment.",
+        "emptyHint": "Ajoutez votre première catégorie pour commencer à organiser votre espace."
       },
       "events": {
         "title": "Événements",
+        "singular": "événement",
         "description": "Conservez chaque événement avec son contexte.",
-        "empty": "Aucun événement pour le moment."
+        "empty": "Aucun événement pour le moment.",
+        "emptyHint": "Ajoutez un événement et associez-le à une catégorie."
       },
       "goals": {
         "title": "Objectifs",
+        "singular": "objectif",
         "description": "Suivez vos objectifs jusqu’au résultat.",
-        "empty": "Aucun objectif pour le moment."
+        "empty": "Aucun objectif pour le moment.",
+        "emptyHint": "Ajoutez un objectif pour suivre votre prochaine réussite."
       },
       "schedules": {
         "title": "Planifications",
+        "singular": "planification",
         "description": "Placez vos événements et objectifs dans le temps.",
-        "empty": "Aucune planification pour le moment."
+        "empty": "Aucune planification pour le moment.",
+        "emptyHint": "Planifiez un événement ou un objectif pour le retrouver ici."
       }
     },
     "actions": {
+      "add": "Ajouter",
       "create": "Créer",
       "edit": "Modifier",
       "delete": "Supprimer",
       "save": "Enregistrer",
+      "cancel": "Annuler",
+      "close": "Fermer",
       "search": "Rechercher",
       "searchPlaceholder": "Rechercher par titre…",
       "next": "Page suivante",
       "confirmDelete": "Supprimer définitivement cet élément et ses données associées ?",
       "confirmRemoveImage": "Supprimer cette image ?"
+    },
+    "dialogs": {
+      "createTitle": "Ajouter — {resource}",
+      "createDescription": "Renseignez les informations utiles. Vous pourrez les modifier à tout moment.",
+      "editTitle": "Modifier — {resource}",
+      "editDescription": "Mettez à jour les informations et les images de cet élément.",
+      "deleteTitle": "Supprimer « {name} » ?",
+      "deleteDescription": "Cette action demande une confirmation.",
+      "deleteWarning": "Cet élément et ses données associées seront supprimés définitivement."
     },
     "fields": {
       "title": "Titre",

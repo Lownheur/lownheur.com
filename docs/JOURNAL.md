@@ -43,3 +43,9 @@
 - Compte gratuit réel créé; accueil, inscription et connexion répondent en HTTP 200.
 - Stripe, offre/usage, pages légales, santé, sécurité, réconciliation et E2E desktop/mobile intégrés.
 - Publication encore conditionnée aux secrets serveur, à Stripe, aux informations légales, au déploiement et à la recette MCP.
+
+## 2026-07-18 — Refonte du dashboard de ressources
+
+- Les formulaires permanents ont été remplacés par des modales accessibles et responsive pour les quatre ressources V1.
+- Chaque carte possède une zone visuelle avec image privée ou illustration SVG dédiée; les planifications héritent du visuel de leur cible.
+- Le parcours complet et les modales ont été validés sur Supabase réel en desktop/mobile avec audit Axe WCAG A/AA.

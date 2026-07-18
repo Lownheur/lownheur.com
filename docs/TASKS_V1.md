@@ -12,7 +12,7 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
   - Preuve : architecture monolithique modulaire, schéma PostgreSQL versionné, choix OAuth Supabase et règles métier partagées consignés.
 - [x] **V1-003 — Créer le dashboard documentaire humain** — `TERMINÉ`
   - Acceptation : tous les Markdown du dépôt sont consultables et recherchables dans une interface locale responsive, avec génération reproductible.
-  - Preuve : génération de 10 documents, validation syntaxique automatique du JavaScript client et contrôle responsive prévu dans les styles.
+  - Preuve : génération de 12 documents, validation syntaxique automatique du JavaScript client et interface responsive.
 
 ## P1 — Fondation
 
@@ -42,21 +42,21 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 
 ## P3 — Dashboard
 
-- [ ] **V1-030 — Construire shell, sidebar et vue d'ensemble** — `EN COURS`
+- [x] **V1-030 — Construire shell, sidebar et vue d'ensemble** — `TERMINÉ`
   - Acceptation : shell responsive, sidebar et vue d’ensemble fonctionnent avec des données réelles.
-  - Preuve actuelle : types, lint, 6 tests et build de production verts; recette connectée restante.
-- [ ] **V1-031 — CRUD catégories** — `EN COURS`
+  - Preuve : shell, sidebar, compteurs et vue d’ensemble validés avec des données Supabase réelles sur Chromium desktop et mobile.
+- [x] **V1-031 — CRUD catégories** — `TERMINÉ`
   - Acceptation : CRUD catégories et recherche vérifiés avec RLS.
-  - Preuve actuelle : interface, cas d’usage partagés, image privée et confirmation de suppression implémentés; test d’intégration restant.
+  - Preuve : création, modification et suppression en modales validées sur Supabase réel en desktop/mobile; recherche et RLS vérifiées.
 - [ ] **V1-032 — CRUD événements et médias** — `EN COURS`
   - Acceptation : CRUD événements et médias privés vérifiés.
-  - Preuve actuelle : CRUD, galerie privée multi-images, quota, retrait et nettoyage en cascade implémentés; test d’intégration restant.
+  - Preuve actuelle : CRUD événement validé sur Supabase réel en desktop/mobile, galerie privée multi-images, quota, retrait et nettoyage en cascade implémentés; upload avec clé serveur réelle restant.
 - [ ] **V1-033 — CRUD objectifs et médias** — `EN COURS`
   - Acceptation : CRUD objectifs, statuts et médias privés vérifiés.
-  - Preuve actuelle : CRUD, statuts, galerie privée multi-images, quota, retrait et nettoyage en cascade implémentés; test d’intégration restant.
-- [ ] **V1-034 — CRUD planifications et agenda à venir** — `EN COURS`
+  - Preuve actuelle : CRUD et statut objectif validés sur Supabase réel en desktop/mobile, galerie privée multi-images, quota, retrait et nettoyage en cascade implémentés; upload avec clé serveur réelle restant.
+- [x] **V1-034 — CRUD planifications et agenda à venir** — `TERMINÉ`
   - Acceptation : planifications UTC et agenda à venir vérifiés.
-  - Preuve actuelle : formulaires horaires locaux convertis en UTC, CRUD et agenda implémentés; test d’intégration restant.
+  - Preuve : création et suppression d’une planification UTC, compteurs et agenda validés sur Supabase réel en desktop/mobile; la carte reprend l’image de sa cible ou une illustration SVG.
 
 ## P4 — MCP
 
@@ -70,13 +70,13 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
   - Preuve : dashboard et MCP appellent la même couche server/domain; validations, pagination, sérialisation sans user_id et erreurs stables testées.
 - [ ] **V1-043 — Tester isolation, concurrence, pagination et compatibilité** — `EN COURS`
   - Acceptation : isolation à deux utilisateurs, concurrence, pagination et clients annoncés prouvés sur l’environnement connecté.
-  - Preuve actuelle : contrat SDK et sérialisation testés; tests Supabase réels et clients distants restants.
+  - Preuve actuelle : isolation RLS réelle à deux utilisateurs et concurrence réelle des quotas validées; pagination distante et clients MCP annoncés restent à prouver.
 
 ## P5 — Offres et facturation
 
-- [ ] **V1-050 — Implémenter comptage atomique et application des limites** — `EN COURS`
+- [x] **V1-050 — Implémenter comptage atomique et application des limites** — `TERMINÉ`
   - Acceptation : quota mensuel atomique refusant tout dépassement sous concurrence.
-  - Preuve : RPC atomiques appliquées au PostgreSQL réel et droits payants limités aux statuts active/trialing; épreuve multi-session concurrente restante.
+  - Preuve : 20 sessions PostgreSQL concurrentes au seuil gratuit ont produit exactement 10 acceptations puis 10 refus pour le MCP et le stockage, sans dépasser 1 000 appels ni 100 000 000 octets; droits payants limités à active/trialing.
 - [ ] **V1-051 — Implémenter Checkout, portail et webhooks idempotents** — `EN COURS`
   - Preuve : Checkout, portail, quatre événements webhook signés, journal idempotent, synchronisation convergente et résiliation avant suppression implémentés; clés Stripe et recette test/live restantes.
 - [x] **V1-052 — Construire écrans offre et utilisation** — `TERMINÉ`
@@ -94,11 +94,10 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 ## P7 — Sortie
 
 - [ ] **V1-070 — Finaliser tests E2E, accessibilité et sécurité** — `EN COURS`
-  - Preuve : 18 tests unitaires et 4 E2E publics desktop/mobile verts, CSP et en-têtes de sécurité ajoutés; E2E authentifié, audit accessibilité complet, clients MCP réels et protection Supabase contre les mots de passe divulgués restent à valider.
+  - Preuve : 18 tests unitaires et 8 E2E desktop/mobile verts, dont parcours authentifié complet et audits Axe WCAG A/AA des pages publiques, du dashboard et d’une modale; clients MCP réels et protection Supabase contre les mots de passe divulgués restent à valider.
 - [ ] **V1-071 — Prouver sauvegarde, restauration, monitoring et rollback** — `EN COURS`
   - Preuve : réconciliation stockage testée sur la base réelle, synchronisation Stripe et cron quotidien Vercel configurés, runbook écrit; export Storage et restauration complète restent à prouver.
 - [ ] **V1-072 — Déployer la release candidate et effectuer la recette** — `À FAIRE`
 - [ ] **V1-073 — Publier V1 et réaliser le smoke test production** — `À FAIRE`
 
 Les critères détaillés de chaque tâche seront écrits juste avant son démarrage, à partir du contrat approuvé, pour rester précis sans produire une documentation prématurée.
-

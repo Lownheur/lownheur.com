@@ -29,10 +29,11 @@ Les changements sont regroupés par version selon Keep a Changelog, sans recopie
 - Pages Confidentialité, CGU, Mentions légales et Support en français et anglais.
 - Healthcheck, logs structurés, réconciliation quotidienne, en-têtes de sécurité, robots et sitemap.
 - Parcours E2E publics desktop/mobile et parcours authentifié activable par compte de test.
+- Refonte des pages Catégories, Événements, Objectifs et Planifications : listes centrées sur le contenu, ajout/modification/suppression en modales accessibles et illustrations SVG quand aucune image n’est disponible.
+- Les cartes de planification reprennent l’image de l’événement ou de l’objectif associé lorsqu’elle existe.
 
 ### Documentation
 
 - Création du contrat, de l'architecture proposée, du workflow et du plan de réalisation de la V1.
 - Ajout du dashboard documentaire humain autonome, recherchable et responsive.
 - Ajout du guide propriétaire et du runbook sauvegarde, restauration, monitoring et rollback.
-

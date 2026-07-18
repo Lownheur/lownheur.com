@@ -195,9 +195,61 @@ export async function removeResourceMedia(client: SupabaseClient, userId: string
   await removeAssets(client, userId, [asset]);
 }
 
+async function getScheduleMediaMap(client: SupabaseClient, userId: string, items: ResourceRecord[]) {
+  const result: Record<string, MediaView[]> = {};
+  const schedulesByTarget = new Map<string, string[]>();
+  for (const item of items) {
+    const target = typeof item.event_id === "string"
+      ? "event:" + item.event_id
+      : typeof item.goal_id === "string"
+        ? "goal:" + item.goal_id
+        : null;
+    if (target) {
+      const scheduleIds = schedulesByTarget.get(target) ?? [];
+      scheduleIds.push(item.id);
+      schedulesByTarget.set(target, scheduleIds);
+    }
+  }
+
+  const eventIds = [...schedulesByTarget.keys()].filter((key) => key.startsWith("event:")).map((key) => key.slice(6));
+  const goalIds = [...schedulesByTarget.keys()].filter((key) => key.startsWith("goal:")).map((key) => key.slice(5));
+  const [{ data: eventLinks }, { data: goalLinks }] = await Promise.all([
+    eventIds.length
+      ? client.from("event_media").select("event_id,asset_id,position").eq("user_id", userId).in("event_id", eventIds).order("position")
+      : Promise.resolve({ data: [] }),
+    goalIds.length
+      ? client.from("goal_media").select("goal_id,asset_id,position").eq("user_id", userId).in("goal_id", goalIds).order("position")
+      : Promise.resolve({ data: [] })
+  ]);
+
+  const assetByTarget = new Map<string, string>();
+  for (const link of eventLinks ?? []) if (!assetByTarget.has("event:" + link.event_id)) assetByTarget.set("event:" + link.event_id, String(link.asset_id));
+  for (const link of goalLinks ?? []) if (!assetByTarget.has("goal:" + link.goal_id)) assetByTarget.set("goal:" + link.goal_id, String(link.asset_id));
+  const assetIds = [...new Set(assetByTarget.values())];
+  if (!assetIds.length) return result;
+
+  const { data: assets } = await client.from("media_assets").select("id,storage_path,alt_text").eq("user_id", userId).in("id", assetIds);
+  const assetsById = new Map((assets ?? []).map((asset) => [String(asset.id), asset]));
+  const paths = [...new Set((assets ?? []).map((asset) => String(asset.storage_path)))];
+  const { data: signed } = await client.storage.from(BUCKET).createSignedUrls(paths, 600);
+  const urlByPath = new Map((signed ?? []).filter((entry) => entry.path && entry.signedUrl).map((entry) => [String(entry.path), String(entry.signedUrl)]));
+
+  for (const [target, assetId] of assetByTarget) {
+    const asset = assetsById.get(assetId);
+    if (!asset) continue;
+    const url = urlByPath.get(String(asset.storage_path));
+    if (!url) continue;
+    for (const scheduleId of schedulesByTarget.get(target) ?? []) {
+      result[scheduleId] = [{ id: assetId, url, alt: String(asset.alt_text ?? "") }];
+    }
+  }
+  return result;
+}
+
 export async function getResourceMediaMap(client: SupabaseClient, userId: string, resource: ResourceName, items: ResourceRecord[]) {
   const result: Record<string, MediaView[]> = {};
-  if (!items.length || resource === "schedules") return result;
+  if (!items.length) return result;
+  if (resource === "schedules") return getScheduleMediaMap(client, userId, items);
   const ownership = new Map<string, string>();
   const pathsById = new Map<string, { path: string; alt: string }>();
   if (resource === "categories") {

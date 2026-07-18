@@ -153,35 +153,55 @@
       "eyebrow": "Organization",
       "categories": {
         "title": "Categories",
+        "singular": "category",
         "description": "Structure the areas that matter to you.",
-        "empty": "No categories yet."
+        "empty": "No categories yet.",
+        "emptyHint": "Add your first category to start organizing your workspace."
       },
       "events": {
         "title": "Events",
+        "singular": "event",
         "description": "Keep each event with the context it needs.",
-        "empty": "No events yet."
+        "empty": "No events yet.",
+        "emptyHint": "Add an event and link it to a category."
       },
       "goals": {
         "title": "Goals",
+        "singular": "goal",
         "description": "Track your goals through to the result.",
-        "empty": "No goals yet."
+        "empty": "No goals yet.",
+        "emptyHint": "Add a goal to track your next achievement."
       },
       "schedules": {
         "title": "Schedules",
+        "singular": "schedule",
         "description": "Place your events and goals in time.",
-        "empty": "No schedules yet."
+        "empty": "No schedules yet.",
+        "emptyHint": "Schedule an event or goal to see it here."
       }
     },
     "actions": {
+      "add": "Add",
       "create": "Create",
       "edit": "Edit",
       "delete": "Delete",
       "save": "Save",
+      "cancel": "Cancel",
+      "close": "Close",
       "search": "Search",
       "searchPlaceholder": "Search by title…",
       "next": "Next page",
       "confirmDelete": "Permanently delete this item and its related data?",
       "confirmRemoveImage": "Delete this image?"
+    },
+    "dialogs": {
+      "createTitle": "Add {resource}",
+      "createDescription": "Enter the useful details. You can change them at any time.",
+      "editTitle": "Edit {resource}",
+      "editDescription": "Update this item's information and images.",
+      "deleteTitle": "Delete “{name}”?",
+      "deleteDescription": "This action requires confirmation.",
+      "deleteWarning": "This item and its related data will be permanently deleted."
     },
     "fields": {
       "title": "Title",

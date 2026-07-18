@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
 test("landing, theme, locale and legal navigation", async ({ page }) => {
   await page.goto("/fr");
@@ -45,4 +46,24 @@ test("signup form exposes accessible required fields", async ({ page }) => {
   await expect(
     page.getByRole("button", { name: "Cr\u00e9er mon compte" })
   ).toBeVisible();
+});
+
+test("critical public pages have no automated WCAG A or AA violations", async ({
+  page
+}) => {
+  for (const path of ["/fr", "/fr/login", "/fr/signup", "/fr/privacy"]) {
+    await page.goto(path);
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+
+    expect(
+      results.violations.map(({ id, impact, nodes }) => ({
+        id,
+        impact,
+        targets: nodes.map((node) => node.target)
+      })),
+      path
+    ).toEqual([]);
+  }
 });
