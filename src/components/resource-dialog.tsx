@@ -49,7 +49,12 @@ export function ResourceDialog({
 
   return (
     <>
-      <button className={triggerClassName} type="button" onClick={() => dialogRef.current?.showModal()}>
+      <button
+        className={triggerClassName}
+        type="button"
+        aria-label={triggerLabel}
+        onClick={() => dialogRef.current?.showModal()}
+      >
         <DialogButtonIcon icon={icon} />
         <span>{triggerLabel}</span>
       </button>

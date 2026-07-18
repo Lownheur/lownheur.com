@@ -32,6 +32,10 @@ Les changements sont regroupés par version selon Keep a Changelog, sans recopie
 - Refonte des pages Catégories, Événements, Objectifs et Planifications : listes centrées sur le contenu, ajout/modification/suppression en modales accessibles et illustrations SVG quand aucune image n’est disponible.
 - Les cartes de planification reprennent l’image de l’événement ou de l’objectif associé lorsqu’elle existe.
 - Configuration d'une bêta technique Sites publique pour tester le compte gratuit et le MCP distant avant Stripe et le déploiement commercial.
+- Dashboard mobile densifié : suppression du second en-tête, langue et thème regroupés avec le logo, cartes en deux colonnes dès 360 px et recherche compacte.
+- Navigation du dashboard simplifiée : Connexions IA et Usage et offre sont désormais regroupés dans Paramètres.
+- Expérience mobile restructurée avec navigation fixe à icônes, en-tête compact, ajout sur une ligne et grille adaptative de deux à trois colonnes.
+- Accueil du dashboard et Paramètres densifiés sur mobile : statistiques compactes, raccourcis côte à côte, profil en deux colonnes et suppression du compte repliable.
 
 ### Documentation
 

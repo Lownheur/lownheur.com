@@ -57,8 +57,18 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 - [x] **V1-034 — CRUD planifications et agenda à venir** — `TERMINÉ`
   - Acceptation : planifications UTC et agenda à venir vérifiés.
   - Preuve : création et suppression d’une planification UTC, compteurs et agenda validés sur Supabase réel en desktop/mobile; la carte reprend l’image de sa cible ou une illustration SVG.
-- [ ] **V1-035 — Densifier le dashboard mobile** — `EN COURS`
+- [x] **V1-035 — Densifier le dashboard mobile** — `TERMINÉ`
   - Acceptation : un seul en-tête reste visible, les contrôles langue/thème demeurent accessibles et les ressources s’affichent sur deux colonnes dès 360 px sans texte illisible ni débordement.
+  - Preuve : contrôle Chromium à 360 × 800 px; aucune seconde topbar, grille mesurée à deux colonnes de 153 px, aucun débordement horizontal, cartes ramenées à 220 px et barre d’outils à 109 px; lint, types et 18 tests unitaires verts.
+- [x] **V1-036 — Simplifier la navigation du dashboard** — `TERMINÉ`
+  - Acceptation : les entrées Connexions IA et Usage et offre quittent la navigation principale et restent clairement accessibles depuis Paramètres en français et en anglais.
+  - Preuve : navigation réduite de huit à six liens; deux raccourcis bilingues ajoutés dans Paramètres; lint, types, 18 tests et build de production verts.
+- [x] **V1-037 — Repenser l’expérience mobile du dashboard** — `TERMINÉ`
+  - Acceptation : aucune barre de défilement de navigation n’est visible, les destinations restent accessibles, l’ajout et la recherche tiennent sur une ligne et les cartes commencent dans la première moitié de l’écran dès 360 px.
+  - Preuve : contrôles Chromium à 360 × 800 et 567 × 700 px; navigation fixe en bas, aucun débordement horizontal, cartes à 200 px du haut, deux colonnes à 360 px et trois à 567 px; lint, types, 18 tests et build de production verts.
+- [x] **V1-038 — Densifier l’accueil du dashboard et Paramètres sur mobile** — `TERMINÉ`
+  - Acceptation : les statistiques et raccourcis sont visibles sans longue succession de cartes, le profil utilise efficacement la largeur et la suppression du compte reste accessible sans dominer la page.
+  - Preuve : à 360 × 800 px, statistiques ramenées de 268 à 182 px, panneau À venir terminé à 521 px, raccourcis Paramètres ramenés de 296 à 62 px et profil complet terminé à 590 px; zone de suppression repliable validée; lint, types, 18 tests et build Next.js verts.
 
 ## P4 — MCP
 

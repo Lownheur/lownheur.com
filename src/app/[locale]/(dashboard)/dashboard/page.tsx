@@ -27,8 +27,8 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
   const counts = [categories?.length ?? 0, events?.length ?? 0, goals?.length ?? 0, schedules?.length ?? 0];
 
   return (
-    <div className="dashboard-page">
-      <header className="dashboard-heading">
+    <div className="dashboard-page dashboard-overview-page">
+      <header className="dashboard-heading dashboard-overview-heading">
         <div><span className="eyebrow">{t("overview.eyebrow")}</span><h1>{t("overview.title")}</h1></div>
         <p>{t("overview.description")}</p>
       </header>

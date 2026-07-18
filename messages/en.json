@@ -130,6 +130,14 @@
       "usage": "Usage and plan",
       "settings": "Settings"
     },
+    "navShort": {
+      "overview": "Home",
+      "schedules": "Schedule",
+      "categories": "Groups",
+      "events": "Events",
+      "goals": "Goals",
+      "settings": "Settings"
+    },
     "overview": {
       "eyebrow": "Today",
       "title": "Your organization at a glance",
@@ -290,6 +298,12 @@
     "eyebrow": "Account",
     "title": "Settings",
     "description": "Manage your Lownheur identity, language and data.",
+    "hubTitle": "Services and plan",
+    "hubDescription": "Find the less frequent workspace settings here.",
+    "connectionsTitle": "AI connections",
+    "connectionsDescription": "Connect and revoke clients that use the Lownheur MCP.",
+    "usageTitle": "Usage and plan",
+    "usageDescription": "Review your quotas, storage and subscription.",
     "profileTitle": "Profile",
     "profileDescription": "These details personalize your workspace.",
     "fields": {

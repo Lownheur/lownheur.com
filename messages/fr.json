@@ -130,6 +130,14 @@
       "usage": "Usage et offre",
       "settings": "Paramètres"
     },
+    "navShort": {
+      "overview": "Accueil",
+      "schedules": "Agenda",
+      "categories": "Catég.",
+      "events": "Évén.",
+      "goals": "Objectifs",
+      "settings": "Réglages"
+    },
     "overview": {
       "eyebrow": "Aujourd’hui",
       "title": "Votre organisation en un regard",
@@ -290,6 +298,12 @@
     "eyebrow": "Compte",
     "title": "Paramètres",
     "description": "Gérez votre identité Lownheur, votre langue et vos données.",
+    "hubTitle": "Services et offre",
+    "hubDescription": "Retrouvez ici les réglages moins fréquents de votre espace.",
+    "connectionsTitle": "Connexions IA",
+    "connectionsDescription": "Connectez et révoquez les clients qui utilisent le MCP Lownheur.",
+    "usageTitle": "Usage et offre",
+    "usageDescription": "Consultez vos quotas, votre stockage et votre abonnement.",
     "profileTitle": "Profil",
     "profileDescription": "Ces informations servent à personnaliser votre espace.",
     "fields": {
