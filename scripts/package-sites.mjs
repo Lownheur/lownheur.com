@@ -19,7 +19,11 @@ await cp(resolve(openNextDirectory, "assets"), clientDirectory, {
 });
 await writeFile(
   resolve(serverDirectory, "index.js"),
-  'export { default } from "./.open-next/worker.js";\n',
+  `import { createRequire } from "node:module";
+globalThis.require ??= createRequire(import.meta.url);
+const { default: worker } = await import("./.open-next/worker.js");
+export default worker;
+`,
   "utf8"
 );
 await copyFile(
