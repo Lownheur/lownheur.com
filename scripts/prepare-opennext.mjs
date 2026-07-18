@@ -61,3 +61,27 @@ Object.defineProperties(exports, {
 });
 `
 );
+
+const consoleDimPath = resolve(
+  root,
+  ".next",
+  "standalone",
+  "node_modules",
+  "next",
+  "dist",
+  "server",
+  "node-environment-extensions",
+  "console-dim.external.js"
+);
+
+await writeFile(
+  consoleDimPath,
+  `"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+function setAbortedLogsStyle() {}
+Object.defineProperty(exports, "setAbortedLogsStyle", {
+  enumerable: true,
+  get: () => setAbortedLogsStyle
+});
+`
+);
