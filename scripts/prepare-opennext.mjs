@@ -85,3 +85,57 @@ Object.defineProperty(exports, "setAbortedLogsStyle", {
 });
 `
 );
+
+const nodeCryptoPath = resolve(
+  root,
+  ".next",
+  "standalone",
+  "node_modules",
+  "next",
+  "dist",
+  "server",
+  "node-environment-extensions",
+  "node-crypto.js"
+);
+
+await writeFile(
+  nodeCryptoPath,
+  `"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+`
+);
+
+const fastSetImmediatePath = resolve(
+  root,
+  ".next",
+  "standalone",
+  "node_modules",
+  "next",
+  "dist",
+  "server",
+  "node-environment-extensions",
+  "fast-set-immediate.external.js"
+);
+
+await writeFile(
+  fastSetImmediatePath,
+  `"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+function DANGEROUSLY_runPendingImmediatesAfterCurrentTask() {}
+function expectNoPendingImmediates() {}
+Object.defineProperties(exports, {
+  DANGEROUSLY_runPendingImmediatesAfterCurrentTask: {
+    enumerable: true,
+    get: () => DANGEROUSLY_runPendingImmediatesAfterCurrentTask
+  },
+  expectNoPendingImmediates: {
+    enumerable: true,
+    get: () => expectNoPendingImmediates
+  },
+  unpatchedSetImmediate: {
+    enumerable: true,
+    get: () => globalThis.setImmediate
+  }
+});
+`
+);
