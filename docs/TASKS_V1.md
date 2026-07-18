@@ -57,12 +57,14 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 - [x] **V1-034 — CRUD planifications et agenda à venir** — `TERMINÉ`
   - Acceptation : planifications UTC et agenda à venir vérifiés.
   - Preuve : création et suppression d’une planification UTC, compteurs et agenda validés sur Supabase réel en desktop/mobile; la carte reprend l’image de sa cible ou une illustration SVG.
+- [ ] **V1-035 — Densifier le dashboard mobile** — `EN COURS`
+  - Acceptation : un seul en-tête reste visible, les contrôles langue/thème demeurent accessibles et les ressources s’affichent sur deux colonnes dès 360 px sans texte illisible ni débordement.
 
 ## P4 — MCP
 
 - [ ] **V1-040 — Valider auth/transport sur les clients ciblés** — `EN COURS`
   - Acceptation : OAuth et transport validés de bout en bout sur ChatGPT, Claude et un client générique après déploiement.
-  - Preuve actuelle : découverte RFC 9728, défi Bearer, consentement et révocation implémentés; smoke test local 401/metadata/OPTIONS vert.
+  - Preuve actuelle : découverte RFC 9728, défi Bearer, consentement et révocation implémentés; smoke test local 401/metadata/OPTIONS vert; environnement Sites public préparé avec Supabase réel pour la recette distante.
 - [x] **V1-041 — Implémenter serveur MCP et schémas d'outils** — `TERMINÉ`
   - Preuve : endpoint Streamable HTTP et 21 outils V1 découverts par le client officiel SDK dans un test en mémoire.
 - [x] **V1-042 — Partager règles métier et erreurs avec le web** — `TERMINÉ`

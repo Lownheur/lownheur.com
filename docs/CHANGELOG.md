@@ -31,6 +31,7 @@ Les changements sont regroupés par version selon Keep a Changelog, sans recopie
 - Parcours E2E publics desktop/mobile et parcours authentifié activable par compte de test.
 - Refonte des pages Catégories, Événements, Objectifs et Planifications : listes centrées sur le contenu, ajout/modification/suppression en modales accessibles et illustrations SVG quand aucune image n’est disponible.
 - Les cartes de planification reprennent l’image de l’événement ou de l’objectif associé lorsqu’elle existe.
+- Configuration d'une bêta technique Sites publique pour tester le compte gratuit et le MCP distant avant Stripe et le déploiement commercial.
 
 ### Documentation
 

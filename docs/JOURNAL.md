@@ -49,3 +49,9 @@
 - Les formulaires permanents ont été remplacés par des modales accessibles et responsive pour les quatre ressources V1.
 - Chaque carte possède une zone visuelle avec image privée ou illustration SVG dédiée; les planifications héritent du visuel de leur cible.
 - Le parcours complet et les modales ont été validés sur Supabase réel en desktop/mobile avec audit Axe WCAG A/AA.
+
+## 2026-07-18 — Préparation de la bêta MCP publique
+
+- Un environnement Sites distinct de la future production Vercel a été créé pour la validation distante du compte gratuit et du MCP.
+- Les variables Supabase publiques et serveur ainsi qu'un secret de réconciliation ont été installés dans l'hébergeur; Stripe reste volontairement absent.
+- L'environnement est destiné à des données de test et ne constitue pas la publication stable de la V1.

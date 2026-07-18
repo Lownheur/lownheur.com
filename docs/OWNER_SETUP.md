@@ -1,6 +1,14 @@
 # Mise en service par le propriétaire
 
-État au 17 juillet 2026 : l'application locale répond sur `http://localhost:3000/fr`, le projet Supabase `pkdwwwqjixwmivbiekrd` est relié, quatre migrations distantes sont appliquées et un compte gratuit réel existe. Les valeurs publiques Supabase sont déjà dans `.env.local`, qui n'est pas versionné.
+État au 18 juillet 2026 : l'application locale répond sur `http://localhost:3000/fr`, le projet Supabase `pkdwwwqjixwmivbiekrd` est relié, quatre migrations distantes sont appliquées et un compte gratuit réel existe. Les valeurs publiques Supabase sont déjà dans `.env.local`, qui n'est pas versionné.
+
+## Bêta publique Sites avant Stripe
+
+La bêta technique est préparée sur `https://lownheur-mcp-beta.lownheur.chatgpt.site`. Elle utilise Supabase réel avec une clé serveur conservée exclusivement dans l'hébergeur. Aucun secret Stripe n'y est configuré : seul le plan gratuit doit être utilisé.
+
+Endpoint MCP attendu : `https://lownheur-mcp-beta.lownheur.chatgpt.site/mcp`.
+
+Cette adresse sert à la recette distante et ne remplace pas le futur domaine commercial. N'y utiliser que des comptes et données de test.
 
 ## Voir et utiliser le compte gratuit maintenant
 
