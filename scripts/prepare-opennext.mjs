@@ -1,4 +1,4 @@
-import { copyFile, mkdir } from "node:fs/promises";
+import { copyFile, mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
@@ -15,3 +15,49 @@ for (const filename of ["middleware.js", "middleware.js.map"]) {
     if (error?.code !== "ENOENT") throw error;
   });
 }
+
+// Next.js includes its development-only file logger in the standalone server
+// even for production builds. Cloudflare Workers have no writable filesystem,
+// and the remaining CommonJS `require("fs")` crashes before the app starts.
+// The logger is disabled in production, so replace only the generated copy with
+// a compatible no-op implementation before OpenNext bundles the worker.
+const fileLoggerPath = resolve(
+  root,
+  ".next",
+  "standalone",
+  "node_modules",
+  "next",
+  "dist",
+  "server",
+  "dev",
+  "browser-logs",
+  "file-logger.js"
+);
+
+await writeFile(
+  fileLoggerPath,
+  `"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class FileLogger {
+  initialize() {}
+  getLogQueue() { return []; }
+  flush() {}
+  log() {}
+  logServer() {}
+  logBrowser() {}
+  forceFlush() {}
+  destroy() {}
+}
+let fileLogger = null;
+function getFileLogger() {
+  if (!fileLogger) fileLogger = new FileLogger();
+  return fileLogger;
+}
+function test__resetFileLogger() { fileLogger = null; }
+Object.defineProperties(exports, {
+  FileLogger: { enumerable: true, get: () => FileLogger },
+  getFileLogger: { enumerable: true, get: () => getFileLogger },
+  test__resetFileLogger: { enumerable: true, get: () => test__resetFileLogger }
+});
+`
+);
