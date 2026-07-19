@@ -74,7 +74,7 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 
 - [ ] **V1-040 — Valider auth/transport sur les clients ciblés** — `EN COURS`
   - Acceptation : OAuth et transport validés de bout en bout sur ChatGPT, Claude et un client générique après déploiement.
-  - Preuve actuelle : connexion OAuth, création de catégories et d'événements validées depuis ChatGPT; les neuf outils MCP acceptant un fichier déclarent le champ `image` selon le contrat ChatGPT et trois actions d'upload dédiées évitent toute ambiguïté avec un chemin. La recette image après actualisation du plugin, puis Claude et un client générique, reste à terminer.
+  - Preuve actuelle : connexion OAuth, création de catégories et d'événements validées depuis ChatGPT; les 30 outils annoncent leurs scopes dans le miroir de compatibilité pris en charge par le SDK MCP actuel, tandis que les neuf outils fichier déclarent `image`. Un échec Supabase transitoire `context canceled` observé lors d'un nouvel appairage reste à recetter, puis Claude et un client générique restent à valider.
 - [x] **V1-041 — Implémenter serveur MCP et schémas d'outils** — `TERMINÉ`
   - Preuve : endpoint Streamable HTTP et 30 outils V1, dont neuf actions médias, découverts par le client officiel SDK dans un test en mémoire.
 - [x] **V1-042 — Partager règles métier et erreurs avec le web** — `TERMINÉ`
