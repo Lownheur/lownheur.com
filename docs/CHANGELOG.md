@@ -19,6 +19,7 @@ Les changements sont regroupés par version selon Keep a Changelog, sans recopie
 
 - Serveur MCP distant OAuth avec 21 outils, découverte standard, quotas et sérialisation compacte.
 - Compatibilité OAuth ChatGPT corrigée : les 21 outils MCP annoncent désormais explicitement leurs scopes d'authentification.
+- Les outils MCP de catégories, événements et objectifs acceptent désormais une image envoyée par ChatGPT, contrôlée puis stockée dans le bucket privé avec application du quota.
 
 - Écran de consentement OAuth, page Connexions IA, guides FR/EN et révocation des applications.
 

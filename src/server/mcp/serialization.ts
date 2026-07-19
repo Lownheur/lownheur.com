@@ -7,7 +7,7 @@ export function serializeResource(resource: ResourceName, row: ResourceRecord) {
     updatedAt: row.updated_at
   };
   if (resource === "categories") {
-    return { ...base, title: row.title, description: row.description, imagePath: row.image_path };
+    return { ...base, title: row.title, description: row.description, hasImage: Boolean(row.image_path) };
   }
   if (resource === "events") {
     return { ...base, categoryId: row.category_id, title: row.title, description: row.description };

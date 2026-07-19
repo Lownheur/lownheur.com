@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MediaError, readImageFiles } from "./media";
+import { downloadMcpImage, MediaError, readImageFiles } from "./media";
 
 function formWith(files: File[]) {
   const data = new FormData();
@@ -36,5 +36,24 @@ describe("media input validation", () => {
     expect(() => readImageFiles(formWith(files))).toThrowError(
       expect.objectContaining({ code: "invalid_media" })
     );
+  });
+
+  it("downloads a ChatGPT image file through the declared file input", async () => {
+    const png = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3]);
+    const file = await downloadMcpImage({
+      download_url: "https://files.openai.com/example",
+      file_id: "file-example",
+      mime_type: "image/png",
+      file_name: "alimentation.png"
+    }, async () => new Response(png, { headers: { "Content-Type": "image/png" } }));
+    expect(file.name).toBe("alimentation.png");
+    expect(file.type).toBe("image/png");
+    expect(file.size).toBe(png.byteLength);
+  });
+
+  it("rejects non-HTTPS and private image download URLs", async () => {
+    const fetcher = async () => new Response();
+    await expect(downloadMcpImage({ download_url: "http://files.openai.com/example", file_id: "file-example" }, fetcher)).rejects.toMatchObject({ code: "invalid_media" });
+    await expect(downloadMcpImage({ download_url: "https://127.0.0.1/example", file_id: "file-example" }, fetcher)).rejects.toMatchObject({ code: "invalid_media" });
   });
 });

@@ -38,7 +38,7 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
   - Preuve : quatre migrations appliquées au projet Supabase réel; 12 tables avec RLS; isolation lecture/mise à jour/suppression prouvée avec deux utilisateurs temporaires dans une transaction annulée; corrections des advisors appliquées.
 - [ ] **V1-023 — Configurer médias privés et quotas de stockage** — `EN COURS`
   - Acceptation : uploads privés, quotas atomiques et suppression des médias testés.
-  - Preuve actuelle : validation MIME/taille, réservation atomique, Storage privé, URL signées, remplacement, nettoyage et 4 tests unitaires; test Supabase réel restant.
+  - Preuve actuelle : validation MIME/taille/signature, réservation atomique, Storage privé, URL signées, remplacement et nettoyage implémentés; le MCP accepte désormais un vrai fichier image ChatGPT au lieu d'un chemin. Test Supabase réel du flux MCP restant.
 
 ## P3 — Dashboard
 
@@ -74,7 +74,7 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 
 - [ ] **V1-040 — Valider auth/transport sur les clients ciblés** — `EN COURS`
   - Acceptation : OAuth et transport validés de bout en bout sur ChatGPT, Claude et un client générique après déploiement.
-  - Preuve actuelle : découverte RFC 9728, défi Bearer avec scopes, consentement et révocation implémentés; les 21 outils publient leur schéma OAuth pour la détection ChatGPT; tests de contrat MCP verts. La recette ChatGPT après redéploiement, puis Claude et un client générique, reste à terminer.
+  - Preuve actuelle : connexion OAuth, création de catégories et d'événements validées depuis ChatGPT; les outils de création/modification de catégories, événements et objectifs annoncent un vrai champ fichier image. La recette image après redéploiement, puis Claude et un client générique, reste à terminer.
 - [x] **V1-041 — Implémenter serveur MCP et schémas d'outils** — `TERMINÉ`
   - Preuve : endpoint Streamable HTTP et 21 outils V1 découverts par le client officiel SDK dans un test en mémoire.
 - [x] **V1-042 — Partager règles métier et erreurs avec le web** — `TERMINÉ`

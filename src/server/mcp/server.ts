@@ -13,7 +13,15 @@ import {
   updateSchemas
 } from "@/server/domain/resources";
 import { serializeResource } from "./serialization";
-import { deleteResourceAndMedia } from "@/server/media";
+import {
+  deleteResourceAndMedia,
+  downloadMcpImage,
+  mcpImageInputSchema,
+  MediaError,
+  uploadResourceMedia,
+  type McpImageInput,
+  type MediaResource
+} from "@/server/media";
 import { MCP_OAUTH_SECURITY_SCHEMES } from "./oauth";
 
 type Context = { client: SupabaseClient; userId: string };
@@ -23,19 +31,81 @@ const idSchema = z.object({ id: z.uuid().describe("Resource UUID") });
 const oauthToolMetadata = {
   securitySchemes: MCP_OAUTH_SECURITY_SCHEMES
 };
+const imageToolMetadata = {
+  ...oauthToolMetadata,
+  "openai/fileParams": ["image"]
+};
+
+const mcpCreateSchemas = {
+  categories: createSchemas.categories.extend({ image: mcpImageInputSchema.optional() }),
+  events: createSchemas.events.extend({ image: mcpImageInputSchema.optional() }),
+  goals: createSchemas.goals.extend({ image: mcpImageInputSchema.optional() }),
+  schedules: createSchemas.schedules
+} as const;
+
+function mediaUpdateSchema(changes: z.ZodType) {
+  return z.object({
+    id: z.uuid(),
+    changes: changes.optional(),
+    image: mcpImageInputSchema.optional()
+  }).refine((value) => value.changes !== undefined || value.image !== undefined, "Provide changes or an image");
+}
+
+const mcpUpdateSchemas = {
+  categories: mediaUpdateSchema(updateSchemas.categories),
+  events: mediaUpdateSchema(updateSchemas.events),
+  goals: mediaUpdateSchema(updateSchemas.goals),
+  schedules: z.object({ id: z.uuid(), changes: updateSchemas.schedules })
+} as const;
 
 function result(payload: unknown) {
   return { content: [{ type: "text" as const, text: JSON.stringify(payload) }] };
 }
 
 function failure(error: unknown) {
-  const code = error instanceof DomainError ? error.code : "internal_error";
-  const message = error instanceof DomainError ? error.message : "The operation could not be completed.";
+  const knownError = error instanceof DomainError || error instanceof MediaError;
+  const code = knownError ? error.code : "internal_error";
+  const message = knownError ? error.message : "The operation could not be completed.";
   return { isError: true, content: [{ type: "text" as const, text: JSON.stringify({ error: code, message }) }] };
 }
 
 async function safely(work: () => Promise<unknown>) {
   try { return result(await work()); } catch (error) { return failure(error); }
+}
+
+function isMediaResource(resource: ResourceName): resource is MediaResource {
+  return resource !== "schedules";
+}
+
+async function createFromMcp(context: Context, resource: ResourceName, input: unknown) {
+  const parsed = mcpCreateSchemas[resource].parse(input) as Record<string, unknown>;
+  const image = parsed.image as McpImageInput | undefined;
+  delete parsed.image;
+  const created = await createResource(context.client, context.userId, resource, parsed);
+  try {
+    if (image && isMediaResource(resource)) {
+      const file = await downloadMcpImage(image);
+      await uploadResourceMedia(context.client, context.userId, resource, created.id, [file]);
+    }
+    const current = image ? await getResource(context.client, context.userId, resource, created.id) : created;
+    return { ...serializeResource(resource, current), ...(image ? { imageUploaded: true } : {}) };
+  } catch (error) {
+    try { await deleteResourceAndMedia(context.client, context.userId, resource, created.id); } catch { /* Preserve the media error. */ }
+    throw error;
+  }
+}
+
+async function updateFromMcp(context: Context, resource: ResourceName, input: unknown) {
+  const parsed = mcpUpdateSchemas[resource].parse(input) as { id: string; changes?: unknown; image?: McpImageInput };
+  let current = parsed.changes === undefined
+    ? await getResource(context.client, context.userId, resource, parsed.id)
+    : await updateResource(context.client, context.userId, resource, parsed.id, parsed.changes);
+  if (parsed.image && isMediaResource(resource)) {
+    const file = await downloadMcpImage(parsed.image);
+    await uploadResourceMedia(context.client, context.userId, resource, parsed.id, [file]);
+    current = await getResource(context.client, context.userId, resource, parsed.id);
+  }
+  return { ...serializeResource(resource, current), ...(parsed.image ? { imageUploaded: true } : {}) };
 }
 
 function registerResourceTools(server: McpServer, context: Context, resource: ResourceName) {
@@ -71,19 +141,19 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
 
   server.registerTool("create_" + name, {
     title: "Create " + name,
-    description: "Create a " + name + " for the authenticated user.",
-    inputSchema: createSchemas[resource],
-    _meta: oauthToolMetadata,
+    description: "Create a " + name + " for the authenticated user." + (isMediaResource(resource) ? " An optional image must be sent through the image file input, never as a URL or storage path." : ""),
+    inputSchema: mcpCreateSchemas[resource],
+    _meta: isMediaResource(resource) ? imageToolMetadata : oauthToolMetadata,
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
-  }, (input: unknown) => safely(async () => serializeResource(resource, await createResource(context.client, context.userId, resource, input))));
+  }, (input: unknown) => safely(() => createFromMcp(context, resource, input)));
 
   server.registerTool("update_" + name, {
     title: "Update " + name,
-    description: "Update fields on a " + name + " owned by the authenticated user.",
-    inputSchema: z.object({ id: z.uuid(), changes: updateSchemas[resource] }),
-    _meta: oauthToolMetadata,
+    description: "Update a " + name + " owned by the authenticated user." + (isMediaResource(resource) ? " An optional image must be sent through the image file input, never as a URL or storage path." : ""),
+    inputSchema: mcpUpdateSchemas[resource],
+    _meta: isMediaResource(resource) ? imageToolMetadata : oauthToolMetadata,
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false }
-  }, ({ id, changes }) => safely(async () => serializeResource(resource, await updateResource(context.client, context.userId, resource, id, changes))));
+  }, (input: unknown) => safely(() => updateFromMcp(context, resource, input)));
 
   server.registerTool("delete_" + name, {
     title: "Delete " + name,

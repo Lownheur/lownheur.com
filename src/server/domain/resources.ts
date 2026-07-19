@@ -20,8 +20,7 @@ export type ResourceName = (typeof resourceNames)[number];
 export const createSchemas = {
   categories: z.object({
     title,
-    description: description.optional().default(null),
-    imagePath: z.string().trim().max(1024).nullable().optional().default(null)
+    description: description.optional().default(null)
   }),
   events: z.object({
     categoryId: id,
@@ -58,8 +57,7 @@ export const updateSchemas = {
   categories: z
     .object({
       title: title.optional(),
-      description: description.optional(),
-      imagePath: z.string().trim().max(1024).nullable().optional()
+      description: description.optional()
     })
     .refine((value) => Object.keys(value).length > 0, "No fields to update"),
   events: z
@@ -158,8 +156,7 @@ function toDatabaseInput(
       ...(input.title !== undefined ? { title: input.title } : {}),
       ...(input.description !== undefined
         ? { description: input.description }
-        : {}),
-      ...(input.imagePath !== undefined ? { image_path: input.imagePath } : {})
+        : {})
     };
   }
   if (resource === "events") {

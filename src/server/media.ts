@@ -1,4 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { isIP } from "node:net";
+import { z } from "zod";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { deleteResource, type ResourceName, type ResourceRecord } from "@/server/domain/resources";
 
@@ -7,6 +9,16 @@ const MAX_FILE_BYTES = 10_485_760;
 const MAX_FILES_PER_REQUEST = 5;
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]);
 const extensions: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/avif": "avif" };
+
+export const mcpImageInputSchema = z.object({
+  download_url: z.url().max(4096).describe("Temporary HTTPS download URL supplied by the chat client"),
+  file_id: z.string().trim().min(1).max(300).describe("File identifier supplied by the chat client"),
+  mime_type: z.string().trim().max(100).optional(),
+  file_name: z.string().trim().max(300).optional()
+});
+
+export type McpImageInput = z.infer<typeof mcpImageInputSchema>;
+type Fetcher = (input: string | URL, init?: RequestInit) => Promise<Response>;
 
 export type MediaResource = "categories" | "events" | "goals";
 export type MediaView = { id: string; url: string; alt: string };
@@ -19,8 +31,7 @@ export class MediaError extends Error {
   }
 }
 
-export function readImageFiles(formData: FormData, name = "images") {
-  const files = formData.getAll(name).filter((value): value is File => value instanceof File && value.size > 0);
+export function validateImageFiles(files: File[]) {
   if (files.length > MAX_FILES_PER_REQUEST) throw new MediaError("invalid_media", "A maximum of five images can be uploaded at once.");
   for (const file of files) {
     if (!ALLOWED_TYPES.has(file.type) || file.size > MAX_FILE_BYTES) {
@@ -28,6 +39,99 @@ export function readImageFiles(formData: FormData, name = "images") {
     }
   }
   return files;
+}
+
+export function readImageFiles(formData: FormData, name = "images") {
+  return validateImageFiles(
+    formData.getAll(name).filter((value): value is File => value instanceof File && value.size > 0)
+  );
+}
+
+function validateRemoteUrl(value: string) {
+  const url = new URL(value);
+  const hostname = url.hostname.toLowerCase().replace(/^\[|\]$/g, "");
+  if (url.protocol !== "https:" || url.username || url.password) {
+    throw new MediaError("invalid_media", "The image download URL must use HTTPS.");
+  }
+  if (hostname === "localhost" || hostname.endsWith(".localhost") || hostname.endsWith(".local") || hostname.endsWith(".internal")) {
+    throw new MediaError("invalid_media", "The image download host is not allowed.");
+  }
+  if (isIP(hostname) === 4) {
+    const [a, b] = hostname.split(".").map(Number);
+    if (a === 0 || a === 10 || a === 127 || (a === 100 && b >= 64 && b <= 127) || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168)) {
+      throw new MediaError("invalid_media", "The image download host is not allowed.");
+    }
+  }
+  if (isIP(hostname) === 6 && (hostname === "::1" || hostname.startsWith("fc") || hostname.startsWith("fd") || hostname.startsWith("fe8") || hostname.startsWith("fe9") || hostname.startsWith("fea") || hostname.startsWith("feb"))) {
+    throw new MediaError("invalid_media", "The image download host is not allowed.");
+  }
+  return url;
+}
+
+async function readLimitedBody(response: Response) {
+  const advertisedSize = Number(response.headers.get("content-length"));
+  if (Number.isFinite(advertisedSize) && advertisedSize > MAX_FILE_BYTES) {
+    throw new MediaError("invalid_media", "Images must be at most 10 MB.");
+  }
+  if (!response.body) return new Uint8Array(await response.arrayBuffer());
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > MAX_FILE_BYTES) {
+      await reader.cancel();
+      throw new MediaError("invalid_media", "Images must be at most 10 MB.");
+    }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return bytes;
+}
+
+function hasImageSignature(bytes: Uint8Array, mimeType: string) {
+  if (mimeType === "image/jpeg") return bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  if (mimeType === "image/png") return bytes.length >= 8 && [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a].every((value, index) => bytes[index] === value);
+  if (mimeType === "image/webp") return bytes.length >= 12 && new TextDecoder().decode(bytes.slice(0, 4)) === "RIFF" && new TextDecoder().decode(bytes.slice(8, 12)) === "WEBP";
+  if (mimeType === "image/avif") {
+    const marker = new TextDecoder().decode(bytes.slice(4, 16));
+    return marker.startsWith("ftyp") && (marker.includes("avif") || marker.includes("avis"));
+  }
+  return false;
+}
+
+export async function downloadMcpImage(input: McpImageInput, fetcher: Fetcher = fetch) {
+  const parsed = mcpImageInputSchema.parse(input);
+  let url = validateRemoteUrl(parsed.download_url);
+  let response: Response | null = null;
+  for (let redirects = 0; redirects <= 3; redirects += 1) {
+    response = await fetcher(url, {
+      redirect: "manual",
+      signal: AbortSignal.timeout(15_000),
+      headers: { "User-Agent": "Lownheur-MCP/1.0" }
+    });
+    if (response.status < 300 || response.status >= 400) break;
+    const location = response.headers.get("location");
+    if (!location || redirects === 3) throw new MediaError("media_failed", "The image download redirected too many times.");
+    url = validateRemoteUrl(new URL(location, url).toString());
+  }
+  if (!response?.ok) throw new MediaError("media_failed", "The image supplied by the chat client could not be downloaded.");
+  const responseType = response.headers.get("content-type")?.split(";", 1)[0]?.trim().toLowerCase();
+  const declaredType = parsed.mime_type?.split(";", 1)[0]?.trim().toLowerCase();
+  const mimeType = responseType && responseType !== "application/octet-stream" ? responseType : declaredType;
+  if (!mimeType || !ALLOWED_TYPES.has(mimeType)) throw new MediaError("invalid_media", "Images must be JPEG, PNG, WebP or AVIF.");
+  const bytes = await readLimitedBody(response);
+  if (!hasImageSignature(bytes, mimeType)) throw new MediaError("invalid_media", "The downloaded file is not a valid supported image.");
+  const fallbackName = "image." + extensions[mimeType];
+  const fileName = (parsed.file_name || fallbackName).replace(/[^a-zA-Z0-9._ -]/g, "_").slice(0, 300) || fallbackName;
+  return validateImageFiles([new File([bytes], fileName, { type: mimeType })])[0];
 }
 
 async function reserveBytes(userId: string, bytes: number) {

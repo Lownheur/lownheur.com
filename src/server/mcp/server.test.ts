@@ -23,5 +23,13 @@ describe("Lownheur MCP server", () => {
     expect(tools[0]?._meta?.securitySchemes).toEqual([
       { type: "oauth2", scopes: ["openid", "email", "profile"] }
     ]);
+    const createCategory = tools.find((tool) => tool.name === "create_category");
+    const updateEvent = tools.find((tool) => tool.name === "update_event");
+    const createSchedule = tools.find((tool) => tool.name === "create_schedule");
+    expect(createCategory?._meta?.["openai/fileParams"]).toEqual(["image"]);
+    expect(updateEvent?._meta?.["openai/fileParams"]).toEqual(["image"]);
+    expect(createSchedule?._meta?.["openai/fileParams"]).toBeUndefined();
+    expect(createCategory?.inputSchema.properties).toHaveProperty("image");
+    expect(createCategory?.inputSchema.properties).not.toHaveProperty("imagePath");
   });
 });
