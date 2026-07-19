@@ -16,8 +16,10 @@ import { serializeResource } from "./serialization";
 import {
   deleteResourceAndMedia,
   downloadMcpImage,
+  getResourceMediaMap,
   mcpImageInputSchema,
   MediaError,
+  removeResourceMedia,
   uploadResourceMedia,
   type McpImageInput,
   type MediaResource
@@ -77,6 +79,19 @@ function isMediaResource(resource: ResourceName): resource is MediaResource {
   return resource !== "schedules";
 }
 
+async function serializeWithMedia(context: Context, resource: MediaResource, row: Awaited<ReturnType<typeof getResource>>) {
+  const media = await getResourceMediaMap(context.client, context.userId, resource, [row]);
+  return { ...serializeResource(resource, row), images: media[row.id] ?? [] };
+}
+
+async function uploadFromMcp(context: Context, resource: MediaResource, resourceId: string, image: McpImageInput) {
+  await getResource(context.client, context.userId, resource, resourceId);
+  const file = await downloadMcpImage(image);
+  await uploadResourceMedia(context.client, context.userId, resource, resourceId, [file]);
+  const current = await getResource(context.client, context.userId, resource, resourceId);
+  return { ...(await serializeWithMedia(context, resource, current)), imageUploaded: true };
+}
+
 async function createFromMcp(context: Context, resource: ResourceName, input: unknown) {
   const parsed = mcpCreateSchemas[resource].parse(input) as Record<string, unknown>;
   const image = parsed.image as McpImageInput | undefined;
@@ -88,7 +103,9 @@ async function createFromMcp(context: Context, resource: ResourceName, input: un
       await uploadResourceMedia(context.client, context.userId, resource, created.id, [file]);
     }
     const current = image ? await getResource(context.client, context.userId, resource, created.id) : created;
-    return { ...serializeResource(resource, current), ...(image ? { imageUploaded: true } : {}) };
+    return image && isMediaResource(resource)
+      ? { ...(await serializeWithMedia(context, resource, current)), imageUploaded: true }
+      : serializeResource(resource, current);
   } catch (error) {
     try { await deleteResourceAndMedia(context.client, context.userId, resource, created.id); } catch { /* Preserve the media error. */ }
     throw error;
@@ -105,7 +122,56 @@ async function updateFromMcp(context: Context, resource: ResourceName, input: un
     await uploadResourceMedia(context.client, context.userId, resource, parsed.id, [file]);
     current = await getResource(context.client, context.userId, resource, parsed.id);
   }
-  return { ...serializeResource(resource, current), ...(parsed.image ? { imageUploaded: true } : {}) };
+  return parsed.image && isMediaResource(resource)
+    ? { ...(await serializeWithMedia(context, resource, current)), imageUploaded: true }
+    : serializeResource(resource, current);
+}
+
+function registerMediaTools(server: McpServer, context: Context, resource: MediaResource) {
+  const name = singular[resource];
+  const resourceId = name + "Id";
+  const uploadName = resource === "categories" ? "set_category_image" : "add_" + name + "_image";
+  const uploadVerb = resource === "categories" ? "Set or replace" : "Add";
+  const uploadSchema = z.object({
+    [resourceId]: z.uuid().describe(name + " UUID"),
+    image: mcpImageInputSchema.describe("The real image file supplied by ChatGPT")
+  });
+
+  server.registerTool(uploadName, {
+    title: uploadVerb + " " + name + " image",
+    description: uploadVerb + " an image using the real file supplied by ChatGPT. Use this after the user attaches or generates an image. Never ask for an image URL or storage path.",
+    inputSchema: uploadSchema,
+    _meta: imageToolMetadata,
+    annotations: { readOnlyHint: false, destructiveHint: resource === "categories", idempotentHint: resource === "categories", openWorldHint: false }
+  }, (input: Record<string, unknown>) => safely(() => uploadFromMcp(context, resource, String(input[resourceId]), input.image as McpImageInput)));
+
+  server.registerTool("list_" + name + "_images", {
+    title: "List " + name + " images",
+    description: "List stored images and their asset IDs for a " + name + " owned by the authenticated user.",
+    inputSchema: z.object({ [resourceId]: z.uuid().describe(name + " UUID") }),
+    _meta: oauthToolMetadata,
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+  }, (input: Record<string, unknown>) => safely(async () => {
+    const current = await getResource(context.client, context.userId, resource, String(input[resourceId]));
+    const media = await getResourceMediaMap(context.client, context.userId, resource, [current]);
+    return { images: media[current.id] ?? [] };
+  }));
+
+  server.registerTool("remove_" + name + "_image", {
+    title: "Remove " + name + " image",
+    description: "Remove one stored image from a " + name + " owned by the authenticated user.",
+    inputSchema: z.object({
+      [resourceId]: z.uuid().describe(name + " UUID"),
+      assetId: z.uuid().describe("Image asset UUID returned by list_" + name + "_images")
+    }),
+    _meta: oauthToolMetadata,
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
+  }, (input: Record<string, unknown>) => safely(async () => {
+    const id = String(input[resourceId]);
+    await getResource(context.client, context.userId, resource, id);
+    await removeResourceMedia(context.client, context.userId, resource, id, String(input.assetId));
+    return { deleted: true, assetId: String(input.assetId) };
+  }));
 }
 
 function registerResourceTools(server: McpServer, context: Context, resource: ResourceName) {
@@ -137,7 +203,10 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
     inputSchema: idSchema,
     _meta: oauthToolMetadata,
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
-  }, ({ id }) => safely(async () => serializeResource(resource, await getResource(context.client, context.userId, resource, id))));
+  }, ({ id }) => safely(async () => {
+    const current = await getResource(context.client, context.userId, resource, id);
+    return isMediaResource(resource) ? serializeWithMedia(context, resource, current) : serializeResource(resource, current);
+  }));
 
   server.registerTool("create_" + name, {
     title: "Create " + name,
@@ -165,8 +234,9 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
 }
 
 export function createLownheurMcpServer(context: Context) {
-  const server = new McpServer({ name: "lownheur", version: "1.0.0" });
+  const server = new McpServer({ name: "lownheur", version: "1.1.0" });
   for (const resource of resourceNames) registerResourceTools(server, context, resource);
+  for (const resource of ["categories", "events", "goals"] as const) registerMediaTools(server, context, resource);
 
   server.registerTool("get_upcoming_schedule", {
     title: "Get upcoming schedule",

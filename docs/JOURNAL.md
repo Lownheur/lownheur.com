@@ -28,7 +28,7 @@
 ## 2026-07-17 — Serveur MCP et OAuth intégrés
 
 - Endpoint Streamable HTTP protégé par OAuth Supabase, consentement et révocation ajoutés.
-- 21 outils V1 branchés sur la couche métier partagée et le quota atomique.
+- 30 outils V1 branchés sur la couche métier partagée et le quota atomique, avec cycle de vie complet des images via MCP.
 - 12 tests, chaîne verify, build production et smoke test protocolaire local verts; validation clients réels reportée à l’environnement déployé.
 
 ## 2026-07-17 — Profil et médias privés intégrés

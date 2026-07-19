@@ -39,7 +39,10 @@ async function handleMcp(request: Request) {
   const server = createLownheurMcpServer(identity);
   await server.connect(transport);
   try {
-    return await transport.handleRequest(request, { authInfo: identity.authInfo, ...(body !== undefined ? { parsedBody: body } : {}) });
+    const response = await transport.handleRequest(request, { authInfo: identity.authInfo, ...(body !== undefined ? { parsedBody: body } : {}) });
+    const headers = new Headers(response.headers);
+    headers.set("Cache-Control", "no-store");
+    return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
   } finally {
     await server.close();
   }

@@ -38,7 +38,7 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
   - Preuve : quatre migrations appliquées au projet Supabase réel; 12 tables avec RLS; isolation lecture/mise à jour/suppression prouvée avec deux utilisateurs temporaires dans une transaction annulée; corrections des advisors appliquées.
 - [ ] **V1-023 — Configurer médias privés et quotas de stockage** — `EN COURS`
   - Acceptation : uploads privés, quotas atomiques et suppression des médias testés.
-  - Preuve actuelle : validation MIME/taille/signature, réservation atomique, Storage privé, URL signées, remplacement et nettoyage implémentés; le MCP accepte désormais un vrai fichier image ChatGPT au lieu d'un chemin. Test Supabase réel du flux MCP restant.
+  - Preuve actuelle : validation MIME/taille/signature, réservation atomique, Storage privé, URL signées, remplacement et nettoyage implémentés; création, modification et neuf actions médias MCP acceptent un vrai fichier ChatGPT et n'exposent aucun `imagePath`. Test Supabase réel du flux MCP restant.
 
 ## P3 — Dashboard
 
@@ -74,9 +74,9 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 
 - [ ] **V1-040 — Valider auth/transport sur les clients ciblés** — `EN COURS`
   - Acceptation : OAuth et transport validés de bout en bout sur ChatGPT, Claude et un client générique après déploiement.
-  - Preuve actuelle : connexion OAuth, création de catégories et d'événements validées depuis ChatGPT; les outils de création/modification de catégories, événements et objectifs annoncent un vrai champ fichier image. La recette image après redéploiement, puis Claude et un client générique, reste à terminer.
+  - Preuve actuelle : connexion OAuth, création de catégories et d'événements validées depuis ChatGPT; les neuf outils MCP acceptant un fichier déclarent le champ `image` selon le contrat ChatGPT et trois actions d'upload dédiées évitent toute ambiguïté avec un chemin. La recette image après actualisation du plugin, puis Claude et un client générique, reste à terminer.
 - [x] **V1-041 — Implémenter serveur MCP et schémas d'outils** — `TERMINÉ`
-  - Preuve : endpoint Streamable HTTP et 21 outils V1 découverts par le client officiel SDK dans un test en mémoire.
+  - Preuve : endpoint Streamable HTTP et 30 outils V1, dont neuf actions médias, découverts par le client officiel SDK dans un test en mémoire.
 - [x] **V1-042 — Partager règles métier et erreurs avec le web** — `TERMINÉ`
   - Preuve actuelle : couche server/domain unique avec validation Zod, pagination curseur, erreurs stables et 4 tests unitaires; branchement MCP restant.
   - Preuve : dashboard et MCP appellent la même couche server/domain; validations, pagination, sérialisation sans user_id et erreurs stables testées.
