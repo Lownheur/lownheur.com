@@ -18,6 +18,7 @@ Les changements sont regroupés par version selon Keep a Changelog, sans recopie
 - Couche métier partagée préparant les mêmes opérations pour l’interface web et le MCP.
 
 - Serveur MCP distant OAuth avec 21 outils, découverte standard, quotas et sérialisation compacte.
+- Compatibilité OAuth ChatGPT corrigée : les 21 outils MCP annoncent désormais explicitement leurs scopes d'authentification.
 
 - Écran de consentement OAuth, page Connexions IA, guides FR/EN et révocation des applications.
 

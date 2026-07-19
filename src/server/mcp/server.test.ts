@@ -19,5 +19,9 @@ describe("Lownheur MCP server", () => {
     expect(tools).toHaveLength(21);
     expect(tools.map((tool) => tool.name)).toEqual(expect.arrayContaining(["list_categories", "create_event", "update_goal", "delete_schedule", "get_upcoming_schedule"]));
     expect(tools.find((tool) => tool.name === "delete_category")?.annotations?.destructiveHint).toBe(true);
+    expect(tools.every((tool) => tool._meta?.securitySchemes !== undefined)).toBe(true);
+    expect(tools[0]?._meta?.securitySchemes).toEqual([
+      { type: "oauth2", scopes: ["openid", "email", "profile"] }
+    ]);
   });
 });

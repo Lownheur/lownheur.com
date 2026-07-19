@@ -2,6 +2,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js";
 import { z } from "zod";
 import { getAppUrl, getSupabaseEnv } from "@/lib/env";
+import { MCP_OAUTH_SCOPES } from "./oauth";
 
 const claimsSchema = z.object({
   sub: z.uuid(),
@@ -35,7 +36,8 @@ export function unauthorizedMcpResponse(message?: string) {
       headers: {
         "Cache-Control": "no-store",
         "WWW-Authenticate":
-          'Bearer resource_metadata="' + getProtectedResourceMetadataUrl() + '"'
+          'Bearer resource_metadata="' + getProtectedResourceMetadataUrl() +
+          '", scope="' + MCP_OAUTH_SCOPES.join(" ") + '"'
       }
     }
   );

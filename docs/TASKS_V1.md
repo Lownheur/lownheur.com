@@ -74,7 +74,7 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 
 - [ ] **V1-040 — Valider auth/transport sur les clients ciblés** — `EN COURS`
   - Acceptation : OAuth et transport validés de bout en bout sur ChatGPT, Claude et un client générique après déploiement.
-  - Preuve actuelle : découverte RFC 9728, défi Bearer, consentement et révocation implémentés; smoke test local 401/metadata/OPTIONS vert; environnement Sites public préparé avec Supabase réel pour la recette distante.
+  - Preuve actuelle : découverte RFC 9728, défi Bearer avec scopes, consentement et révocation implémentés; les 21 outils publient leur schéma OAuth pour la détection ChatGPT; tests de contrat MCP verts. La recette ChatGPT après redéploiement, puis Claude et un client générique, reste à terminer.
 - [x] **V1-041 — Implémenter serveur MCP et schémas d'outils** — `TERMINÉ`
   - Preuve : endpoint Streamable HTTP et 21 outils V1 découverts par le client officiel SDK dans un test en mémoire.
 - [x] **V1-042 — Partager règles métier et erreurs avec le web** — `TERMINÉ`

@@ -14,10 +14,15 @@ import {
 } from "@/server/domain/resources";
 import { serializeResource } from "./serialization";
 import { deleteResourceAndMedia } from "@/server/media";
+import { MCP_OAUTH_SECURITY_SCHEMES } from "./oauth";
 
 type Context = { client: SupabaseClient; userId: string };
 const singular = { categories: "category", events: "event", goals: "goal", schedules: "schedule" } as const;
 const idSchema = z.object({ id: z.uuid().describe("Resource UUID") });
+
+const oauthToolMetadata = {
+  securitySchemes: MCP_OAUTH_SECURITY_SCHEMES
+};
 
 function result(payload: unknown) {
   return { content: [{ type: "text" as const, text: JSON.stringify(payload) }] };
@@ -45,6 +50,7 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
     title: "List " + resource,
     description: "List the authenticated user's " + resource + " with cursor pagination.",
     inputSchema: listSchema,
+    _meta: oauthToolMetadata,
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   }, (input) => safely(async () => {
     const page = await listResources(context.client, context.userId, resource, {
@@ -59,6 +65,7 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
     title: "Get " + name,
     description: "Get one " + name + " owned by the authenticated user.",
     inputSchema: idSchema,
+    _meta: oauthToolMetadata,
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   }, ({ id }) => safely(async () => serializeResource(resource, await getResource(context.client, context.userId, resource, id))));
 
@@ -66,6 +73,7 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
     title: "Create " + name,
     description: "Create a " + name + " for the authenticated user.",
     inputSchema: createSchemas[resource],
+    _meta: oauthToolMetadata,
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
   }, (input: unknown) => safely(async () => serializeResource(resource, await createResource(context.client, context.userId, resource, input))));
 
@@ -73,6 +81,7 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
     title: "Update " + name,
     description: "Update fields on a " + name + " owned by the authenticated user.",
     inputSchema: z.object({ id: z.uuid(), changes: updateSchemas[resource] }),
+    _meta: oauthToolMetadata,
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   }, ({ id, changes }) => safely(async () => serializeResource(resource, await updateResource(context.client, context.userId, resource, id, changes))));
 
@@ -80,6 +89,7 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
     title: "Delete " + name,
     description: "Permanently delete a " + name + " owned by the authenticated user.",
     inputSchema: idSchema,
+    _meta: oauthToolMetadata,
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: false }
   }, ({ id }) => safely(async () => { await deleteResourceAndMedia(context.client, context.userId, resource, id); return { deleted: true, id }; }));
 }
@@ -92,6 +102,7 @@ export function createLownheurMcpServer(context: Context) {
     title: "Get upcoming schedule",
     description: "Return the authenticated user's next scheduled items in chronological order.",
     inputSchema: z.object({ limit: z.number().int().min(1).max(50).optional().default(10) }),
+    _meta: oauthToolMetadata,
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   }, ({ limit }) => safely(async () => {
     const { data, error } = await context.client.from("schedules").select("*").eq("user_id", context.userId).eq("status", "scheduled").gte("starts_at", new Date().toISOString()).order("starts_at", { ascending: true }).limit(limit);
