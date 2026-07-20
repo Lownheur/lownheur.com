@@ -20,3 +20,6 @@ Une personne francophone ou anglophone qui veut centraliser ses événements et 
 
 Chaque version future fera l'objet d'un document distinct, rédigé seulement après la validation de mise sur le marché de la version précédente.
 
+## Pistes futures non planifiées
+
+- Permettre à une IA de demander une image lisible de l’emploi du temps en vue jour ou semaine. Cette idée n’ajoute aucun endpoint à la V1 et devra être arbitrée après sa stabilisation.

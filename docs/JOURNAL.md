@@ -61,3 +61,8 @@
 - Catégories hiérarchiques, objectifs mesurables et planifications récurrentes intégrés à une couche métier commune au dashboard et aux 30 outils MCP.
 - Migration appliquée et vérifiée sur Supabase réel, notamment pour les cycles de catégories et les occurrences respectant le fuseau Europe/Paris.
 - Redirection localisée de la racine et page 404 Lownheur ajoutées; interface contrôlée sur desktop et mobile avant build de production.
+
+## 2026-07-20 — Calendrier V1 et reconnexion OAuth fiabilisés
+
+- Vues Jour et Semaine ajoutées à Planifications à partir d’occurrences bornées, soumises à RLS et calculées dans le fuseau du compte, sans nouvel outil MCP.
+- Route `/oauth/consent` retirée du filtre 404 qui cassait le retour Supabase lors des reconnexions ChatGPT; tests desktop/mobile et build de production validés.

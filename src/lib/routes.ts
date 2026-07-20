@@ -21,6 +21,12 @@ const dashboardSegments = new Set([
   "usage"
 ]);
 
+const technicalPaths = new Set(["/oauth/consent"]);
+
+export function isKnownUnlocalizedPath(pathname: string) {
+  return pathname === "/" || technicalPaths.has(pathname);
+}
+
 export function localizedPath(pathname: string): { locale: AppLocale; known: boolean } | null {
   const segments = pathname.split("/").filter(Boolean);
   const locale = segments[0] === "en" ? "en" : segments[0] === "fr" ? "fr" : null;

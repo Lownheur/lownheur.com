@@ -192,6 +192,25 @@
       "6": "Sat",
       "7": "Sun"
     },
+    "calendar": {
+      "viewLabel": "Schedule display",
+      "views": {
+        "list": "List",
+        "day": "Day",
+        "week": "Week"
+      },
+      "previous": "Previous period",
+      "next": "Next period",
+      "today": "Today",
+      "chooseDate": "Choose a date",
+      "go": "Show",
+      "weekTitle": "{from} – {to}",
+      "empty": "No schedules",
+      "event": "Event",
+      "goal": "Goal",
+      "recurring": "Recurring schedule",
+      "unknownTarget": "Unavailable item"
+    },
     "resources": {
       "eyebrow": "Organization",
       "categories": {

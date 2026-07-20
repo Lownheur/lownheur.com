@@ -192,6 +192,25 @@
       "6": "Sam",
       "7": "Dim"
     },
+    "calendar": {
+      "viewLabel": "Affichage des planifications",
+      "views": {
+        "list": "Liste",
+        "day": "Jour",
+        "week": "Semaine"
+      },
+      "previous": "Période précédente",
+      "next": "Période suivante",
+      "today": "Aujourd’hui",
+      "chooseDate": "Choisir une date",
+      "go": "Afficher",
+      "weekTitle": "{from} – {to}",
+      "empty": "Aucune planification",
+      "event": "Événement",
+      "goal": "Objectif",
+      "recurring": "Planification récurrente",
+      "unknownTarget": "Élément indisponible"
+    },
     "resources": {
       "eyebrow": "Organisation",
       "categories": {

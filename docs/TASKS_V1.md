@@ -72,12 +72,15 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 - [x] **V1-039 — Structurer catégories, objectifs et planifications récurrentes** — `TERMINÉ`
   - Acceptation : les catégories forment une arborescence sans cycle, les objectifs décrivent une cible mesurable et les planifications quotidiennes, hebdomadaires ou mensuelles produisent leurs prochaines occurrences dans le bon fuseau. Création, lecture, modification et suppression suivent les mêmes règles dans le dashboard et le MCP, en français et en anglais.
   - Preuve : migration appliquée à Supabase; hiérarchie à trois niveaux créée et cycle refusé dans une transaction annulée; objectif `4 séances/semaine` stocké; occurrences quotidiennes Europe/Paris vérifiées autour du changement d’heure. Dashboard FR contrôlé en desktop et à 360 × 800 px sans débordement; les 30 outils MCP partagent les mêmes schémas et règles métier. Lint, types, 29 tests unitaires et build Next.js verts.
+- [x] **V1-044 — Ajouter le calendrier des planifications en vue jour/semaine** — `TERMINÉ`
+  - Acceptation : depuis Planifications, l’utilisateur passe entre liste, jour et semaine, navigue dans les dates et voit les occurrences uniques ou récurrentes dans son fuseau; l’affichage reste utilisable en français, en anglais et sur mobile. Aucun nouvel outil MCP n’est ajouté : les planifications restent pilotées par les outils existants.
+  - Preuve : vues Liste, Jour et Semaine reliées aux occurrences Supabase dans le fuseau du compte, navigation par date et adaptation mobile validées dans le navigateur. La fonction bornée à 31 jours reste interne au dashboard et soumise à RLS; les 30 outils MCP sont inchangés. Migration appliquée, 34 tests unitaires, 10 E2E publics, lint, types et builds Next.js/Cloudflare verts.
 
 ## P4 — MCP
 
 - [ ] **V1-040 — Valider auth/transport sur les clients ciblés** — `EN COURS`
   - Acceptation : OAuth et transport validés de bout en bout sur ChatGPT, Claude et un client générique après déploiement.
-  - Preuve actuelle : connexion OAuth, création de catégories et d'événements validées depuis ChatGPT; les 30 outils annoncent leurs scopes dans le miroir de compatibilité pris en charge par le SDK MCP actuel, tandis que les neuf outils fichier déclarent `image`. Un échec Supabase transitoire `context canceled` observé lors d'un nouvel appairage reste à recetter, puis Claude et un client générique restent à valider.
+  - Preuve actuelle : connexion OAuth, création de catégories et d'événements validées depuis ChatGPT; les 30 outils annoncent leurs scopes dans le miroir de compatibilité pris en charge par le SDK MCP actuel, tandis que les neuf outils fichier déclarent `image`. Le 2026-07-20, la cause de la reconnexion cassée est identifiée : après le 302 réussi de Supabase, la 404 applicative interceptait `/oauth/consent`. Cette route technique est désormais préservée et couverte en unité et E2E desktop/mobile; recette déployée ChatGPT, Claude et client générique restant à valider.
 - [x] **V1-041 — Implémenter serveur MCP et schémas d'outils** — `TERMINÉ`
   - Preuve : endpoint Streamable HTTP et 30 outils V1, dont neuf actions médias, découverts par le client officiel SDK dans un test en mémoire.
 - [x] **V1-042 — Partager règles métier et erreurs avec le web** — `TERMINÉ`

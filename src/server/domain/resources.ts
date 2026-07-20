@@ -527,6 +527,19 @@ export type ScheduleOccurrence = {
   recurrenceTimezone: string;
 };
 
+function mapScheduleOccurrences(data: unknown): ScheduleOccurrence[] {
+  if (!Array.isArray(data)) return [];
+  return data.map((row: Record<string, unknown>) => ({
+    scheduleId: String(row.schedule_id),
+    eventId: typeof row.event_id === "string" ? row.event_id : null,
+    goalId: typeof row.goal_id === "string" ? row.goal_id : null,
+    startsAt: String(row.occurrence_starts_at),
+    endsAt: typeof row.occurrence_ends_at === "string" ? row.occurrence_ends_at : null,
+    recurrence: recurrence.parse(row.recurrence),
+    recurrenceTimezone: String(row.recurrence_timezone)
+  }));
+}
+
 export async function getUpcomingScheduleOccurrences(
   client: SupabaseClient,
   options: { limit?: number; from?: string } = {}
@@ -538,15 +551,27 @@ export async function getUpcomingScheduleOccurrences(
     p_from: from
   });
   mapError(error);
-  return (data ?? []).map((row: Record<string, unknown>) => ({
-    scheduleId: String(row.schedule_id),
-    eventId: typeof row.event_id === "string" ? row.event_id : null,
-    goalId: typeof row.goal_id === "string" ? row.goal_id : null,
-    startsAt: String(row.occurrence_starts_at),
-    endsAt: typeof row.occurrence_ends_at === "string" ? row.occurrence_ends_at : null,
-    recurrence: recurrence.parse(row.recurrence),
-    recurrenceTimezone: String(row.recurrence_timezone)
-  }));
+  return mapScheduleOccurrences(data);
+}
+
+export async function getScheduleOccurrencesInRange(
+  client: SupabaseClient,
+  options: { from: string; to: string; limit?: number }
+): Promise<ScheduleOccurrence[]> {
+  const from = timestamp.parse(options.from);
+  const to = timestamp.parse(options.to);
+  const limit = z.number().int().min(1).max(500).parse(options.limit ?? 500);
+  const duration = new Date(to).getTime() - new Date(from).getTime();
+  if (duration <= 0 || duration > 31 * 24 * 60 * 60 * 1000) {
+    throw new DomainError("invalid_input", "The schedule range must be between one instant and 31 days.");
+  }
+  const { data, error } = await client.rpc("get_schedule_occurrences_in_range", {
+    p_from: from,
+    p_to: to,
+    p_limit: limit
+  });
+  mapError(error);
+  return mapScheduleOccurrences(data);
 }
 
 export async function deleteResource(

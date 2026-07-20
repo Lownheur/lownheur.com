@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { localizedPath, notFoundHtml } from "./routes";
+import { isKnownUnlocalizedPath, localizedPath, notFoundHtml } from "./routes";
 
 describe("localizedPath", () => {
   it("keeps every public and dashboard V1 route", () => {
@@ -12,6 +12,11 @@ describe("localizedPath", () => {
     expect(localizedPath("/fr/unknown")).toEqual({ locale: "fr", known: false });
     expect(localizedPath("/en/dashboard/unknown")).toEqual({ locale: "en", known: false });
     expect(localizedPath("/fr/one/two/three")).toEqual({ locale: "fr", known: false });
+  });
+
+  it("preserves the OAuth consent callback outside localized routes", () => {
+    expect(isKnownUnlocalizedPath("/oauth/consent")).toBe(true);
+    expect(isKnownUnlocalizedPath("/oauth/authorize")).toBe(false);
   });
 
   it("renders a localized standalone 404 response", () => {

@@ -42,6 +42,8 @@ Les changements sont regroupés par version selon Keep a Changelog, sans recopie
 - Objectifs enrichis d’un type, d’une valeur cible, d’une unité et d’une période pour représenter valeurs quotidiennes, fréquences et réussites uniques.
 - Planifications quotidiennes, hebdomadaires ou mensuelles avec intervalle, jours choisis, fin facultative et fuseau horaire; l’agenda et le MCP renvoient les occurrences calculées sans dupliquer les règles.
 - Entrée `/` localisée automatiquement et page 404 Lownheur responsive en français ou en anglais, à la place de l’erreur d’hébergement par défaut.
+- Calendrier des planifications avec vues Liste, Jour et Semaine, navigation par date, fuseau du compte et affichage responsive des occurrences récurrentes.
+- Reconnexion OAuth fiabilisée : la route technique `/oauth/consent` n’est plus interceptée par la page 404 Lownheur.
 
 ### Documentation
 

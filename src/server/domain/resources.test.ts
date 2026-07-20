@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   buildCategoryOptions,
   categoryDescendantIds,
   DomainError,
+  getScheduleOccurrencesInRange,
   parseCreateInput,
   parseUpdateInput
 } from "./resources";
@@ -99,5 +101,34 @@ describe("resource input validation", () => {
     expect(categoryDescendantIds(categories, "root")).toEqual(
       new Set(["root", "child", "grandchild"])
     );
+  });
+
+  it("bounds calendar occurrence queries and maps their public shape", async () => {
+    const client = {
+      rpc: async () => ({
+        data: [{
+          schedule_id: "00000000-0000-4000-8000-000000000010",
+          event_id: "00000000-0000-4000-8000-000000000011",
+          goal_id: null,
+          occurrence_starts_at: "2026-07-20T08:00:00Z",
+          occurrence_ends_at: null,
+          recurrence: "weekly",
+          recurrence_timezone: "Europe/Paris"
+        }],
+        error: null
+      })
+    } as unknown as SupabaseClient;
+
+    await expect(getScheduleOccurrencesInRange(client, {
+      from: "2026-07-20T00:00:00Z",
+      to: "2026-07-27T00:00:00Z"
+    })).resolves.toEqual([expect.objectContaining({
+      eventId: "00000000-0000-4000-8000-000000000011",
+      recurrence: "weekly"
+    })]);
+    await expect(getScheduleOccurrencesInRange(client, {
+      from: "2026-07-20T00:00:00Z",
+      to: "2026-09-20T00:00:00Z"
+    })).rejects.toThrow(DomainError);
   });
 });

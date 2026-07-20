@@ -1,6 +1,8 @@
 import { getTranslations } from "next-intl/server";
+import type { ReactNode } from "react";
 import type { AppLocale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
+import type { CalendarView } from "@/lib/calendar";
 import type { MediaView } from "@/server/media";
 import {
   categoryDescendantIds,
@@ -15,6 +17,7 @@ import { PrivateImage } from "./private-image";
 import { ResourceDialog } from "./resource-dialog";
 import { ResourceIllustration } from "./resource-illustration";
 import { ScheduleRecurrenceFields } from "./schedule-recurrence-fields";
+import { ScheduleViewSwitcher } from "./schedule-calendar";
 import {
   createResourceAction,
   deleteResourceAction,
@@ -275,7 +278,10 @@ export async function ResourceManager({
   media,
   status,
   error,
-  dialog
+  dialog,
+  scheduleView = "list",
+  selectedDate,
+  scheduleCalendar
 }: {
   locale: AppLocale;
   resource: ResourceName;
@@ -289,6 +295,9 @@ export async function ResourceManager({
   status?: string;
   error?: string;
   dialog?: DialogState;
+  scheduleView?: CalendarView;
+  selectedDate?: string;
+  scheduleCalendar?: ReactNode;
 }) {
   const t = await getTranslations({ locale, namespace: "Dashboard" });
   const isSearchable = resource !== "schedules";
@@ -304,7 +313,9 @@ export async function ResourceManager({
       {error ? <p className="form-notice form-error" role="alert">{t("errors." + error)}</p> : null}
 
       <div className="resource-toolbar">
-        {isSearchable ? (
+        {resource === "schedules" && selectedDate ? (
+          <ScheduleViewSwitcher locale={locale} view={scheduleView} selectedDate={selectedDate} />
+        ) : isSearchable ? (
           <form className="resource-search">
             <label className="sr-only" htmlFor="resource-search">{t("actions.search")}</label>
             <input id="resource-search" className="form-input" type="search" name="search" defaultValue={search} placeholder={t("actions.searchPlaceholder")} />
@@ -326,7 +337,7 @@ export async function ResourceManager({
         </ResourceDialog>
       </div>
 
-      {page.items.length ? (
+      {resource === "schedules" && scheduleView !== "list" ? scheduleCalendar : page.items.length ? (
         <section className={"resource-list-grid resource-list-grid-" + resource} aria-label={t("resources." + resource + ".title")}>
           {page.items.map((row) => {
             const rawDate = value(row, "starts_at");
@@ -432,7 +443,7 @@ export async function ResourceManager({
         </div>
       )}
 
-      {page.nextCursor ? (
+      {scheduleView === "list" && page.nextCursor ? (
         <Link className="button pagination-next" href={{ pathname: resourcePaths[resource], query: { ...(search ? { search } : {}), cursor: page.nextCursor } }}>{t("actions.next")}</Link>
       ) : null}
     </div>

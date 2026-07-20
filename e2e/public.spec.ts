@@ -17,6 +17,13 @@ test("root chooses a locale and unknown routes use the Lownheur 404", async ({
   ).toHaveAttribute("href", "/fr");
 });
 
+test("OAuth consent callback is never intercepted by the custom 404", async ({ page }) => {
+  const response = await page.goto("/oauth/consent");
+  expect(response?.status()).toBe(200);
+  await expect(page.getByRole("heading", { level: 1, name: "Autorisation impossible" })).toBeVisible();
+  await expect(page.getByText("Page introuvable")).toHaveCount(0);
+});
+
 test("landing, theme, locale and legal navigation", async ({ page }) => {
   await page.goto("/fr");
   await expect(
