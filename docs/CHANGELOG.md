@@ -38,6 +38,10 @@ Les changements sont regroupés par version selon Keep a Changelog, sans recopie
 - Navigation du dashboard simplifiée : Connexions IA et Usage et offre sont désormais regroupés dans Paramètres.
 - Expérience mobile restructurée avec navigation fixe à icônes, en-tête compact, ajout sur une ligne et grille adaptative de deux à trois colonnes.
 - Accueil du dashboard et Paramètres densifiés sur mobile : statistiques compactes, raccourcis côte à côte, profil en deux colonnes et suppression du compte repliable.
+- Catégories organisables en arborescence sans limite fonctionnelle de profondeur, avec chemins lisibles dans les formulaires web et les réponses MCP.
+- Objectifs enrichis d’un type, d’une valeur cible, d’une unité et d’une période pour représenter valeurs quotidiennes, fréquences et réussites uniques.
+- Planifications quotidiennes, hebdomadaires ou mensuelles avec intervalle, jours choisis, fin facultative et fuseau horaire; l’agenda et le MCP renvoient les occurrences calculées sans dupliquer les règles.
+- Entrée `/` localisée automatiquement et page 404 Lownheur responsive en français ou en anglais, à la place de l’erreur d’hébergement par défaut.
 
 ### Documentation
 

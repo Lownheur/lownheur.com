@@ -190,6 +190,16 @@
   border-top: 1px solid var(--color-border);
 }
 
+.agenda-list li > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.agenda-list time {
+  color: var(--color-ink-soft);
+  font-size: 0.82rem;
+}
+
 .status-pill {
   width: fit-content;
   padding: 0.28rem 0.55rem;
@@ -405,6 +415,13 @@
   -webkit-line-clamp: 3;
 }
 
+.resource-card-metric {
+  display: block;
+  margin-top: 0.45rem;
+  color: var(--color-primary);
+  font-size: 0.82rem;
+}
+
 .resource-card-actions {
   display: flex;
   gap: var(--space-2);
@@ -496,6 +513,90 @@ textarea.form-input {
 
 .resource-form .form-wide {
   grid-column: 1 / -1;
+}
+
+.structured-fields {
+  min-width: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-primary) 3%, var(--color-canvas));
+}
+
+.structured-fields > legend,
+.weekday-picker > legend {
+  padding-inline: 0.35rem;
+  color: var(--color-ink);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.structured-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.weekday-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: var(--space-4) 0;
+  padding: 0;
+  border: 0;
+}
+
+.weekday-picker label {
+  display: block;
+  cursor: pointer;
+}
+
+.weekday-picker input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.weekday-picker span {
+  display: grid;
+  min-width: 2.7rem;
+  min-height: 2.4rem;
+  place-items: center;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-ink-soft);
+  background: var(--color-surface);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.weekday-picker input:checked + span {
+  color: var(--color-primary-ink);
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+
+.weekday-picker input:focus-visible + span {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+  outline-offset: 2px;
+}
+
+.timezone-readonly {
+  display: grid;
+  align-content: center;
+  gap: 0.35rem;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-ink-soft);
+  font-size: 0.75rem;
+}
+
+.timezone-readonly strong {
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
 }
 
 .resource-dialog {
@@ -1088,6 +1189,10 @@ textarea.form-input {
   }
 
   .resource-form {
+    grid-template-columns: 1fr;
+  }
+
+  .structured-fields-grid {
     grid-template-columns: 1fr;
   }
 

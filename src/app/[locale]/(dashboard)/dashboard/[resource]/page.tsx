@@ -4,7 +4,14 @@ import type { AppLocale } from "@/i18n/routing";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { ResourceManager } from "@/components/resource-manager";
-import { listResources, resourceNames, type ResourceName } from "@/server/domain/resources";
+import {
+  buildCategoryOptions,
+  listResources,
+  resourceNames,
+  type ResourceName,
+  type ResourcePage,
+  type ResourceRecord
+} from "@/server/domain/resources";
 import { getResourceMediaMap } from "@/server/media";
 
 function isResource(value: string): value is ResourceName {
@@ -25,12 +32,30 @@ export default async function ResourcePage({
     requireUser(locale),
     createSupabaseServerClient()
   ]);
-  const [page, categories, events, goals] = await Promise.all([
-    listResources(client, user.id, resource, { limit: 20, cursor: query.cursor, search: resource === "schedules" ? undefined : query.search }),
-    client.from("categories").select("id,title").eq("user_id", user.id).order("title"),
+  const [categories, events, goals, profile] = await Promise.all([
+    client.from("categories").select("*").eq("user_id", user.id).order("title"),
     client.from("events").select("id,title").eq("user_id", user.id).order("title"),
-    client.from("goals").select("id,title").eq("user_id", user.id).order("title")
+    client.from("goals").select("id,title").eq("user_id", user.id).order("title"),
+    client.from("profiles").select("timezone").eq("user_id", user.id).maybeSingle()
   ]);
+  const categoryRows = (categories.data ?? []) as ResourceRecord[];
+  const categoryOptions = buildCategoryOptions(categoryRows);
+  let page: ResourcePage;
+  if (resource === "categories") {
+    const byId = new Map(categoryRows.map((row) => [row.id, row]));
+    const normalizedSearch = query.search?.trim().toLocaleLowerCase(locale);
+    const items = categoryOptions
+      .filter((category) => !normalizedSearch || category.path.toLocaleLowerCase(locale).includes(normalizedSearch))
+      .map((category) => byId.get(category.id))
+      .filter((row): row is ResourceRecord => Boolean(row));
+    page = { items, nextCursor: null };
+  } else {
+    page = await listResources(client, user.id, resource, {
+      limit: 20,
+      cursor: query.cursor,
+      search: resource === "schedules" ? undefined : query.search
+    });
+  }
 
   const media = await getResourceMediaMap(client, user.id, resource, page.items);
 
@@ -41,9 +66,10 @@ export default async function ResourcePage({
       resource={resource}
       page={page}
       search={query.search}
-      categories={categories.data ?? []}
+      categories={categoryOptions}
       events={events.data ?? []}
       goals={goals.data ?? []}
+      timezone={profile.data?.timezone ?? "UTC"}
       media={media}
       status={query.status}
       error={query.error}

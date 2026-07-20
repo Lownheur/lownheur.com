@@ -48,5 +48,18 @@ describe("Lownheur MCP server", () => {
       expect(JSON.stringify(tool?.inputSchema), toolName).not.toContain("imagePath");
     }
     expect(JSON.stringify(tools)).not.toContain("imagePath");
+    expect(tools.find((tool) => tool.name === "create_category")?.inputSchema.properties).toHaveProperty("parentCategoryId");
+    expect(tools.find((tool) => tool.name === "create_goal")?.inputSchema.properties).toEqual(expect.objectContaining({
+      goalType: expect.any(Object),
+      targetValue: expect.any(Object),
+      unit: expect.any(Object),
+      period: expect.any(Object)
+    }));
+    expect(tools.find((tool) => tool.name === "create_schedule")?.inputSchema.properties).toEqual(expect.objectContaining({
+      recurrence: expect.any(Object),
+      recurrenceInterval: expect.any(Object),
+      recurrenceWeekdays: expect.any(Object),
+      recurrenceTimezone: expect.any(Object)
+    }));
   });
 });

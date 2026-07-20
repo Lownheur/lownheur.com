@@ -35,7 +35,7 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
   - Preuve actuelle : page Paramètres FR/EN, username unique, fuseau, avatar privé et suppression avec confirmation implémentés; recette distante restante.
 - [x] **V1-022 — Créer migrations, contraintes et politiques RLS** — `TERMINÉ`
   - Acceptation : migration appliquée, contraintes et RLS testées avec deux utilisateurs isolés.
-  - Preuve : quatre migrations appliquées au projet Supabase réel; 12 tables avec RLS; isolation lecture/mise à jour/suppression prouvée avec deux utilisateurs temporaires dans une transaction annulée; corrections des advisors appliquées.
+  - Preuve : cinq migrations appliquées au projet Supabase réel; 12 tables avec RLS; isolation lecture/mise à jour/suppression prouvée avec deux utilisateurs temporaires dans une transaction annulée; corrections des advisors appliquées.
 - [ ] **V1-023 — Configurer médias privés et quotas de stockage** — `EN COURS`
   - Acceptation : uploads privés, quotas atomiques et suppression des médias testés.
   - Preuve actuelle : validation MIME/taille/signature, réservation atomique, Storage privé, URL signées, remplacement et nettoyage implémentés; création, modification et neuf actions médias MCP acceptent un vrai fichier ChatGPT et n'exposent aucun `imagePath`. Test Supabase réel du flux MCP restant.
@@ -69,6 +69,9 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 - [x] **V1-038 — Densifier l’accueil du dashboard et Paramètres sur mobile** — `TERMINÉ`
   - Acceptation : les statistiques et raccourcis sont visibles sans longue succession de cartes, le profil utilise efficacement la largeur et la suppression du compte reste accessible sans dominer la page.
   - Preuve : à 360 × 800 px, statistiques ramenées de 268 à 182 px, panneau À venir terminé à 521 px, raccourcis Paramètres ramenés de 296 à 62 px et profil complet terminé à 590 px; zone de suppression repliable validée; lint, types, 18 tests et build Next.js verts.
+- [x] **V1-039 — Structurer catégories, objectifs et planifications récurrentes** — `TERMINÉ`
+  - Acceptation : les catégories forment une arborescence sans cycle, les objectifs décrivent une cible mesurable et les planifications quotidiennes, hebdomadaires ou mensuelles produisent leurs prochaines occurrences dans le bon fuseau. Création, lecture, modification et suppression suivent les mêmes règles dans le dashboard et le MCP, en français et en anglais.
+  - Preuve : migration appliquée à Supabase; hiérarchie à trois niveaux créée et cycle refusé dans une transaction annulée; objectif `4 séances/semaine` stocké; occurrences quotidiennes Europe/Paris vérifiées autour du changement d’heure. Dashboard FR contrôlé en desktop et à 360 × 800 px sans débordement; les 30 outils MCP partagent les mêmes schémas et règles métier. Lint, types, 29 tests unitaires et build Next.js verts.
 
 ## P4 — MCP
 
@@ -102,11 +105,14 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
   - Preuve actuelle : guides FR/EN intégrés pour ChatGPT, Claude et client générique; validation réelle de chaque parcours restante.
 - [ ] **V1-062 — Ajouter confidentialité, CGU, mentions et support** — `EN COURS`
   - Preuve : pages confidentialité, CGU, mentions et support publiées en FR/EN; identité légale, politique de remboursement et relecture professionnelle restent à fournir.
+- [x] **V1-063 — Garantir une entrée et une erreur 404 utiles** — `TERMINÉ`
+  - Acceptation : `/` redirige selon la langue prise en charge avec repli français et toute URL inconnue affiche une page Lownheur responsive avec retour explicite vers `/fr` ou `/en`, sans page Vercel par défaut.
+  - Preuve : Middleware Edge actif depuis `src/middleware.ts`; `/` redirige vers `/fr` dans le navigateur de recette et les langues prises en charge restent détectées; `/fr/chemin-introuvable` répond en HTTP 404 avec la page Lownheur, un retour vers `/fr` et aucun débordement à 360 px. Test E2E desktop/mobile ajouté et builds Vercel/Cloudflare verts.
 
 ## P7 — Sortie
 
 - [ ] **V1-070 — Finaliser tests E2E, accessibilité et sécurité** — `EN COURS`
-  - Preuve : 18 tests unitaires et 8 E2E desktop/mobile verts, dont parcours authentifié complet et audits Axe WCAG A/AA des pages publiques, du dashboard et d’une modale; clients MCP réels et protection Supabase contre les mots de passe divulgués restent à valider.
+  - Preuve : 29 tests unitaires verts; parcours E2E publics desktop/mobile, redirection/404 et audits Axe WCAG A/AA verts. Le parcours authentifié reste activable par compte de test; clients MCP réels supplémentaires et protection Supabase contre les mots de passe divulgués restent à valider.
 - [ ] **V1-071 — Prouver sauvegarde, restauration, monitoring et rollback** — `EN COURS`
   - Preuve : réconciliation stockage testée sur la base réelle, synchronisation Stripe et cron quotidien Vercel configurés, runbook écrit; export Storage et restauration complète restent à prouver.
 - [ ] **V1-072 — Déployer la release candidate et effectuer la recette** — `À FAIRE`

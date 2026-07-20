@@ -7,13 +7,29 @@ export function serializeResource(resource: ResourceName, row: ResourceRecord) {
     updatedAt: row.updated_at
   };
   if (resource === "categories") {
-    return { ...base, title: row.title, description: row.description, hasImage: Boolean(row.image_path) };
+    return {
+      ...base,
+      parentCategoryId: row.parent_id,
+      title: row.title,
+      description: row.description,
+      hasImage: Boolean(row.image_path)
+    };
   }
   if (resource === "events") {
     return { ...base, categoryId: row.category_id, title: row.title, description: row.description };
   }
   if (resource === "goals") {
-    return { ...base, categoryId: row.category_id, title: row.title, description: row.description, status: row.status };
+    return {
+      ...base,
+      categoryId: row.category_id,
+      title: row.title,
+      description: row.description,
+      status: row.status,
+      goalType: row.goal_type,
+      targetValue: row.target_value,
+      unit: row.unit,
+      period: row.period
+    };
   }
   return {
     ...base,
@@ -21,6 +37,11 @@ export function serializeResource(resource: ResourceName, row: ResourceRecord) {
     targetId: row.event_id ?? row.goal_id,
     startsAt: row.starts_at,
     endsAt: row.ends_at,
-    status: row.status
+    status: row.status,
+    recurrence: row.recurrence,
+    recurrenceInterval: row.recurrence_interval,
+    recurrenceWeekdays: row.recurrence_weekdays,
+    recurrenceEndsAt: row.recurrence_ends_at,
+    recurrenceTimezone: row.recurrence_timezone
   };
 }

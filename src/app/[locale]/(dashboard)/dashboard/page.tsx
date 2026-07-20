@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { AppLocale } from "@/i18n/routing";
+import { getUpcomingScheduleOccurrences } from "@/server/domain/resources";
 
 const resources = ["categories", "events", "goals", "schedules"] as const;
 
@@ -11,20 +12,29 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
   const t = await getTranslations({ locale, namespace: "Dashboard" });
   const user = await requireUser(locale);
   const client = await createSupabaseServerClient();
-  const [{ data: categories }, { data: events }, { data: goals }, { data: schedules }] =
+  const [categories, events, goals, schedules, occurrences] =
     await Promise.all([
-      client.from("categories").select("id", { count: "exact" }).eq("user_id", user.id),
-      client.from("events").select("id", { count: "exact" }).eq("user_id", user.id),
-      client.from("goals").select("id", { count: "exact" }).eq("user_id", user.id),
-      client
-        .from("schedules")
-        .select("id,starts_at,status")
-        .eq("user_id", user.id)
-        .gte("starts_at", new Date().toISOString())
-        .order("starts_at", { ascending: true })
-        .limit(5)
+      client.from("categories").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+      client.from("events").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+      client.from("goals").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+      client.from("schedules").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+      getUpcomingScheduleOccurrences(client, { limit: 5 })
     ]);
-  const counts = [categories?.length ?? 0, events?.length ?? 0, goals?.length ?? 0, schedules?.length ?? 0];
+  const eventIds = occurrences.flatMap((occurrence) => occurrence.eventId ? [occurrence.eventId] : []);
+  const goalIds = occurrences.flatMap((occurrence) => occurrence.goalId ? [occurrence.goalId] : []);
+  const [{ data: eventTargets }, { data: goalTargets }] = await Promise.all([
+    eventIds.length
+      ? client.from("events").select("id,title").eq("user_id", user.id).in("id", eventIds)
+      : Promise.resolve({ data: [] }),
+    goalIds.length
+      ? client.from("goals").select("id,title").eq("user_id", user.id).in("id", goalIds)
+      : Promise.resolve({ data: [] })
+  ]);
+  const targetTitles = new Map([
+    ...(eventTargets ?? []).map((target) => [target.id, target.title] as const),
+    ...(goalTargets ?? []).map((target) => [target.id, target.title] as const)
+  ]);
+  const counts = [categories.count ?? 0, events.count ?? 0, goals.count ?? 0, schedules.count ?? 0];
 
   return (
     <div className="dashboard-page dashboard-overview-page">
@@ -41,10 +51,16 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
       </section>
       <section className="dashboard-panel">
         <div className="panel-heading"><div><h2>{t("overview.upcoming")}</h2><p>{t("overview.upcomingDescription")}</p></div><Link href="/dashboard/schedules">{t("viewAll")}</Link></div>
-        {schedules?.length ? (
+        {occurrences.length ? (
           <ul className="agenda-list">
-            {schedules.map((schedule) => (
-              <li key={schedule.id}><time dateTime={schedule.starts_at}>{new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(schedule.starts_at))}</time><span className="status-pill">{t("statuses." + schedule.status)}</span></li>
+            {occurrences.map((occurrence) => (
+              <li key={occurrence.scheduleId + occurrence.startsAt}>
+                <div>
+                  <strong>{targetTitles.get(occurrence.eventId ?? occurrence.goalId ?? "") ?? t("resources.schedules.singular")}</strong>
+                  <time dateTime={occurrence.startsAt}>{new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(occurrence.startsAt))}</time>
+                </div>
+                <span className="status-pill">{t("recurrences." + occurrence.recurrence)}</span>
+              </li>
             ))}
           </ul>
         ) : <div className="empty-state"><strong>{t("overview.emptyTitle")}</strong><p>{t("overview.emptyDescription")}</p></div>}

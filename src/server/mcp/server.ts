@@ -5,6 +5,7 @@ import {
   createResource,
   createSchemas,
   DomainError,
+  getUpcomingScheduleOccurrences,
   getResource,
   listResources,
   resourceNames,
@@ -28,6 +29,12 @@ import { MCP_OAUTH_SECURITY_SCHEMES } from "./oauth";
 
 type Context = { client: SupabaseClient; userId: string };
 const singular = { categories: "category", events: "event", goals: "goal", schedules: "schedule" } as const;
+const capabilityDescription = {
+  categories: " Categories can be nested to any practical depth with parentCategoryId; never create cycles.",
+  events: " Events belong to one category, including a subcategory.",
+  goals: " Goals include goalType, targetValue, unit and period so the target is measurable.",
+  schedules: " Schedules can be one-time, daily, weekly or monthly; weekly rules use ISO weekdays and recurring rules preserve local time through recurrenceTimezone."
+} as const;
 const idSchema = z.object({ id: z.uuid().describe("Resource UUID") });
 
 const oauthToolMetadata = {
@@ -184,7 +191,7 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
 
   server.registerTool("list_" + resource, {
     title: "List " + resource,
-    description: "List the authenticated user's " + resource + " with cursor pagination.",
+    description: "List the authenticated user's " + resource + " with cursor pagination." + capabilityDescription[resource],
     inputSchema: listSchema,
     _meta: oauthToolMetadata,
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
@@ -210,7 +217,7 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
 
   server.registerTool("create_" + name, {
     title: "Create " + name,
-    description: "Create a " + name + " for the authenticated user." + (isMediaResource(resource) ? " An optional image must be sent through the image file input, never as a URL or storage path." : ""),
+    description: "Create a " + name + " for the authenticated user." + capabilityDescription[resource] + (isMediaResource(resource) ? " An optional image must be sent through the image file input, never as a URL or storage path." : ""),
     inputSchema: mcpCreateSchemas[resource],
     _meta: isMediaResource(resource) ? imageToolMetadata : oauthToolMetadata,
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
@@ -218,7 +225,7 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
 
   server.registerTool("update_" + name, {
     title: "Update " + name,
-    description: "Update a " + name + " owned by the authenticated user." + (isMediaResource(resource) ? " An optional image must be sent through the image file input, never as a URL or storage path." : ""),
+    description: "Update a " + name + " owned by the authenticated user." + capabilityDescription[resource] + (isMediaResource(resource) ? " An optional image must be sent through the image file input, never as a URL or storage path." : ""),
     inputSchema: mcpUpdateSchemas[resource],
     _meta: isMediaResource(resource) ? imageToolMetadata : oauthToolMetadata,
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false }
@@ -234,20 +241,32 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
 }
 
 export function createLownheurMcpServer(context: Context) {
-  const server = new McpServer({ name: "lownheur", version: "1.1.0" });
+  const server = new McpServer({ name: "lownheur", version: "1.2.0" });
   for (const resource of resourceNames) registerResourceTools(server, context, resource);
   for (const resource of ["categories", "events", "goals"] as const) registerMediaTools(server, context, resource);
 
   server.registerTool("get_upcoming_schedule", {
     title: "Get upcoming schedule",
-    description: "Return the authenticated user's next scheduled items in chronological order.",
-    inputSchema: z.object({ limit: z.number().int().min(1).max(50).optional().default(10) }),
+    description: "Return the authenticated user's next schedule occurrences in chronological order. Recurring rules are expanded in their IANA time zone without duplicating schedule records.",
+    inputSchema: z.object({
+      limit: z.number().int().min(1).max(50).optional().default(10),
+      from: z.iso.datetime({ offset: true }).optional().describe("Start boundary, defaults to now")
+    }),
     _meta: oauthToolMetadata,
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
-  }, ({ limit }) => safely(async () => {
-    const { data, error } = await context.client.from("schedules").select("*").eq("user_id", context.userId).eq("status", "scheduled").gte("starts_at", new Date().toISOString()).order("starts_at", { ascending: true }).limit(limit);
-    if (error) throw new DomainError("database_error", error.message);
-    return { items: (data ?? []).map((row) => serializeResource("schedules", row)) };
+  }, ({ limit, from }) => safely(async () => {
+    const occurrences = await getUpcomingScheduleOccurrences(context.client, { limit, from });
+    return {
+      items: occurrences.map((occurrence) => ({
+        scheduleId: occurrence.scheduleId,
+        targetType: occurrence.eventId ? "event" : "goal",
+        targetId: occurrence.eventId ?? occurrence.goalId,
+        startsAt: occurrence.startsAt,
+        endsAt: occurrence.endsAt,
+        recurrence: occurrence.recurrence,
+        recurrenceTimezone: occurrence.recurrenceTimezone
+      }))
+    };
   }));
 
   return server;

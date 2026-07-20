@@ -157,12 +157,47 @@
       "achieved": "Achieved",
       "abandoned": "Abandoned"
     },
+    "goalTypes": {
+      "target": "Target value",
+      "frequency": "Frequency",
+      "completion": "One-time achievement"
+    },
+    "periods": {
+      "once": "once",
+      "day": "per day",
+      "week": "per week",
+      "month": "per month"
+    },
+    "goalDefaults": {
+      "successUnit": "success"
+    },
+    "goalMetric": "{value} {unit} · {period}",
+    "recurrences": {
+      "none": "None",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    },
+    "recurrenceSummary": {
+      "daily": "{count, plural, =1 {Every day} other {Every # days}}",
+      "weekly": "{count, plural, =1 {Every week} other {Every # weeks}} · {days}",
+      "monthly": "{count, plural, =1 {Every month} other {Every # months}}"
+    },
+    "weekdays": {
+      "1": "Mon",
+      "2": "Tue",
+      "3": "Wed",
+      "4": "Thu",
+      "5": "Fri",
+      "6": "Sat",
+      "7": "Sun"
+    },
     "resources": {
       "eyebrow": "Organization",
       "categories": {
         "title": "Categories",
         "singular": "category",
-        "description": "Structure the areas that matter to you.",
+        "description": "Structure your areas and sub-areas in a clear hierarchy.",
         "empty": "No categories yet.",
         "emptyHint": "Add your first category to start organizing your workspace."
       },
@@ -176,14 +211,14 @@
       "goals": {
         "title": "Goals",
         "singular": "goal",
-        "description": "Track your goals through to the result.",
+        "description": "Set a target, unit and period for every goal.",
         "empty": "No goals yet.",
         "emptyHint": "Add a goal to track your next achievement."
       },
       "schedules": {
         "title": "Schedules",
         "singular": "schedule",
-        "description": "Place your events and goals in time.",
+        "description": "Place events and goals in time, once or on a recurring rule.",
         "empty": "No schedules yet.",
         "emptyHint": "Schedule an event or goal to see it here."
       }
@@ -215,10 +250,23 @@
       "title": "Title",
       "description": "Description",
       "category": "Category",
+      "parentCategory": "Parent category",
+      "noParentCategory": "None — top-level category",
       "target": "Event or goal",
       "startsAt": "Start",
       "endsAt": "End (optional)",
       "status": "Status",
+      "goalMeasurement": "Goal measurement",
+      "goalType": "Goal type",
+      "targetValue": "Target value",
+      "unit": "Unit",
+      "period": "Period",
+      "recurrenceSection": "Recurrence",
+      "recurrence": "Repeat",
+      "recurrenceInterval": "Repeat every",
+      "recurrenceWeekdays": "Days of the week",
+      "recurrenceEndsAt": "Recurrence end (optional)",
+      "recurrenceTimezone": "Time zone",
       "images": "Images",
       "imageHint": "JPEG, PNG, WebP or AVIF · 10 MB maximum per image."
     },
@@ -226,6 +274,7 @@
       "invalid_input": "Check the information you entered.",
       "not_found": "This item no longer exists.",
       "conflict": "An identical item already exists.",
+      "category_has_children": "Move or delete this category’s subcategories first.",
       "database_error": "The change could not be saved.",
       "invalid_media": "Check the image format, size or count.",
       "storage_quota": "Your storage quota has been reached.",
@@ -269,7 +318,7 @@
         "title": "ChatGPT",
         "step1": "In ChatGPT web, enable developer mode when it is available for your plan and workspace.",
         "step2": "In Settings > Apps > Create, enter {endpoint}, select OAuth and scan the tools.",
-        "step3": "Connect your Lownheur account, review the 21 tools and confirm write actions when ChatGPT asks."
+        "step3": "Connect your Lownheur account, review the 30 tools and confirm write actions when ChatGPT asks."
       },
       "claude": {
         "title": "Claude",
@@ -382,6 +431,11 @@
       "billing_failed": "Billing could not be opened. Try again.",
       "no_customer": "No Stripe billing customer is associated yet."
     }
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "This page does not exist or has moved. Return to the Lownheur home page.",
+    "back": "Back to home"
   },
   "Footer": {
     "copyright": "© {year} Lownheur. All rights reserved.",

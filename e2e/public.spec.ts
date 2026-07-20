@@ -1,6 +1,22 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
+test("root chooses a locale and unknown routes use the Lownheur 404", async ({
+  page
+}) => {
+  await page.goto("/");
+  await expect(page).toHaveURL(/\/(fr|en)$/);
+
+  const response = await page.goto("/fr/chemin-introuvable");
+  expect(response?.status()).toBe(404);
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Page introuvable" })
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Revenir à l’accueil" })
+  ).toHaveAttribute("href", "/fr");
+});
+
 test("landing, theme, locale and legal navigation", async ({ page }) => {
   await page.goto("/fr");
   await expect(

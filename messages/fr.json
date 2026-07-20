@@ -157,12 +157,47 @@
       "achieved": "Atteint",
       "abandoned": "Abandonné"
     },
+    "goalTypes": {
+      "target": "Valeur cible",
+      "frequency": "Fréquence",
+      "completion": "Réussite unique"
+    },
+    "periods": {
+      "once": "une fois",
+      "day": "par jour",
+      "week": "par semaine",
+      "month": "par mois"
+    },
+    "goalDefaults": {
+      "successUnit": "réussite"
+    },
+    "goalMetric": "{value} {unit} · {period}",
+    "recurrences": {
+      "none": "Aucune",
+      "daily": "Quotidienne",
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuelle"
+    },
+    "recurrenceSummary": {
+      "daily": "{count, plural, =1 {Tous les jours} other {Tous les # jours}}",
+      "weekly": "{count, plural, =1 {Chaque semaine} other {Toutes les # semaines}} · {days}",
+      "monthly": "{count, plural, =1 {Chaque mois} other {Tous les # mois}}"
+    },
+    "weekdays": {
+      "1": "Lun",
+      "2": "Mar",
+      "3": "Mer",
+      "4": "Jeu",
+      "5": "Ven",
+      "6": "Sam",
+      "7": "Dim"
+    },
     "resources": {
       "eyebrow": "Organisation",
       "categories": {
         "title": "Catégories",
         "singular": "catégorie",
-        "description": "Structurez les domaines qui comptent pour vous.",
+        "description": "Structurez vos domaines et sous-domaines dans une arborescence claire.",
         "empty": "Aucune catégorie pour le moment.",
         "emptyHint": "Ajoutez votre première catégorie pour commencer à organiser votre espace."
       },
@@ -176,14 +211,14 @@
       "goals": {
         "title": "Objectifs",
         "singular": "objectif",
-        "description": "Suivez vos objectifs jusqu’au résultat.",
+        "description": "Définissez une cible, une unité et une période pour chaque objectif.",
         "empty": "Aucun objectif pour le moment.",
         "emptyHint": "Ajoutez un objectif pour suivre votre prochaine réussite."
       },
       "schedules": {
         "title": "Planifications",
         "singular": "planification",
-        "description": "Placez vos événements et objectifs dans le temps.",
+        "description": "Placez vos événements et objectifs dans le temps, une fois ou selon une récurrence.",
         "empty": "Aucune planification pour le moment.",
         "emptyHint": "Planifiez un événement ou un objectif pour le retrouver ici."
       }
@@ -215,10 +250,23 @@
       "title": "Titre",
       "description": "Description",
       "category": "Catégorie",
+      "parentCategory": "Catégorie parente",
+      "noParentCategory": "Aucune — catégorie principale",
       "target": "Événement ou objectif",
       "startsAt": "Début",
       "endsAt": "Fin (facultative)",
       "status": "Statut",
+      "goalMeasurement": "Mesure de l’objectif",
+      "goalType": "Type d’objectif",
+      "targetValue": "Valeur cible",
+      "unit": "Unité",
+      "period": "Période",
+      "recurrenceSection": "Récurrence",
+      "recurrence": "Répétition",
+      "recurrenceInterval": "Tous les combien",
+      "recurrenceWeekdays": "Jours de la semaine",
+      "recurrenceEndsAt": "Fin de la récurrence (facultative)",
+      "recurrenceTimezone": "Fuseau horaire",
       "images": "Images",
       "imageHint": "JPEG, PNG, WebP ou AVIF · 10 Mo maximum par image."
     },
@@ -226,6 +274,7 @@
       "invalid_input": "Vérifiez les informations saisies.",
       "not_found": "Cet élément n’existe plus.",
       "conflict": "Un élément identique existe déjà.",
+      "category_has_children": "Déplacez ou supprimez d’abord les sous-catégories de cette catégorie.",
       "database_error": "La modification n’a pas pu être enregistrée.",
       "invalid_media": "Vérifiez le format, la taille ou le nombre d’images.",
       "storage_quota": "Votre quota de stockage est atteint.",
@@ -269,7 +318,7 @@
         "title": "ChatGPT",
         "step1": "Dans ChatGPT web, activez le mode développeur disponible pour votre offre et votre espace de travail.",
         "step2": "Dans Paramètres > Apps > Créer, indiquez {endpoint}, choisissez OAuth puis lancez l’analyse des outils.",
-        "step3": "Connectez votre compte Lownheur, vérifiez les 21 outils et confirmez les actions d’écriture quand ChatGPT le demande."
+        "step3": "Connectez votre compte Lownheur, vérifiez les 30 outils et confirmez les actions d’écriture quand ChatGPT le demande."
       },
       "claude": {
         "title": "Claude",
@@ -382,6 +431,11 @@
       "billing_failed": "La facturation n'a pas pu être ouverte. Réessayez.",
       "no_customer": "Aucun compte de facturation Stripe n'est encore associé."
     }
+  },
+  "NotFound": {
+    "title": "Page introuvable",
+    "description": "Cette page n’existe pas ou a été déplacée. Revenez à l’accueil Lownheur.",
+    "back": "Revenir à l’accueil"
   },
   "Footer": {
     "copyright": "© {year} Lownheur. Tous droits réservés.",

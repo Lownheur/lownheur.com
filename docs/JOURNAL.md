@@ -55,3 +55,9 @@
 - Un environnement Sites distinct de la future production Vercel a été créé pour la validation distante du compte gratuit et du MCP.
 - Les variables Supabase publiques et serveur ainsi qu'un secret de réconciliation ont été installés dans l'hébergeur; Stripe reste volontairement absent.
 - L'environnement est destiné à des données de test et ne constitue pas la publication stable de la V1.
+
+## 2026-07-20 — Modèle temporel V1 harmonisé
+
+- Catégories hiérarchiques, objectifs mesurables et planifications récurrentes intégrés à une couche métier commune au dashboard et aux 30 outils MCP.
+- Migration appliquée et vérifiée sur Supabase réel, notamment pour les cycles de catégories et les occurrences respectant le fuseau Europe/Paris.
+- Redirection localisée de la racine et page 404 Lownheur ajoutées; interface contrôlée sur desktop et mobile avant build de production.

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildCategoryOptions,
+  categoryDescendantIds,
   DomainError,
   parseCreateInput,
   parseUpdateInput
@@ -35,5 +37,67 @@ describe("resource input validation", () => {
     expect(
       parseUpdateInput("goals", { status: "achieved" })
     ).toEqual({ status: "achieved" });
+  });
+
+  it("accepts measurable goals and recurring weekly schedules", () => {
+    expect(parseCreateInput("goals", {
+      categoryId: "00000000-0000-4000-8000-000000000001",
+      title: "Sport",
+      goalType: "frequency",
+      targetValue: "4",
+      unit: "sessions",
+      period: "week"
+    })).toMatchObject({
+      goalType: "frequency",
+      targetValue: 4,
+      unit: "sessions",
+      period: "week"
+    });
+
+    expect(parseCreateInput("schedules", {
+      targetType: "goal",
+      targetId: "00000000-0000-4000-8000-000000000002",
+      startsAt: "2026-07-20T18:00:00+02:00",
+      recurrence: "weekly",
+      recurrenceInterval: 1,
+      recurrenceWeekdays: [3, 1, 3],
+      recurrenceTimezone: "Europe/Paris"
+    })).toMatchObject({
+      recurrence: "weekly",
+      recurrenceWeekdays: [1, 3],
+      recurrenceTimezone: "Europe/Paris"
+    });
+  });
+
+  it("rejects a weekly schedule without weekdays", () => {
+    expect(() => parseCreateInput("schedules", {
+      targetType: "event",
+      targetId: "00000000-0000-4000-8000-000000000003",
+      startsAt: "2026-07-20T18:00:00Z",
+      recurrence: "weekly"
+    })).toThrow(DomainError);
+  });
+
+  it("builds arbitrary-depth category paths and descendants", () => {
+    const base = {
+      user_id: "user",
+      description: null,
+      created_at: "2026-07-20T00:00:00Z",
+      updated_at: "2026-07-20T00:00:00Z"
+    };
+    const categories = buildCategoryOptions([
+      { ...base, id: "root", title: "Alimentation", parent_id: null },
+      { ...base, id: "child", title: "Déjeuner", parent_id: "root" },
+      { ...base, id: "grandchild", title: "Dessert", parent_id: "child" }
+    ]);
+
+    expect(categories.map((category) => category.path)).toEqual([
+      "Alimentation",
+      "Alimentation › Déjeuner",
+      "Alimentation › Déjeuner › Dessert"
+    ]);
+    expect(categoryDescendantIds(categories, "root")).toEqual(
+      new Set(["root", "child", "grandchild"])
+    );
   });
 });

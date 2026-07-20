@@ -7,6 +7,54 @@
 @import "../styles/usage.css";
 @import "../styles/info.css";
 
+.not-found-page {
+  display: grid;
+  min-height: 100dvh;
+  padding: clamp(1rem, 5vw, 4rem);
+  place-items: center;
+  background:
+    radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--color-primary) 15%, transparent), transparent 34rem),
+    var(--color-canvas);
+}
+
+.not-found-card {
+  display: grid;
+  width: min(100%, 42rem);
+  gap: var(--space-5);
+  justify-items: start;
+  padding: clamp(1.5rem, 6vw, 4rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.not-found-code {
+  color: var(--color-primary);
+  font-size: clamp(4rem, 18vw, 9rem);
+  font-weight: 900;
+  line-height: 0.8;
+  letter-spacing: -0.08em;
+}
+
+.not-found-card h1 {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.not-found-card p {
+  max-width: 36rem;
+  margin: 0;
+  color: var(--color-ink-soft);
+}
+
+.not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
 * {
   box-sizing: border-box;
 }

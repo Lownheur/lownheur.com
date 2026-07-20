@@ -37,16 +37,40 @@ function nullable(value: FormDataEntryValue | null) {
 
 function resourceInput(resource: ResourceName, formData: FormData) {
   if (resource === "categories") {
-    return { title: formData.get("title"), description: nullable(formData.get("description")) };
+    return {
+      title: formData.get("title"),
+      description: nullable(formData.get("description")),
+      parentCategoryId: nullable(formData.get("parentCategoryId"))
+    };
   }
   if (resource === "events") {
     return { categoryId: formData.get("categoryId"), title: formData.get("title"), description: nullable(formData.get("description")) };
   }
   if (resource === "goals") {
-    return { categoryId: formData.get("categoryId"), title: formData.get("title"), description: nullable(formData.get("description")), status: formData.get("status") };
+    return {
+      categoryId: formData.get("categoryId"),
+      title: formData.get("title"),
+      description: nullable(formData.get("description")),
+      status: formData.get("status"),
+      goalType: formData.get("goalType"),
+      targetValue: formData.get("targetValue"),
+      unit: formData.get("unit"),
+      period: formData.get("period")
+    };
   }
   const target = String(formData.get("target") ?? "").split(":");
-  return { targetType: target[0], targetId: target[1], startsAt: formData.get("startsAt"), endsAt: nullable(formData.get("endsAt")), status: formData.get("status") };
+  return {
+    targetType: target[0],
+    targetId: target[1],
+    startsAt: formData.get("startsAt"),
+    endsAt: nullable(formData.get("endsAt")),
+    status: formData.get("status"),
+    recurrence: formData.get("recurrence"),
+    recurrenceInterval: formData.get("recurrenceInterval"),
+    recurrenceWeekdays: formData.getAll("recurrenceWeekdays"),
+    recurrenceEndsAt: nullable(formData.get("recurrenceEndsAt")),
+    recurrenceTimezone: formData.get("recurrenceTimezone")
+  };
 }
 
 function resourcePath(locale: AppLocale, resource: ResourceName) {
