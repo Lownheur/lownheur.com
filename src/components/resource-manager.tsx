@@ -372,6 +372,137 @@ async function ResourceForm({
   );
 }
 
+export async function ResourceCreateDialog({
+  locale,
+  resource,
+  categories,
+  events,
+  goals,
+  timezone,
+  defaultOpen = false,
+  triggerClassName = "button button-primary resource-add-button",
+  error
+}: {
+  locale: AppLocale;
+  resource: ResourceName;
+  categories: CategoryOption[];
+  events: Option[];
+  goals: Option[];
+  timezone: string;
+  defaultOpen?: boolean;
+  triggerClassName?: string;
+  error?: string;
+}) {
+  const t = await getTranslations({ locale, namespace: "Dashboard" });
+  const singular = t("resources." + resource + ".singular");
+  return (
+    <ResourceDialog
+      triggerLabel={t("actions.add")}
+      title={t("dialogs.createTitle", { resource: singular })}
+      description={t("dialogs.createDescription", { resource: singular })}
+      triggerClassName={triggerClassName}
+      icon="plus"
+      closeLabel={t("actions.close")}
+      defaultOpen={defaultOpen}
+    >
+      <div className="dialog-illustration"><ResourceIllustration resource={resource} /></div>
+      {error ? <p className="form-notice form-error" role="alert">{t("errors." + error)}</p> : null}
+      <ResourceForm
+        locale={locale}
+        resource={resource}
+        categories={categories}
+        events={events}
+        goals={goals}
+        timezone={timezone}
+        submitLabel={t("actions.create")}
+        cancelLabel={t("actions.cancel")}
+      />
+    </ResourceDialog>
+  );
+}
+
+export async function ResourceCardDialogs({
+  locale,
+  resource,
+  row,
+  title,
+  categories,
+  events,
+  goals,
+  timezone,
+  assets,
+  defaultEditOpen = false
+}: {
+  locale: AppLocale;
+  resource: Exclude<ResourceName, "schedules">;
+  row: ResourceRecord;
+  title: string;
+  categories: CategoryOption[];
+  events: Option[];
+  goals: Option[];
+  timezone: string;
+  assets: MediaView[];
+  defaultEditOpen?: boolean;
+}) {
+  const t = await getTranslations({ locale, namespace: "Dashboard" });
+  const singular = t("resources." + resource + ".singular");
+  return (
+    <div className="resource-card-actions">
+      <ResourceDialog
+        triggerLabel={t("actions.edit")}
+        title={t("dialogs.editTitle", { resource: singular })}
+        description={t("dialogs.editDescription", { resource: singular })}
+        triggerClassName="button button-ghost"
+        icon="edit"
+        closeLabel={t("actions.close")}
+        defaultOpen={defaultEditOpen}
+      >
+        <div className="dialog-illustration"><ResourceIllustration resource={resource} /></div>
+        <ExistingMedia
+          locale={locale}
+          resource={resource}
+          resourceId={row.id}
+          assets={assets}
+          confirmation={t("actions.confirmRemoveImage")}
+        />
+        <ResourceForm
+          locale={locale}
+          resource={resource}
+          row={row}
+          categories={categories}
+          events={events}
+          goals={goals}
+          timezone={timezone}
+          submitLabel={t("actions.save")}
+          cancelLabel={t("actions.cancel")}
+        />
+      </ResourceDialog>
+      <ResourceDialog
+        triggerLabel={t("actions.delete")}
+        title={t("dialogs.deleteTitle", { name: title })}
+        description={t("dialogs.deleteDescription")}
+        triggerClassName="button button-ghost button-danger"
+        icon="trash"
+        closeLabel={t("actions.close")}
+      >
+        <div className="delete-dialog-content">
+          <ResourceIllustration resource={resource} />
+          <p>{t("dialogs.deleteWarning")}</p>
+        </div>
+        <form className="delete-dialog-form" action={deleteResourceAction}>
+          <input type="hidden" name="locale" value={locale} />
+          <input type="hidden" name="resource" value={resource} />
+          <input type="hidden" name="id" value={row.id} />
+          <footer className="resource-dialog-footer">
+            <button className="button button-ghost" type="button" data-dialog-close>{t("actions.cancel")}</button>
+            <button className="button button-danger-solid" type="submit">{t("actions.delete")}</button>
+          </footer>
+        </form>
+      </ResourceDialog>
+    </div>
+  );
+}
+
 export async function ResourceManager({
   locale,
   resource,

@@ -87,6 +87,9 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 - [x] **V1-048 — Adapter le MCP au nouveau flux de progression** — `TERMINÉ`
   - Acceptation : le MCP ne planifie plus directement les objectifs, sait relier objectifs et événements, valider les occurrences et gérer l’historique périodique avec les mêmes autorisations que le web.
   - Preuve : `create/update_event` acceptent `goalIds`, `create/update_schedule` n’acceptent que `eventId`, et trois outils ajoutés gèrent validation d’occurrence, validation périodique et lecture d’historique. Les 33 outils sont découverts et leurs schémas vérifiés par le SDK MCP officiel; aucune propriété de planification directe d’objectif n’est exposée.
+- [x] **V1-049 — Finaliser l’exploration visuelle du Dashboard** — `TERMINÉ`
+  - Acceptation : le Dashboard ne répète pas de grand titre marketing; Aujourd’hui et Calendrier affichent le chemin de catégorie et les objectifs liés de chaque événement; Organisation réunit catégories, événements et objectifs dans des cartes imbriquées, en commençant par les catégories parentes, avec un seul bouton d’ajout permettant de choisir le type à créer.
+  - Preuve : recette navigateur authentifiée sur les trois sections; Aujourd’hui et Calendrier affichent les chemins complets et les objectifs liés, Organisation présente six seules catégories parentes avant ouverture puis les cartes enfants avec médias ou SVG, et le sélecteur d’ajout propose exactement catégorie, événement ou objectif. Format tablette 925 × 445 sans débordement horizontal; lint, types, 34 tests et builds Next.js/Cloudflare verts.
 
 ## P4 — MCP
 

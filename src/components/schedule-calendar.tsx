@@ -5,7 +5,12 @@ import { addCalendarDays, dateInTimeZone, type CalendarView } from "@/lib/calend
 import type { ScheduleOccurrence } from "@/server/domain/resources";
 import { setOccurrenceCompletedAction } from "@/app/[locale]/(dashboard)/dashboard/actions";
 
-type Target = { id: string; title: string };
+type Target = {
+  id: string;
+  title: string;
+  categoryPath: string;
+  goalTitles: string[];
+};
 
 export async function ScheduleViewSwitcher({
   locale,
@@ -59,7 +64,7 @@ export async function ScheduleCalendar({
   events: Target[];
 }) {
   const t = await getTranslations({ locale, namespace: "Dashboard.calendar" });
-  const eventTitles = new Map(events.map((item) => [item.id, item.title]));
+  const eventById = new Map(events.map((item) => [item.id, item]));
   const byDay = new Map(days.map((day) => [day, [] as ScheduleOccurrence[]]));
   for (const occurrence of occurrences) {
     byDay.get(dateInTimeZone(new Date(occurrence.startsAt), timeZone))?.push(occurrence);
@@ -119,27 +124,38 @@ export async function ScheduleCalendar({
                 {isToday ? <span>{t("today")}</span> : null}
               </header>
               <div className="calendar-day-items">
-                {items.length ? items.map((occurrence) => (
-                  <article className={occurrence.completedAt ? "calendar-item is-event is-completed" : "calendar-item is-event"} key={occurrence.scheduleId + occurrence.startsAt}>
-                    <div className="calendar-item-time">
-                      <time dateTime={occurrence.startsAt}>{timeFormatter.format(new Date(occurrence.startsAt))}</time>
-                      {occurrence.endsAt ? <span>– {timeFormatter.format(new Date(occurrence.endsAt))}</span> : null}
-                    </div>
-                    <strong>{eventTitles.get(occurrence.eventId) ?? t("unknownTarget")}</strong>
-                    <div className="calendar-item-meta">
-                      <form action={setOccurrenceCompletedAction}>
-                        <input type="hidden" name="locale" value={locale} />
-                        <input type="hidden" name="scheduleId" value={occurrence.scheduleId} />
-                        <input type="hidden" name="occurrenceStartsAt" value={occurrence.startsAt} />
-                        <input type="hidden" name="completed" value={occurrence.completedAt ? "false" : "true"} />
-                        <button className="calendar-check" type="submit">
-                          {occurrence.completedAt ? "✓ " + t("completed") : t("complete")}
-                        </button>
-                      </form>
-                      {occurrence.recurrence !== "none" ? <span aria-label={t("recurring")}>↻</span> : null}
-                    </div>
-                  </article>
-                )) : <p className="calendar-day-empty">{t("empty")}</p>}
+                {items.length ? items.map((occurrence) => {
+                  const event = eventById.get(occurrence.eventId);
+                  return (
+                    <article className={occurrence.completedAt ? "calendar-item is-event is-completed" : "calendar-item is-event"} key={occurrence.scheduleId + occurrence.startsAt}>
+                      <div className="calendar-item-time">
+                        <time dateTime={occurrence.startsAt}>{timeFormatter.format(new Date(occurrence.startsAt))}</time>
+                        {occurrence.endsAt ? <span>– {timeFormatter.format(new Date(occurrence.endsAt))}</span> : null}
+                      </div>
+                      <strong>{event?.title ?? t("unknownTarget")}</strong>
+                      {event ? (
+                        <div className="event-context-labels calendar-context-labels">
+                          {event.categoryPath ? <span className="context-label is-category">{event.categoryPath}</span> : null}
+                          {event.goalTitles.map((goal) => (
+                            <span className="context-label is-goal" key={goal}>◎ {goal}</span>
+                          ))}
+                        </div>
+                      ) : null}
+                      <div className="calendar-item-meta">
+                        <form action={setOccurrenceCompletedAction}>
+                          <input type="hidden" name="locale" value={locale} />
+                          <input type="hidden" name="scheduleId" value={occurrence.scheduleId} />
+                          <input type="hidden" name="occurrenceStartsAt" value={occurrence.startsAt} />
+                          <input type="hidden" name="completed" value={occurrence.completedAt ? "false" : "true"} />
+                          <button className="calendar-check" type="submit">
+                            {occurrence.completedAt ? "✓ " + t("completed") : t("complete")}
+                          </button>
+                        </form>
+                        {occurrence.recurrence !== "none" ? <span aria-label={t("recurring")}>↻</span> : null}
+                      </div>
+                    </article>
+                  );
+                }) : <p className="calendar-day-empty">{t("empty")}</p>}
               </div>
             </section>
           );
