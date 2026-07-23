@@ -34,7 +34,7 @@
       },
       "schedules": {
         "title": "Schedules",
-        "description": "Place an event or goal in time and see what comes next immediately."
+        "description": "Place events in time and link them to the goals they advance."
       }
     },
     "pricingEyebrow": "Three plans",
@@ -138,6 +138,27 @@
       "goals": "Goals",
       "settings": "Settings"
     },
+    "unified": {
+      "title": "Your day and projects in one place",
+      "description": "Act today, explore your organization and schedule events without switching tools.",
+      "sectionLabel": "Dashboard sections",
+      "sections": {
+        "today": "Today",
+        "organize": "Organization",
+        "calendar": "Calendar"
+      },
+      "todayEvents": "To do today",
+      "todayEventsHint": "Every occurrence is checked independently.",
+      "emptyEvents": "Schedule an event to see it here.",
+      "goalTracking": "Goal tracking",
+      "goalTrackingHint": "Check the current period without blocking time in the calendar.",
+      "organization": "Your organization",
+      "organizationHint": "Open a top-level category to see its subcategories, events and goals.",
+      "manageLabel": "Manage data",
+      "history": "History",
+      "check": "Check",
+      "uncheck": "Undo check"
+    },
     "overview": {
       "eyebrow": "Today",
       "title": "Your organization at a glance",
@@ -146,7 +167,7 @@
       "upcoming": "Coming up",
       "upcomingDescription": "Your next five schedules.",
       "emptyTitle": "Nothing scheduled",
-      "emptyDescription": "Create an event or goal, then place it in time."
+      "emptyDescription": "Create an event, then place it in time."
     },
     "statuses": {
       "scheduled": "Scheduled",
@@ -208,6 +229,8 @@
       "empty": "No schedules",
       "event": "Event",
       "goal": "Goal",
+      "complete": "Complete",
+      "completed": "Done",
       "recurring": "Recurring schedule",
       "unknownTarget": "Unavailable item"
     },
@@ -237,9 +260,9 @@
       "schedules": {
         "title": "Schedules",
         "singular": "schedule",
-        "description": "Place events and goals in time, once or on a recurring rule.",
+        "description": "Place events in time, once or on a recurring rule.",
         "empty": "No schedules yet.",
-        "emptyHint": "Schedule an event or goal to see it here."
+        "emptyHint": "Schedule an event to see it here."
       }
     },
     "actions": {
@@ -269,6 +292,9 @@
       "title": "Title",
       "description": "Description",
       "category": "Category",
+      "event": "Event",
+      "linkedGoals": "Linked goals",
+      "noLinkedGoals": "Create a goal first if this event should advance one.",
       "parentCategory": "Parent category",
       "noParentCategory": "None — top-level category",
       "target": "Event or goal",
@@ -337,7 +363,7 @@
         "title": "ChatGPT",
         "step1": "In ChatGPT web, enable developer mode when it is available for your plan and workspace.",
         "step2": "In Settings > Apps > Create, enter {endpoint}, select OAuth and scan the tools.",
-        "step3": "Connect your Lownheur account, review the 30 tools and confirm write actions when ChatGPT asks."
+        "step3": "Connect your Lownheur account, review the 33 tools and confirm write actions when ChatGPT asks."
       },
       "claude": {
         "title": "Claude",

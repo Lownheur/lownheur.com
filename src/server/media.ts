@@ -303,11 +303,7 @@ async function getScheduleMediaMap(client: SupabaseClient, userId: string, items
   const result: Record<string, MediaView[]> = {};
   const schedulesByTarget = new Map<string, string[]>();
   for (const item of items) {
-    const target = typeof item.event_id === "string"
-      ? "event:" + item.event_id
-      : typeof item.goal_id === "string"
-        ? "goal:" + item.goal_id
-        : null;
+    const target = typeof item.event_id === "string" ? item.event_id : null;
     if (target) {
       const scheduleIds = schedulesByTarget.get(target) ?? [];
       scheduleIds.push(item.id);
@@ -315,20 +311,13 @@ async function getScheduleMediaMap(client: SupabaseClient, userId: string, items
     }
   }
 
-  const eventIds = [...schedulesByTarget.keys()].filter((key) => key.startsWith("event:")).map((key) => key.slice(6));
-  const goalIds = [...schedulesByTarget.keys()].filter((key) => key.startsWith("goal:")).map((key) => key.slice(5));
-  const [{ data: eventLinks }, { data: goalLinks }] = await Promise.all([
-    eventIds.length
-      ? client.from("event_media").select("event_id,asset_id,position").eq("user_id", userId).in("event_id", eventIds).order("position")
-      : Promise.resolve({ data: [] }),
-    goalIds.length
-      ? client.from("goal_media").select("goal_id,asset_id,position").eq("user_id", userId).in("goal_id", goalIds).order("position")
-      : Promise.resolve({ data: [] })
-  ]);
+  const eventIds = [...schedulesByTarget.keys()];
+  const { data: eventLinks } = eventIds.length
+    ? await client.from("event_media").select("event_id,asset_id,position").eq("user_id", userId).in("event_id", eventIds).order("position")
+    : { data: [] };
 
   const assetByTarget = new Map<string, string>();
-  for (const link of eventLinks ?? []) if (!assetByTarget.has("event:" + link.event_id)) assetByTarget.set("event:" + link.event_id, String(link.asset_id));
-  for (const link of goalLinks ?? []) if (!assetByTarget.has("goal:" + link.goal_id)) assetByTarget.set("goal:" + link.goal_id, String(link.asset_id));
+  for (const link of eventLinks ?? []) if (!assetByTarget.has(String(link.event_id))) assetByTarget.set(String(link.event_id), String(link.asset_id));
   const assetIds = [...new Set(assetByTarget.values())];
   if (!assetIds.length) return result;
 

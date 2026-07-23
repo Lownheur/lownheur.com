@@ -7,8 +7,11 @@ import {
   DomainError,
   getUpcomingScheduleOccurrences,
   getResource,
+  listGoalCheckIns,
   listResources,
   resourceNames,
+  setGoalCheckIn,
+  setScheduleOccurrenceCompleted,
   type ResourceName,
   updateResource,
   updateSchemas
@@ -31,9 +34,9 @@ type Context = { client: SupabaseClient; userId: string };
 const singular = { categories: "category", events: "event", goals: "goal", schedules: "schedule" } as const;
 const capabilityDescription = {
   categories: " Categories can be nested to any practical depth with parentCategoryId; never create cycles.",
-  events: " Events belong to one category, including a subcategory.",
-  goals: " Goals include goalType, targetValue, unit and period so the target is measurable.",
-  schedules: " Schedules can be one-time, daily, weekly or monthly; weekly rules use ISO weekdays and recurring rules preserve local time through recurrenceTimezone."
+  events: " Events belong to one category and can advance several goals through goalIds.",
+  goals: " Goals are outcomes or habits. They include goalType, targetValue, unit and period, and are never scheduled directly.",
+  schedules: " Schedules only place events in time. They can be one-time, daily, weekly or monthly; weekly rules use ISO weekdays and recurring rules preserve local time through recurrenceTimezone."
 } as const;
 const idSchema = z.object({ id: z.uuid().describe("Resource UUID") });
 
@@ -241,7 +244,7 @@ function registerResourceTools(server: McpServer, context: Context, resource: Re
 }
 
 export function createLownheurMcpServer(context: Context) {
-  const server = new McpServer({ name: "lownheur", version: "1.2.0" });
+  const server = new McpServer({ name: "lownheur", version: "1.3.0" });
   for (const resource of resourceNames) registerResourceTools(server, context, resource);
   for (const resource of ["categories", "events", "goals"] as const) registerMediaTools(server, context, resource);
 
@@ -259,15 +262,53 @@ export function createLownheurMcpServer(context: Context) {
     return {
       items: occurrences.map((occurrence) => ({
         scheduleId: occurrence.scheduleId,
-        targetType: occurrence.eventId ? "event" : "goal",
-        targetId: occurrence.eventId ?? occurrence.goalId,
+        eventId: occurrence.eventId,
         startsAt: occurrence.startsAt,
         endsAt: occurrence.endsAt,
         recurrence: occurrence.recurrence,
-        recurrenceTimezone: occurrence.recurrenceTimezone
+        recurrenceTimezone: occurrence.recurrenceTimezone,
+        completedAt: occurrence.completedAt
       }))
     };
   }));
+
+  server.registerTool("set_schedule_occurrence_completed", {
+    title: "Complete a schedule occurrence",
+    description: "Check or uncheck one concrete occurrence of a scheduled event. This never completes every recurrence at once.",
+    inputSchema: z.object({
+      scheduleId: z.uuid(),
+      occurrenceStartsAt: z.iso.datetime({ offset: true }),
+      completed: z.boolean().default(true)
+    }),
+    _meta: oauthToolMetadata,
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+  }, (input) => safely(() => setScheduleOccurrenceCompleted(context.client, context.userId, input)));
+
+  server.registerTool("set_goal_check_in", {
+    title: "Check in a goal",
+    description: "Check or uncheck a goal for one day, week, month, or the one-time achievement period. Use the period start date in the user's account time zone.",
+    inputSchema: z.object({
+      goalId: z.uuid(),
+      periodStart: z.iso.date(),
+      completed: z.boolean().default(true),
+      value: z.number().finite().min(0).max(9_999_999_999.9999).optional()
+    }),
+    _meta: oauthToolMetadata,
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+  }, (input) => safely(() => setGoalCheckIn(context.client, context.userId, input)));
+
+  server.registerTool("list_goal_check_ins", {
+    title: "List goal check-ins",
+    description: "Return the completion history of one goal, newest period first.",
+    inputSchema: z.object({
+      goalId: z.uuid(),
+      limit: z.number().int().min(1).max(366).optional().default(100)
+    }),
+    _meta: oauthToolMetadata,
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+  }, ({ goalId, limit }) => safely(async () => ({
+    items: await listGoalCheckIns(context.client, context.userId, goalId, limit)
+  })));
 
   return server;
 }

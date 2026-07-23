@@ -1,12 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import type { AppLocale } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
-import {
-  addCalendarDays,
-  dateInTimeZone,
-  type CalendarView
-} from "@/lib/calendar";
+import { addCalendarDays, dateInTimeZone, type CalendarView } from "@/lib/calendar";
 import type { ScheduleOccurrence } from "@/server/domain/resources";
+import { setOccurrenceCompletedAction } from "@/app/[locale]/(dashboard)/dashboard/actions";
 
 type Target = { id: string; title: string };
 
@@ -22,15 +19,12 @@ export async function ScheduleViewSwitcher({
   const t = await getTranslations({ locale, namespace: "Dashboard.calendar" });
   return (
     <nav className="calendar-view-switch" aria-label={t("viewLabel")}>
-      {(["list", "day", "week"] as const).map((candidate) => (
+      {(["day", "week"] as const).map((candidate) => (
         <Link
           key={candidate}
           className={candidate === view ? "is-active" : undefined}
           aria-current={candidate === view ? "page" : undefined}
-          href={{
-            pathname: "/dashboard/schedules",
-            query: candidate === "list" ? {} : { view: candidate, date: selectedDate }
-          }}
+          href={{ pathname: "/dashboard", query: { section: "calendar", view: candidate, date: selectedDate } }}
         >
           {t("views." + candidate)}
         </Link>
@@ -50,8 +44,7 @@ export async function ScheduleCalendar({
   today,
   timeZone,
   occurrences,
-  events,
-  goals
+  events
 }: {
   locale: AppLocale;
   view: Exclude<CalendarView, "list">;
@@ -64,11 +57,9 @@ export async function ScheduleCalendar({
   timeZone: string;
   occurrences: ScheduleOccurrence[];
   events: Target[];
-  goals: Target[];
 }) {
   const t = await getTranslations({ locale, namespace: "Dashboard.calendar" });
   const eventTitles = new Map(events.map((item) => [item.id, item.title]));
-  const goalTitles = new Map(goals.map((item) => [item.id, item.title]));
   const byDay = new Map(days.map((day) => [day, [] as ScheduleOccurrence[]]));
   for (const occurrence of occurrences) {
     byDay.get(dateInTimeZone(new Date(occurrence.startsAt), timeZone))?.push(occurrence);
@@ -103,18 +94,13 @@ export async function ScheduleCalendar({
     <section className="schedule-calendar" aria-labelledby="calendar-title">
       <header className="calendar-controls">
         <div className="calendar-period-controls">
-          <Link className="button button-ghost calendar-arrow" href={{ pathname: "/dashboard/schedules", query: { view, date: previousDate } }} aria-label={t("previous")}>
-            <span aria-hidden="true">←</span>
-          </Link>
-          <Link className="button button-ghost" href={{ pathname: "/dashboard/schedules", query: { view, date: today } }}>
-            {t("today")}
-          </Link>
-          <Link className="button button-ghost calendar-arrow" href={{ pathname: "/dashboard/schedules", query: { view, date: nextDate } }} aria-label={t("next")}>
-            <span aria-hidden="true">→</span>
-          </Link>
+          <Link className="button button-ghost calendar-arrow" href={{ pathname: "/dashboard", query: { section: "calendar", view, date: previousDate } }} aria-label={t("previous")}>←</Link>
+          <Link className="button button-ghost" href={{ pathname: "/dashboard", query: { section: "calendar", view, date: today } }}>{t("today")}</Link>
+          <Link className="button button-ghost calendar-arrow" href={{ pathname: "/dashboard", query: { section: "calendar", view, date: nextDate } }} aria-label={t("next")}>→</Link>
         </div>
         <h2 id="calendar-title">{title}</h2>
         <form className="calendar-date-form" method="get">
+          <input type="hidden" name="section" value="calendar" />
           <input type="hidden" name="view" value={view} />
           <label className="sr-only" htmlFor="calendar-date">{t("chooseDate")}</label>
           <input id="calendar-date" className="form-input" type="date" name="date" defaultValue={selectedDate} />
@@ -133,25 +119,27 @@ export async function ScheduleCalendar({
                 {isToday ? <span>{t("today")}</span> : null}
               </header>
               <div className="calendar-day-items">
-                {items.length ? items.map((occurrence) => {
-                  const isEvent = Boolean(occurrence.eventId);
-                  const title = isEvent
-                    ? eventTitles.get(occurrence.eventId ?? "")
-                    : goalTitles.get(occurrence.goalId ?? "");
-                  return (
-                    <article className={isEvent ? "calendar-item is-event" : "calendar-item is-goal"} key={occurrence.scheduleId + occurrence.startsAt}>
-                      <div className="calendar-item-time">
-                        <time dateTime={occurrence.startsAt}>{timeFormatter.format(new Date(occurrence.startsAt))}</time>
-                        {occurrence.endsAt ? <span>– {timeFormatter.format(new Date(occurrence.endsAt))}</span> : null}
-                      </div>
-                      <strong>{title ?? t("unknownTarget")}</strong>
-                      <div className="calendar-item-meta">
-                        <span>{isEvent ? t("event") : t("goal")}</span>
-                        {occurrence.recurrence !== "none" ? <span aria-label={t("recurring")}>↻</span> : null}
-                      </div>
-                    </article>
-                  );
-                }) : <p className="calendar-day-empty">{t("empty")}</p>}
+                {items.length ? items.map((occurrence) => (
+                  <article className={occurrence.completedAt ? "calendar-item is-event is-completed" : "calendar-item is-event"} key={occurrence.scheduleId + occurrence.startsAt}>
+                    <div className="calendar-item-time">
+                      <time dateTime={occurrence.startsAt}>{timeFormatter.format(new Date(occurrence.startsAt))}</time>
+                      {occurrence.endsAt ? <span>– {timeFormatter.format(new Date(occurrence.endsAt))}</span> : null}
+                    </div>
+                    <strong>{eventTitles.get(occurrence.eventId) ?? t("unknownTarget")}</strong>
+                    <div className="calendar-item-meta">
+                      <form action={setOccurrenceCompletedAction}>
+                        <input type="hidden" name="locale" value={locale} />
+                        <input type="hidden" name="scheduleId" value={occurrence.scheduleId} />
+                        <input type="hidden" name="occurrenceStartsAt" value={occurrence.startsAt} />
+                        <input type="hidden" name="completed" value={occurrence.completedAt ? "false" : "true"} />
+                        <button className="calendar-check" type="submit">
+                          {occurrence.completedAt ? "✓ " + t("completed") : t("complete")}
+                        </button>
+                      </form>
+                      {occurrence.recurrence !== "none" ? <span aria-label={t("recurring")}>↻</span> : null}
+                    </div>
+                  </article>
+                )) : <p className="calendar-day-empty">{t("empty")}</p>}
               </div>
             </section>
           );

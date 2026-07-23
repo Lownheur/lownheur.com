@@ -29,10 +29,10 @@ type Option = { id: string; title: string };
 type DialogState = { type?: "create" | "edit"; id?: string };
 
 const resourcePaths = {
-  categories: "/dashboard/categories",
-  events: "/dashboard/events",
-  goals: "/dashboard/goals",
-  schedules: "/dashboard/schedules"
+  categories: "/dashboard",
+  events: "/dashboard",
+  goals: "/dashboard",
+  schedules: "/dashboard"
 } as const;
 
 function value(row: ResourceRecord | undefined, key: string) {
@@ -87,13 +87,12 @@ function ExistingMedia({
   );
 }
 
-async function ResourceFields({
+export async function LegacyResourceFields({
   locale,
   resource,
   row,
   categories,
   events,
-  goals,
   timezone
 }: {
   locale: AppLocale;
@@ -106,23 +105,13 @@ async function ResourceFields({
 }) {
   const t = await getTranslations({ locale, namespace: "Dashboard" });
   if (resource === "schedules") {
-    const target = value(row, "event_id")
-      ? "event:" + value(row, "event_id")
-      : value(row, "goal_id")
-        ? "goal:" + value(row, "goal_id")
-        : "";
     return (
       <>
         <label className="form-wide">
-          <span>{t("fields.target")}</span>
-          <select className="form-input" name="target" defaultValue={target} required>
+          <span>{t("fields.event")}</span>
+          <select className="form-input" name="eventId" defaultValue={value(row, "event_id")} required>
             <option value="">—</option>
-            <optgroup label={t("nav.events")}>
-              {events.map((item) => <option value={"event:" + item.id} key={item.id}>{item.title}</option>)}
-            </optgroup>
-            <optgroup label={t("nav.goals")}>
-              {goals.map((item) => <option value={"goal:" + item.id} key={item.id}>{item.title}</option>)}
-            </optgroup>
+            {events.map((item) => <option value={item.id} key={item.id}>{item.title}</option>)}
           </select>
         </label>
         <LocalDateTimeField name="startsAt" label={t("fields.startsAt")} defaultValue={value(row, "starts_at")} required />
@@ -231,6 +220,123 @@ async function ResourceFields({
   );
 }
 
+async function UnifiedResourceFields({
+  locale,
+  resource,
+  row,
+  categories,
+  events,
+  goals,
+  timezone
+}: {
+  locale: AppLocale;
+  resource: ResourceName;
+  row?: ResourceRecord;
+  categories: CategoryOption[];
+  events: Option[];
+  goals: Option[];
+  timezone: string;
+}) {
+  const t = await getTranslations({ locale, namespace: "Dashboard" });
+  if (resource === "schedules") {
+    return (
+      <>
+        <label className="form-wide">
+          <span>{t("fields.event")}</span>
+          <select className="form-input" name="eventId" defaultValue={value(row, "event_id")} required>
+            <option value="">—</option>
+            {events.map((item) => <option value={item.id} key={item.id}>{item.title}</option>)}
+          </select>
+        </label>
+        <LocalDateTimeField name="startsAt" label={t("fields.startsAt")} defaultValue={value(row, "starts_at")} required />
+        <LocalDateTimeField name="endsAt" label={t("fields.endsAt")} defaultValue={value(row, "ends_at")} />
+        <input type="hidden" name="status" value={value(row, "status") || "scheduled"} />
+        <ScheduleRecurrenceFields
+          defaultRecurrence={value(row, "recurrence") || "none"}
+          defaultInterval={numberValue(row, "recurrence_interval", 1)}
+          defaultWeekdays={numberArrayValue(row, "recurrence_weekdays")}
+          defaultEndsAt={value(row, "recurrence_ends_at")}
+          timezone={value(row, "recurrence_timezone") || timezone}
+          labels={{
+            section: t("fields.recurrenceSection"),
+            recurrence: t("fields.recurrence"),
+            interval: t("fields.recurrenceInterval"),
+            weekdays: t("fields.recurrenceWeekdays"),
+            endsAt: t("fields.recurrenceEndsAt"),
+            timezone: t("fields.recurrenceTimezone"),
+            none: t("recurrences.none"),
+            daily: t("recurrences.daily"),
+            weekly: t("recurrences.weekly"),
+            monthly: t("recurrences.monthly"),
+            weekdayNames: [1, 2, 3, 4, 5, 6, 7].map((day) => t("weekdays." + day))
+          }}
+        />
+      </>
+    );
+  }
+
+  return (
+    <>
+      {resource === "categories" ? (
+        <label className="form-wide">
+          <span>{t("fields.parentCategory")}</span>
+          <select className="form-input" name="parentCategoryId" defaultValue={value(row, "parent_id")}>
+            <option value="">{t("fields.noParentCategory")}</option>
+            {categories
+              .filter((item) => !row || !categoryDescendantIds(categories, row.id).has(item.id))
+              .map((item) => <option value={item.id} key={item.id}>{item.path}</option>)}
+          </select>
+        </label>
+      ) : (
+        <label className="form-wide">
+          <span>{t("fields.category")}</span>
+          <select className="form-input" name="categoryId" defaultValue={value(row, "category_id")} required>
+            <option value="">—</option>
+            {categories.map((item) => <option value={item.id} key={item.id}>{item.path}</option>)}
+          </select>
+        </label>
+      )}
+      <label className="form-wide">
+        <span>{t("fields.title")}</span>
+        <input className="form-input" name="title" defaultValue={value(row, "title")} maxLength={120} required />
+      </label>
+      <label className="form-wide">
+        <span>{t("fields.description")}</span>
+        <textarea className="form-input" name="description" defaultValue={value(row, "description")} maxLength={5000} rows={4} />
+      </label>
+      {resource === "goals" ? (
+        <fieldset className="structured-fields form-wide">
+          <legend>{t("fields.goalMeasurement")}</legend>
+          <div className="structured-fields-grid">
+            <label><span>{t("fields.goalType")}</span><select className="form-input" name="goalType" defaultValue={value(row, "goal_type") || "completion"}>{["target", "frequency", "completion"].map((item) => <option value={item} key={item}>{t("goalTypes." + item)}</option>)}</select></label>
+            <label><span>{t("fields.targetValue")}</span><input className="form-input" type="number" name="targetValue" min="0" max="9999999999.9999" step="any" defaultValue={numberValue(row, "target_value", 1)} required /></label>
+            <label><span>{t("fields.unit")}</span><input className="form-input" name="unit" defaultValue={value(row, "unit") || t("goalDefaults.successUnit")} maxLength={40} required /></label>
+            <label><span>{t("fields.period")}</span><select className="form-input" name="period" defaultValue={value(row, "period") || "once"}>{["once", "day", "week", "month"].map((item) => <option value={item} key={item}>{t("periods." + item)}</option>)}</select></label>
+            <label className="form-wide"><span>{t("fields.status")}</span><select className="form-input" name="status" defaultValue={value(row, "status") || "todo"}>{["todo", "in_progress", "achieved", "abandoned"].map((item) => <option value={item} key={item}>{t("statuses." + item)}</option>)}</select></label>
+          </div>
+        </fieldset>
+      ) : resource === "events" ? (
+        <fieldset className="structured-fields form-wide">
+          <legend>{t("fields.linkedGoals")}</legend>
+          <div className="goal-link-options">
+            {goals.length ? goals.map((goal) => (
+              <label key={goal.id}>
+                <input type="checkbox" name="goalIds" value={goal.id} defaultChecked={Array.isArray(row?.goal_ids) && row.goal_ids.includes(goal.id)} />
+                <span>{goal.title}</span>
+              </label>
+            )) : <small>{t("fields.noLinkedGoals")}</small>}
+          </div>
+        </fieldset>
+      ) : null}
+      <label className="form-wide image-upload-field">
+        <span className="image-upload-preview"><ResourceIllustration resource={resource} /></span>
+        <span className="image-upload-copy"><strong>{t("fields.images")}</strong><small>{t("fields.imageHint")}</small></span>
+        <input className="form-input file-input" type="file" name="images" accept="image/jpeg,image/png,image/webp,image/avif" multiple={resource !== "categories"} />
+      </label>
+    </>
+  );
+}
+
 async function ResourceForm({
   locale,
   resource,
@@ -257,7 +363,7 @@ async function ResourceForm({
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="resource" value={resource} />
       {row ? <input type="hidden" name="id" value={row.id} /> : null}
-      <ResourceFields locale={locale} resource={resource} row={row} categories={categories} events={events} goals={goals} timezone={timezone} />
+      <UnifiedResourceFields locale={locale} resource={resource} row={row} categories={categories} events={events} goals={goals} timezone={timezone} />
       <footer className="resource-dialog-footer">
         <button className="button button-ghost" type="button" data-dialog-close>{cancelLabel}</button>
         <button className="button button-primary" type="submit">{submitLabel}</button>
@@ -343,7 +449,7 @@ export async function ResourceManager({
             const rawDate = value(row, "starts_at");
             const dateLabel = rawDate ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(rawDate)) : "";
             const scheduleTarget = resource === "schedules"
-              ? events.find((item) => item.id === value(row, "event_id"))?.title ?? goals.find((item) => item.id === value(row, "goal_id"))?.title
+              ? events.find((item) => item.id === value(row, "event_id"))?.title
               : undefined;
             const title = resource === "schedules" ? scheduleTarget ?? dateLabel : value(row, "title");
             const recurrenceValue = value(row, "recurrence") || "none";
@@ -444,7 +550,15 @@ export async function ResourceManager({
       )}
 
       {scheduleView === "list" && page.nextCursor ? (
-        <Link className="button pagination-next" href={{ pathname: resourcePaths[resource], query: { ...(search ? { search } : {}), cursor: page.nextCursor } }}>{t("actions.next")}</Link>
+        <Link className="button pagination-next" href={{
+          pathname: resourcePaths[resource],
+          query: {
+            section: resource === "schedules" ? "calendar" : "organize",
+            manage: resource,
+            ...(search ? { search } : {}),
+            cursor: page.nextCursor
+          }
+        }}>{t("actions.next")}</Link>
       ) : null}
     </div>
   );

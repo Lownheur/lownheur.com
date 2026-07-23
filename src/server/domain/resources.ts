@@ -6,7 +6,9 @@ const description = z
   .union([z.string().trim().max(5000), z.null()])
   .transform((value) => value === "" ? null : value);
 const id = z.uuid();
+const idArray = z.array(id).max(100).transform((values) => [...new Set(values)]);
 const timestamp = z.iso.datetime({ offset: true });
+const dateOnly = z.iso.date();
 const nullableId = z.union([id, z.null()]);
 const goalType = z.enum(["target", "frequency", "completion"]);
 const goalPeriod = z.enum(["once", "day", "week", "month"]);
@@ -72,7 +74,8 @@ export const createSchemas = {
   events: z.object({
     categoryId: id,
     title,
-    description: description.optional().default(null)
+    description: description.optional().default(null),
+    goalIds: idArray.optional().default([]).describe("Goals advanced by this event")
   }),
   goals: z.object({
     categoryId: id,
@@ -89,8 +92,7 @@ export const createSchemas = {
   }),
   schedules: z
     .object({
-      targetType: z.enum(["event", "goal"]),
-      targetId: id,
+      eventId: id.describe("Event UUID. Goals are linked to events and are never scheduled directly"),
       startsAt: timestamp,
       endsAt: timestamp.nullable().optional().default(null),
       status: z
@@ -118,7 +120,8 @@ export const updateSchemas = {
     .object({
       categoryId: id.optional(),
       title: title.optional(),
-      description: description.optional()
+      description: description.optional(),
+      goalIds: idArray.optional()
     })
     .refine((value) => Object.keys(value).length > 0, "No fields to update"),
   goals: z
@@ -135,8 +138,7 @@ export const updateSchemas = {
     .refine((value) => Object.keys(value).length > 0, "No fields to update"),
   schedules: z
     .object({
-      targetType: z.enum(["event", "goal"]).optional(),
-      targetId: id.optional(),
+      eventId: id.optional(),
       startsAt: timestamp.optional(),
       endsAt: timestamp.nullable().optional(),
       status: z.enum(["scheduled", "completed", "cancelled"]).optional(),
@@ -146,12 +148,6 @@ export const updateSchemas = {
       recurrenceEndsAt: timestamp.nullable().optional(),
       recurrenceTimezone: recurrenceTimezone.optional()
     })
-    .refine(
-      (value) =>
-        (value.targetType === undefined && value.targetId === undefined) ||
-        (value.targetType !== undefined && value.targetId !== undefined),
-      "targetType and targetId must be provided together"
-    )
     .refine((value) => Object.keys(value).length > 0, "No fields to update")
 } as const;
 
@@ -254,15 +250,8 @@ function toDatabaseInput(
     };
   }
 
-  const target =
-    input.targetType !== undefined && input.targetId !== undefined
-      ? input.targetType === "event"
-        ? { event_id: input.targetId, goal_id: null }
-        : { event_id: null, goal_id: input.targetId }
-      : {};
-
   return {
-    ...target,
+    ...(input.eventId !== undefined ? { event_id: input.eventId, goal_id: null } : {}),
     ...(input.startsAt !== undefined ? { starts_at: input.startsAt } : {}),
     ...(input.endsAt !== undefined ? { ends_at: input.endsAt } : {}),
     ...(input.status !== undefined ? { status: input.status } : {}),
@@ -284,8 +273,7 @@ function toDatabaseInput(
 
 function scheduleInputFromRecord(row: ResourceRecord) {
   return {
-    targetType: row.event_id ? "event" : "goal",
-    targetId: row.event_id ?? row.goal_id,
+    eventId: row.event_id,
     startsAt: row.starts_at,
     endsAt: row.ends_at,
     status: row.status,
@@ -295,6 +283,21 @@ function scheduleInputFromRecord(row: ResourceRecord) {
     recurrenceEndsAt: row.recurrence_ends_at,
     recurrenceTimezone: row.recurrence_timezone
   };
+}
+
+function normalizeResourceRow(resource: ResourceName, row: ResourceRecord): ResourceRecord {
+  if (resource !== "events") return row;
+  const links = Array.isArray(row.event_goals)
+    ? row.event_goals as Array<{ goal_id?: unknown }>
+    : [];
+  const event = { ...row };
+  delete event.event_goals;
+  return {
+    ...event,
+    goal_ids: links
+      .map((link) => link.goal_id)
+      .filter((goalId): goalId is string => typeof goalId === "string")
+  } as ResourceRecord;
 }
 
 function normalizeScheduleChanges(input: Record<string, unknown>) {
@@ -343,7 +346,7 @@ export async function listResources(
   const limit = z.number().int().min(1).max(100).parse(options.limit ?? 20);
   let query = client
     .from(resource)
-    .select("*")
+    .select(resource === "events" ? "*,event_goals(goal_id)" : "*")
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .order("id", { ascending: false })
@@ -369,7 +372,7 @@ export async function listResources(
 
   const { data, error } = await query;
   mapError(error);
-  const rows = (data ?? []) as ResourceRecord[];
+  const rows = ((data ?? []) as unknown as ResourceRecord[]).map((row) => normalizeResourceRow(resource, row));
   const hasMore = rows.length > limit;
   const items = hasMore ? rows.slice(0, limit) : rows;
 
@@ -390,14 +393,14 @@ export async function getResource(
 
   const { data, error } = await client
     .from(resource)
-    .select("*")
+    .select(resource === "events" ? "*,event_goals(goal_id)" : "*")
     .eq("user_id", userId)
     .eq("id", validId.data)
     .maybeSingle();
 
   mapError(error);
   if (!data) throw new DomainError("not_found", "Resource not found.");
-  return data as ResourceRecord;
+  return normalizeResourceRow(resource, data as unknown as ResourceRecord);
 }
 
 export async function createResource(
@@ -416,13 +419,27 @@ export async function createResource(
     mapError(profileError);
     parsed = { ...parsed, recurrenceTimezone: profile?.timezone ?? "UTC" };
   }
+  const goalIds = resource === "events" ? parsed.goalIds as string[] : undefined;
+  const databaseParsed = { ...parsed };
+  delete databaseParsed.goalIds;
   const { data, error } = await client
     .from(resource)
-    .insert({ user_id: userId, ...toDatabaseInput(resource, parsed) })
+    .insert({ user_id: userId, ...toDatabaseInput(resource, databaseParsed) })
     .select("*")
     .single();
 
   mapError(error);
+  if (resource === "events") {
+    const { error: linkError } = await client.rpc("set_event_goals", {
+      p_event_id: data.id,
+      p_goal_ids: goalIds ?? []
+    });
+    if (linkError) {
+      await client.from("events").delete().eq("user_id", userId).eq("id", data.id);
+      mapError(linkError);
+    }
+    return getResource(client, userId, resource, data.id);
+  }
   return data as ResourceRecord;
 }
 
@@ -445,9 +462,14 @@ export async function updateResource(
     });
   }
 
+  const goalIds = resource === "events" && parsed.goalIds !== undefined
+    ? parsed.goalIds as string[]
+    : undefined;
+  const databaseParsed = { ...parsed };
+  delete databaseParsed.goalIds;
   const { data, error } = await client
     .from(resource)
-    .update(toDatabaseInput(resource, parsed))
+    .update(toDatabaseInput(resource, databaseParsed))
     .eq("user_id", userId)
     .eq("id", validId.data)
     .select("*")
@@ -455,7 +477,16 @@ export async function updateResource(
 
   mapError(error);
   if (!data) throw new DomainError("not_found", "Resource not found.");
-  return data as ResourceRecord;
+  if (resource === "events" && goalIds !== undefined) {
+    const { error: linkError } = await client.rpc("set_event_goals", {
+      p_event_id: validId.data,
+      p_goal_ids: goalIds
+    });
+    mapError(linkError);
+  }
+  return resource === "events"
+    ? getResource(client, userId, resource, validId.data)
+    : data as ResourceRecord;
 }
 
 export type CategoryOption = {
@@ -519,24 +550,49 @@ export function categoryDescendantIds(categories: CategoryOption[], categoryId: 
 
 export type ScheduleOccurrence = {
   scheduleId: string;
-  eventId: string | null;
-  goalId: string | null;
+  eventId: string;
   startsAt: string;
   endsAt: string | null;
   recurrence: "none" | "daily" | "weekly" | "monthly";
   recurrenceTimezone: string;
+  completedAt: string | null;
 };
 
 function mapScheduleOccurrences(data: unknown): ScheduleOccurrence[] {
   if (!Array.isArray(data)) return [];
   return data.map((row: Record<string, unknown>) => ({
     scheduleId: String(row.schedule_id),
-    eventId: typeof row.event_id === "string" ? row.event_id : null,
-    goalId: typeof row.goal_id === "string" ? row.goal_id : null,
+    eventId: String(row.event_id),
     startsAt: String(row.occurrence_starts_at),
     endsAt: typeof row.occurrence_ends_at === "string" ? row.occurrence_ends_at : null,
     recurrence: recurrence.parse(row.recurrence),
-    recurrenceTimezone: String(row.recurrence_timezone)
+    recurrenceTimezone: String(row.recurrence_timezone),
+    completedAt: null
+  }));
+}
+
+async function attachOccurrenceCompletions(
+  client: SupabaseClient,
+  occurrences: ScheduleOccurrence[]
+) {
+  if (!occurrences.length) return occurrences;
+  const scheduleIds = [...new Set(occurrences.map((item) => item.scheduleId))];
+  const from = occurrences.reduce((value, item) => item.startsAt < value ? item.startsAt : value, occurrences[0].startsAt);
+  const to = occurrences.reduce((value, item) => item.startsAt > value ? item.startsAt : value, occurrences[0].startsAt);
+  const { data, error } = await client
+    .from("schedule_occurrence_completions")
+    .select("schedule_id,occurrence_starts_at,completed_at")
+    .in("schedule_id", scheduleIds)
+    .gte("occurrence_starts_at", from)
+    .lte("occurrence_starts_at", to);
+  mapError(error);
+  const completed = new Map((data ?? []).map((row) => [
+    row.schedule_id + "|" + row.occurrence_starts_at,
+    row.completed_at
+  ]));
+  return occurrences.map((item) => ({
+    ...item,
+    completedAt: completed.get(item.scheduleId + "|" + item.startsAt) ?? null
   }));
 }
 
@@ -551,7 +607,7 @@ export async function getUpcomingScheduleOccurrences(
     p_from: from
   });
   mapError(error);
-  return mapScheduleOccurrences(data);
+  return attachOccurrenceCompletions(client, mapScheduleOccurrences(data));
 }
 
 export async function getScheduleOccurrencesInRange(
@@ -571,7 +627,98 @@ export async function getScheduleOccurrencesInRange(
     p_limit: limit
   });
   mapError(error);
-  return mapScheduleOccurrences(data);
+  return attachOccurrenceCompletions(client, mapScheduleOccurrences(data));
+}
+
+export async function setScheduleOccurrenceCompleted(
+  client: SupabaseClient,
+  userId: string,
+  input: { scheduleId: string; occurrenceStartsAt: string; completed: boolean }
+) {
+  const scheduleId = id.parse(input.scheduleId);
+  const occurrenceStartsAt = timestamp.parse(input.occurrenceStartsAt);
+  const occurrences = await getScheduleOccurrencesInRange(client, {
+    from: new Date(new Date(occurrenceStartsAt).getTime() - 1000).toISOString(),
+    to: new Date(new Date(occurrenceStartsAt).getTime() + 1000).toISOString(),
+    limit: 5
+  });
+  if (!occurrences.some((item) => item.scheduleId === scheduleId && item.startsAt === occurrenceStartsAt)) {
+    throw new DomainError("not_found", "Schedule occurrence not found.");
+  }
+  if (!input.completed) {
+    const { error } = await client
+      .from("schedule_occurrence_completions")
+      .delete()
+      .eq("user_id", userId)
+      .eq("schedule_id", scheduleId)
+      .eq("occurrence_starts_at", occurrenceStartsAt);
+    mapError(error);
+    return { scheduleId, occurrenceStartsAt, completed: false };
+  }
+  const completedAt = new Date().toISOString();
+  const { error } = await client
+    .from("schedule_occurrence_completions")
+    .upsert({
+      user_id: userId,
+      schedule_id: scheduleId,
+      occurrence_starts_at: occurrenceStartsAt,
+      completed_at: completedAt
+    });
+  mapError(error);
+  return { scheduleId, occurrenceStartsAt, completed: true, completedAt };
+}
+
+export async function setGoalCheckIn(
+  client: SupabaseClient,
+  userId: string,
+  input: { goalId: string; periodStart: string; completed: boolean; value?: number }
+) {
+  const goalId = id.parse(input.goalId);
+  const periodStart = dateOnly.parse(input.periodStart);
+  await getResource(client, userId, "goals", goalId);
+  if (!input.completed) {
+    const { error } = await client
+      .from("goal_check_ins")
+      .delete()
+      .eq("user_id", userId)
+      .eq("goal_id", goalId)
+      .eq("period_start", periodStart);
+    mapError(error);
+    return { goalId, periodStart, completed: false };
+  }
+  const value = targetValue.parse(input.value ?? 1);
+  const completedAt = new Date().toISOString();
+  const { error } = await client
+    .from("goal_check_ins")
+    .upsert({
+      user_id: userId,
+      goal_id: goalId,
+      period_start: periodStart,
+      value,
+      completed_at: completedAt
+    });
+  mapError(error);
+  return { goalId, periodStart, completed: true, value, completedAt };
+}
+
+export async function listGoalCheckIns(
+  client: SupabaseClient,
+  userId: string,
+  goalId: string,
+  limit = 100
+) {
+  const validGoalId = id.parse(goalId);
+  await getResource(client, userId, "goals", validGoalId);
+  const validLimit = z.number().int().min(1).max(366).parse(limit);
+  const { data, error } = await client
+    .from("goal_check_ins")
+    .select("period_start,value,completed_at")
+    .eq("user_id", userId)
+    .eq("goal_id", validGoalId)
+    .order("period_start", { ascending: false })
+    .limit(validLimit);
+  mapError(error);
+  return data ?? [];
 }
 
 export async function deleteResource(

@@ -34,7 +34,7 @@
       },
       "schedules": {
         "title": "Planifications",
-        "description": "Placez un événement ou un objectif dans le temps et voyez la suite immédiatement."
+        "description": "Placez vos événements dans le temps et reliez-les aux objectifs qu’ils font progresser."
       }
     },
     "pricingEyebrow": "Trois offres",
@@ -138,6 +138,27 @@
       "goals": "Objectifs",
       "settings": "Réglages"
     },
+    "unified": {
+      "title": "Votre journée, vos projets, un seul espace",
+      "description": "Agissez aujourd’hui, explorez votre organisation et planifiez vos événements sans changer d’outil.",
+      "sectionLabel": "Sections du dashboard",
+      "sections": {
+        "today": "Aujourd’hui",
+        "organize": "Organisation",
+        "calendar": "Calendrier"
+      },
+      "todayEvents": "À faire aujourd’hui",
+      "todayEventsHint": "Chaque occurrence se valide indépendamment.",
+      "emptyEvents": "Planifiez un événement pour le retrouver ici.",
+      "goalTracking": "Suivi des objectifs",
+      "goalTrackingHint": "Validez la période en cours sans bloquer une heure dans l’agenda.",
+      "organization": "Votre organisation",
+      "organizationHint": "Ouvrez une catégorie principale pour voir ses sous-catégories, événements et objectifs.",
+      "manageLabel": "Gérer les données",
+      "history": "Historique",
+      "check": "Valider",
+      "uncheck": "Annuler la validation"
+    },
     "overview": {
       "eyebrow": "Aujourd’hui",
       "title": "Votre organisation en un regard",
@@ -146,7 +167,7 @@
       "upcoming": "À venir",
       "upcomingDescription": "Vos cinq prochaines planifications.",
       "emptyTitle": "Rien de planifié",
-      "emptyDescription": "Créez un événement ou un objectif, puis placez-le dans le temps."
+      "emptyDescription": "Créez un événement, puis placez-le dans le temps."
     },
     "statuses": {
       "scheduled": "Planifié",
@@ -208,6 +229,8 @@
       "empty": "Aucune planification",
       "event": "Événement",
       "goal": "Objectif",
+      "complete": "Valider",
+      "completed": "Fait",
       "recurring": "Planification récurrente",
       "unknownTarget": "Élément indisponible"
     },
@@ -237,9 +260,9 @@
       "schedules": {
         "title": "Planifications",
         "singular": "planification",
-        "description": "Placez vos événements et objectifs dans le temps, une fois ou selon une récurrence.",
+        "description": "Placez vos événements dans le temps, une fois ou selon une récurrence.",
         "empty": "Aucune planification pour le moment.",
-        "emptyHint": "Planifiez un événement ou un objectif pour le retrouver ici."
+        "emptyHint": "Planifiez un événement pour le retrouver ici."
       }
     },
     "actions": {
@@ -269,6 +292,9 @@
       "title": "Titre",
       "description": "Description",
       "category": "Catégorie",
+      "event": "Événement",
+      "linkedGoals": "Objectifs liés",
+      "noLinkedGoals": "Créez d’abord un objectif si cet événement doit en faire progresser un.",
       "parentCategory": "Catégorie parente",
       "noParentCategory": "Aucune — catégorie principale",
       "target": "Événement ou objectif",
@@ -337,7 +363,7 @@
         "title": "ChatGPT",
         "step1": "Dans ChatGPT web, activez le mode développeur disponible pour votre offre et votre espace de travail.",
         "step2": "Dans Paramètres > Apps > Créer, indiquez {endpoint}, choisissez OAuth puis lancez l’analyse des outils.",
-        "step3": "Connectez votre compte Lownheur, vérifiez les 30 outils et confirmez les actions d’écriture quand ChatGPT le demande."
+        "step3": "Connectez votre compte Lownheur, vérifiez les 33 outils et confirmez les actions d’écriture quand ChatGPT le demande."
       },
       "claude": {
         "title": "Claude",

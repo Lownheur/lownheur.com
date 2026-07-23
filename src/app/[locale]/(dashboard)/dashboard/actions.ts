@@ -11,6 +11,8 @@ import {
   deleteResource,
   DomainError,
   resourceNames,
+  setGoalCheckIn,
+  setScheduleOccurrenceCompleted,
   type ResourceName,
   updateResource
 } from "@/server/domain/resources";
@@ -44,7 +46,12 @@ function resourceInput(resource: ResourceName, formData: FormData) {
     };
   }
   if (resource === "events") {
-    return { categoryId: formData.get("categoryId"), title: formData.get("title"), description: nullable(formData.get("description")) };
+    return {
+      categoryId: formData.get("categoryId"),
+      title: formData.get("title"),
+      description: nullable(formData.get("description")),
+      goalIds: formData.getAll("goalIds")
+    };
   }
   if (resource === "goals") {
     return {
@@ -58,10 +65,8 @@ function resourceInput(resource: ResourceName, formData: FormData) {
       period: formData.get("period")
     };
   }
-  const target = String(formData.get("target") ?? "").split(":");
   return {
-    targetType: target[0],
-    targetId: target[1],
+    eventId: formData.get("eventId"),
     startsAt: formData.get("startsAt"),
     endsAt: nullable(formData.get("endsAt")),
     status: formData.get("status"),
@@ -74,7 +79,8 @@ function resourceInput(resource: ResourceName, formData: FormData) {
 }
 
 function resourcePath(locale: AppLocale, resource: ResourceName) {
-  return "/" + locale + "/dashboard/" + resource;
+  const section = resource === "schedules" ? "calendar" : "organize";
+  return "/" + locale + "/dashboard?section=" + section + "&manage=" + resource;
 }
 
 function errorRedirect(locale: AppLocale, resource: ResourceName, error: unknown, dialog?: "create" | "edit", id?: string): never {
@@ -82,7 +88,7 @@ function errorRedirect(locale: AppLocale, resource: ResourceName, error: unknown
   const query = new URLSearchParams({ error: code });
   if (dialog) query.set("dialog", dialog);
   if (id) query.set("id", id);
-  redirectTo(resourcePath(locale, resource) + "?" + query.toString());
+  redirectTo(resourcePath(locale, resource) + "&" + query.toString());
 }
 
 function isMediaResource(resource: ResourceName): resource is MediaResource {
@@ -107,7 +113,7 @@ export async function createResourceAction(formData: FormData) {
     errorRedirect(locale, resource, error, "create");
   }
   revalidatePath(resourcePath(locale, resource));
-  redirectTo(resourcePath(locale, resource) + "?status=created");
+  redirectTo(resourcePath(locale, resource) + "&status=created");
 }
 
 export async function updateResourceAction(formData: FormData) {
@@ -124,7 +130,7 @@ export async function updateResourceAction(formData: FormData) {
     errorRedirect(locale, resource, error, "edit", resourceId);
   }
   revalidatePath(resourcePath(locale, resource));
-  redirectTo(resourcePath(locale, resource) + "?status=updated");
+  redirectTo(resourcePath(locale, resource) + "&status=updated");
 }
 
 export async function deleteResourceAction(formData: FormData) {
@@ -139,7 +145,32 @@ export async function deleteResourceAction(formData: FormData) {
     errorRedirect(locale, resource, error);
   }
   revalidatePath(resourcePath(locale, resource));
-  redirectTo(resourcePath(locale, resource) + "?status=deleted");
+  redirectTo(resourcePath(locale, resource) + "&status=deleted");
+}
+
+export async function setOccurrenceCompletedAction(formData: FormData) {
+  const locale = readLocale(formData);
+  const user = await requireUser(locale);
+  const client = await createSupabaseServerClient();
+  await setScheduleOccurrenceCompleted(client, user.id, {
+    scheduleId: String(formData.get("scheduleId") ?? ""),
+    occurrenceStartsAt: String(formData.get("occurrenceStartsAt") ?? ""),
+    completed: formData.get("completed") === "true"
+  });
+  revalidatePath("/" + locale + "/dashboard");
+}
+
+export async function setGoalCheckInAction(formData: FormData) {
+  const locale = readLocale(formData);
+  const user = await requireUser(locale);
+  const client = await createSupabaseServerClient();
+  await setGoalCheckIn(client, user.id, {
+    goalId: String(formData.get("goalId") ?? ""),
+    periodStart: String(formData.get("periodStart") ?? ""),
+    completed: formData.get("completed") === "true",
+    value: formData.get("value") ? Number(formData.get("value")) : undefined
+  });
+  revalidatePath("/" + locale + "/dashboard");
 }
 
 export async function removeMediaAction(formData: FormData) {

@@ -16,7 +16,13 @@ export function serializeResource(resource: ResourceName, row: ResourceRecord) {
     };
   }
   if (resource === "events") {
-    return { ...base, categoryId: row.category_id, title: row.title, description: row.description };
+    return {
+      ...base,
+      categoryId: row.category_id,
+      title: row.title,
+      description: row.description,
+      goalIds: row.goal_ids ?? []
+    };
   }
   if (resource === "goals") {
     return {
@@ -33,8 +39,7 @@ export function serializeResource(resource: ResourceName, row: ResourceRecord) {
   }
   return {
     ...base,
-    targetType: row.event_id ? "event" : "goal",
-    targetId: row.event_id ?? row.goal_id,
+    eventId: row.event_id,
     startsAt: row.starts_at,
     endsAt: row.ends_at,
     status: row.status,

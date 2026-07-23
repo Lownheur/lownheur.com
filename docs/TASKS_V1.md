@@ -75,14 +75,26 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 - [x] **V1-044 — Ajouter le calendrier des planifications en vue jour/semaine** — `TERMINÉ`
   - Acceptation : depuis Planifications, l’utilisateur passe entre liste, jour et semaine, navigue dans les dates et voit les occurrences uniques ou récurrentes dans son fuseau; l’affichage reste utilisable en français, en anglais et sur mobile. Aucun nouvel outil MCP n’est ajouté : les planifications restent pilotées par les outils existants.
   - Preuve : vues Liste, Jour et Semaine reliées aux occurrences Supabase dans le fuseau du compte, navigation par date et adaptation mobile validées dans le navigateur. La fonction bornée à 31 jours reste interne au dashboard et soumise à RLS; les 30 outils MCP sont inchangés. Migration appliquée, 34 tests unitaires, 10 E2E publics, lint, types et builds Next.js/Cloudflare verts.
+- [x] **V1-045 — Étendre le shell mobile aux formats tablette** — `TERMINÉ`
+  - Acceptation : jusqu’à 1080 px de large, le dashboard utilise l’en-tête compact et la navigation fixe en bas, libère la hauteur du contenu et reste sans débordement; le layout desktop avec sidebar demeure au-delà.
+  - Preuve : recette navigateur à 925 × 445 px avec navigation fixe en bas, en-tête compact, zéro débordement horizontal et début des cartes à 212 px au lieu de 369 px sur la capture initiale. Seuils contrôlés : shell compact à 1080 px, sidebar desktop restaurée à 1081 px; mobile 360 px toujours en deux colonnes sans débordement. Lint, types, 34 tests unitaires et builds Next.js/Cloudflare verts.
+- [x] **V1-046 — Séparer objectifs, événements et validations** — `TERMINÉ`
+  - Acceptation : seuls les événements sont planifiables; événements et objectifs sont reliables plusieurs-à-plusieurs; une occurrence planifiée se coche indépendamment; les objectifs quotidiens, hebdomadaires ou mensuels conservent un historique et les objectifs uniques se valident une fois. Les données existantes sont conservées et RLS protège toutes les nouvelles tables.
+  - Preuve : trois migrations appliquées à Supabase réel; les 196 planifications sont désormais rattachées à un événement, aucune ne conserve une cible objectif et les 56 anciennes planifications ont été converties sans perte en deux événements liés aux objectifs concernés. Les tables de liaison, validations d’occurrences et historiques d’objectifs sont protégées par RLS et leurs clés étrangères sont indexées. Validation et annulation réelles d’une occurrence et d’un objectif contrôlées dans le navigateur; lint, types, 34 tests et builds Next.js/Cloudflare verts.
+- [x] **V1-047 — Unifier l’expérience sur Dashboard et Paramètres** — `TERMINÉ`
+  - Acceptation : la navigation principale ne contient que Dashboard et Paramètres; Aujourd’hui, l’exploration des catégories et le calendrier vivent sur Dashboard; seules les catégories parentes apparaissent avant ouverture et chaque branche révèle enfants, événements et objectifs.
+  - Preuve : navigation réduite à deux destinations et Dashboard unifié en trois sections sur une même route. L’arbre réel affiche les catégories parentes puis leurs enfants, événements et objectifs liés; l’exemple du propriétaire a été organisé jusqu’à trois niveaux. Recette Chromium desktop et tablette 925 × 445 sans débordement horizontal; les anciennes routes redirigent vers la section correspondante.
+- [x] **V1-048 — Adapter le MCP au nouveau flux de progression** — `TERMINÉ`
+  - Acceptation : le MCP ne planifie plus directement les objectifs, sait relier objectifs et événements, valider les occurrences et gérer l’historique périodique avec les mêmes autorisations que le web.
+  - Preuve : `create/update_event` acceptent `goalIds`, `create/update_schedule` n’acceptent que `eventId`, et trois outils ajoutés gèrent validation d’occurrence, validation périodique et lecture d’historique. Les 33 outils sont découverts et leurs schémas vérifiés par le SDK MCP officiel; aucune propriété de planification directe d’objectif n’est exposée.
 
 ## P4 — MCP
 
 - [ ] **V1-040 — Valider auth/transport sur les clients ciblés** — `EN COURS`
   - Acceptation : OAuth et transport validés de bout en bout sur ChatGPT, Claude et un client générique après déploiement.
-  - Preuve actuelle : connexion OAuth, création de catégories et d'événements validées depuis ChatGPT; les 30 outils annoncent leurs scopes dans le miroir de compatibilité pris en charge par le SDK MCP actuel, tandis que les neuf outils fichier déclarent `image`. Le 2026-07-20, la cause de la reconnexion cassée est identifiée : après le 302 réussi de Supabase, la 404 applicative interceptait `/oauth/consent`. Cette route technique est désormais préservée, couverte en unité et E2E desktop/mobile, puis vérifiée en production avec une réponse HTTP 200 et la page d’autorisation. La reconnexion réelle depuis ChatGPT, Claude et un client générique reste à valider.
+  - Preuve actuelle : connexion OAuth, création de catégories et d'événements validées depuis ChatGPT; les 33 outils annoncent leurs scopes dans le miroir de compatibilité pris en charge par le SDK MCP actuel, tandis que les neuf outils fichier déclarent `image`. Le 2026-07-20, la cause de la reconnexion cassée est identifiée : après le 302 réussi de Supabase, la 404 applicative interceptait `/oauth/consent`. Cette route technique est désormais préservée, couverte en unité et E2E desktop/mobile, puis vérifiée en production avec une réponse HTTP 200 et la page d’autorisation. La reconnexion réelle depuis ChatGPT, Claude et un client générique reste à valider.
 - [x] **V1-041 — Implémenter serveur MCP et schémas d'outils** — `TERMINÉ`
-  - Preuve : endpoint Streamable HTTP et 30 outils V1, dont neuf actions médias, découverts par le client officiel SDK dans un test en mémoire.
+  - Preuve : endpoint Streamable HTTP et 33 outils V1, dont neuf actions médias et trois actions de progression, découverts par le client officiel SDK dans un test en mémoire.
 - [x] **V1-042 — Partager règles métier et erreurs avec le web** — `TERMINÉ`
   - Preuve actuelle : couche server/domain unique avec validation Zod, pagination curseur, erreurs stables et 4 tests unitaires; branchement MCP restant.
   - Preuve : dashboard et MCP appellent la même couche server/domain; validations, pagination, sérialisation sans user_id et erreurs stables testées.
@@ -115,7 +127,7 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 ## P7 — Sortie
 
 - [ ] **V1-070 — Finaliser tests E2E, accessibilité et sécurité** — `EN COURS`
-  - Preuve : 29 tests unitaires verts; parcours E2E publics desktop/mobile, redirection/404 et audits Axe WCAG A/AA verts. Le parcours authentifié reste activable par compte de test; clients MCP réels supplémentaires et protection Supabase contre les mots de passe divulgués restent à valider.
+  - Preuve : 34 tests unitaires verts; parcours E2E publics desktop/mobile, redirection/404 et audits Axe WCAG A/AA verts. Le parcours authentifié reste activable par compte de test; clients MCP réels supplémentaires et protection Supabase contre les mots de passe divulgués restent à valider.
 - [ ] **V1-071 — Prouver sauvegarde, restauration, monitoring et rollback** — `EN COURS`
   - Preuve : réconciliation stockage testée sur la base réelle, synchronisation Stripe et cron quotidien Vercel configurés, runbook écrit; export Storage et restauration complète restent à prouver.
 - [ ] **V1-072 — Déployer la release candidate et effectuer la recette** — `À FAIRE`

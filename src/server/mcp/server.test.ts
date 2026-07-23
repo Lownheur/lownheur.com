@@ -16,13 +16,16 @@ describe("Lownheur MCP server", () => {
     await client.connect(clientTransport);
     closers.push(() => client.close(), () => server.close());
     const { tools } = await client.listTools();
-    expect(tools).toHaveLength(30);
+    expect(tools).toHaveLength(33);
     expect(tools.map((tool) => tool.name)).toEqual(expect.arrayContaining([
       "list_categories",
       "create_event",
       "update_goal",
       "delete_schedule",
       "get_upcoming_schedule",
+      "set_schedule_occurrence_completed",
+      "set_goal_check_in",
+      "list_goal_check_ins",
       "set_category_image",
       "add_event_image",
       "add_goal_image",
@@ -56,10 +59,13 @@ describe("Lownheur MCP server", () => {
       period: expect.any(Object)
     }));
     expect(tools.find((tool) => tool.name === "create_schedule")?.inputSchema.properties).toEqual(expect.objectContaining({
+      eventId: expect.any(Object),
       recurrence: expect.any(Object),
       recurrenceInterval: expect.any(Object),
       recurrenceWeekdays: expect.any(Object),
       recurrenceTimezone: expect.any(Object)
     }));
+    expect(tools.find((tool) => tool.name === "create_schedule")?.inputSchema.properties).not.toHaveProperty("targetType");
+    expect(tools.find((tool) => tool.name === "create_event")?.inputSchema.properties).toHaveProperty("goalIds");
   });
 });

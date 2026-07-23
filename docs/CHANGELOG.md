@@ -17,7 +17,7 @@ Les changements sont regroupés par version selon Keep a Changelog, sans recopie
 
 - Couche métier partagée préparant les mêmes opérations pour l’interface web et le MCP.
 
-- Serveur MCP distant OAuth avec 30 outils, découverte standard, quotas et sérialisation compacte.
+- Serveur MCP distant OAuth avec 33 outils, découverte standard, quotas et sérialisation compacte.
 - Compatibilité OAuth ChatGPT corrigée : tous les outils MCP annoncent désormais explicitement leurs scopes d'authentification.
 - Les créations et modifications MCP de catégories, événements et objectifs acceptent une image envoyée par ChatGPT; neuf actions médias dédiées permettent aussi de définir, lister et retirer ces images sans chemin texte.
 
@@ -44,6 +44,9 @@ Les changements sont regroupés par version selon Keep a Changelog, sans recopie
 - Entrée `/` localisée automatiquement et page 404 Lownheur responsive en français ou en anglais, à la place de l’erreur d’hébergement par défaut.
 - Calendrier des planifications avec vues Liste, Jour et Semaine, navigation par date, fuseau du compte et affichage responsive des occurrences récurrentes.
 - Reconnexion OAuth fiabilisée : la route technique `/oauth/consent` n’est plus interceptée par la page 404 Lownheur.
+- Shell mobile étendu aux fenêtres tablette jusqu’à 1080 px : navigation fixe en bas, en-tête compact et contenu visible plus tôt sur les écrans peu hauts.
+- Dashboard quotidien unifié en trois sections sur une seule page : tâches et objectifs à valider, arbre de catégories parent-enfants avec événements/objectifs liés, puis calendrier jour/semaine. La navigation principale ne conserve que Dashboard et Paramètres.
+- Les objectifs ne sont plus planifiés directement : les événements peuvent servir plusieurs objectifs, chaque occurrence de calendrier se coche séparément et chaque objectif conserve son historique quotidien, hebdomadaire, mensuel ou unique. Le MCP expose les mêmes règles et les 56 anciennes planifications d’objectifs ont été converties sans perte.
 
 ### Documentation
 

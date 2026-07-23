@@ -19,20 +19,19 @@ describe("resource input validation", () => {
     ).toMatchObject({ title: "Sport", description: null });
   });
 
-  it("requires exactly one schedule target through the public shape", () => {
+  it("requires an event schedule target through the public shape", () => {
     expect(() =>
       parseCreateInput("schedules", {
-        targetType: "event",
-        targetId: "not-a-uuid",
+        eventId: "not-a-uuid",
         startsAt: "2026-07-17T10:00:00Z"
       })
     ).toThrow(DomainError);
   });
 
-  it("requires target type and id together on schedule updates", () => {
+  it("rejects legacy goal schedule fields", () => {
     expect(() =>
       parseUpdateInput("schedules", { targetType: "goal" })
-    ).toThrow("targetType and targetId");
+    ).toThrow("No fields to update");
   });
 
   it("accepts a valid goal status transition payload", () => {
@@ -57,8 +56,7 @@ describe("resource input validation", () => {
     });
 
     expect(parseCreateInput("schedules", {
-      targetType: "goal",
-      targetId: "00000000-0000-4000-8000-000000000002",
+      eventId: "00000000-0000-4000-8000-000000000002",
       startsAt: "2026-07-20T18:00:00+02:00",
       recurrence: "weekly",
       recurrenceInterval: 1,
@@ -73,8 +71,7 @@ describe("resource input validation", () => {
 
   it("rejects a weekly schedule without weekdays", () => {
     expect(() => parseCreateInput("schedules", {
-      targetType: "event",
-      targetId: "00000000-0000-4000-8000-000000000003",
+      eventId: "00000000-0000-4000-8000-000000000003",
       startsAt: "2026-07-20T18:00:00Z",
       recurrence: "weekly"
     })).toThrow(DomainError);
@@ -104,7 +101,14 @@ describe("resource input validation", () => {
   });
 
   it("bounds calendar occurrence queries and maps their public shape", async () => {
+    const completionQuery = {
+      select() { return this; },
+      in() { return this; },
+      gte() { return this; },
+      lte: async () => ({ data: [], error: null })
+    };
     const client = {
+      from: () => completionQuery,
       rpc: async () => ({
         data: [{
           schedule_id: "00000000-0000-4000-8000-000000000010",

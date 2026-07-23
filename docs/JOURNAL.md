@@ -66,3 +66,9 @@
 
 - Vues Jour et Semaine ajoutées à Planifications à partir d’occurrences bornées, soumises à RLS et calculées dans le fuseau du compte, sans nouvel outil MCP.
 - Route `/oauth/consent` retirée du filtre 404 qui cassait le retour Supabase lors des reconnexions ChatGPT; tests desktop/mobile et build de production validés.
+
+## 2026-07-23 — Modèle de progression et Dashboard unifiés
+
+- Objectifs, événements et temps séparés : seuls les événements sont planifiables, mais chaque événement peut avancer plusieurs objectifs.
+- Les 196 planifications réelles ont été conservées; les 56 anciennes cibles objectif ont été transformées en événements liés, puis les validations d’occurrences et historiques périodiques ont été ajoutés sous RLS.
+- Le produit quotidien tient désormais dans Dashboard et Paramètres; Aujourd’hui, Organisation et Calendrier partagent une seule page, et les 33 outils MCP suivent exactement le même modèle.
