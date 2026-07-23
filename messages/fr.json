@@ -147,6 +147,12 @@
         "organize": "Organisation",
         "calendar": "Calendrier"
       },
+      "sectionsCompact": {
+        "today": "Auj.",
+        "organize": "Organiser",
+        "calendar": "Agenda",
+        "settings": "Réglages"
+      },
       "todayEvents": "À faire aujourd’hui",
       "todayEventsHint": "Chaque occurrence se valide indépendamment.",
       "emptyEvents": "Planifiez un événement pour le retrouver ici.",

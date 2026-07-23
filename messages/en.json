@@ -147,6 +147,12 @@
         "organize": "Organization",
         "calendar": "Calendar"
       },
+      "sectionsCompact": {
+        "today": "Today",
+        "organize": "Organize",
+        "calendar": "Calendar",
+        "settings": "Settings"
+      },
       "todayEvents": "To do today",
       "todayEventsHint": "Every occurrence is checked independently.",
       "emptyEvents": "Schedule an event to see it here.",

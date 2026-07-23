@@ -89,7 +89,10 @@
 }
 
 .dashboard-content {
+  display: grid;
   width: min(100%, 92rem);
+  gap: var(--space-4);
+  align-content: start;
   margin-inline: auto;
   padding: clamp(1.25rem, 4vw, 3rem);
 }
@@ -246,8 +249,12 @@
 
 .dashboard-section-tabs a.is-active {
   color: var(--color-primary-ink);
-  background: var(--color-surface);
+  background: var(--color-primary);
   box-shadow: var(--shadow-sm);
+}
+
+.dashboard-section-label-compact {
+  display: none;
 }
 
 .today-layout {
@@ -363,15 +370,15 @@
 }
 
 .context-label.is-category {
-  border-color: color-mix(in srgb, var(--color-primary) 26%, var(--color-border));
-  color: var(--color-primary-ink);
-  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+  border-color: var(--color-category-label-border);
+  color: var(--color-category-label-ink);
+  background: var(--color-category-label-background);
 }
 
 .context-label.is-goal {
-  border-color: color-mix(in srgb, #e8a83c 30%, var(--color-border));
-  color: color-mix(in srgb, #e8a83c 70%, var(--color-ink));
-  background: color-mix(in srgb, #e8a83c 10%, var(--color-surface));
+  border-color: var(--color-goal-label-border);
+  color: var(--color-goal-label-ink);
+  background: var(--color-goal-label-background);
 }
 
 .organization-toolbar {
@@ -1450,18 +1457,7 @@ textarea.form-input {
   }
 
   .dashboard-nav {
-    position: fixed;
-    inset: auto 0 0;
-    z-index: 60;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.15rem;
-    overflow: visible;
-    padding: 0.35rem 0.3rem calc(0.35rem + env(safe-area-inset-bottom));
-    border-top: 1px solid var(--color-border);
-    background: color-mix(in srgb, var(--color-surface) 96%, transparent);
-    box-shadow: 0 -0.5rem 1.5rem rgb(0 0 0 / 0.07);
-    backdrop-filter: blur(18px);
+    display: none;
   }
 
   .dashboard-nav a {
@@ -1505,7 +1501,7 @@ textarea.form-input {
   }
 
   .dashboard-content {
-    padding: 1rem 1rem calc(5rem + env(safe-area-inset-bottom));
+    padding: 1rem;
   }
 
   .dashboard-page {
@@ -1637,18 +1633,7 @@ textarea.form-input {
   }
 
   .dashboard-nav {
-    position: fixed;
-    inset: auto 0 0;
-    z-index: 60;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.15rem;
-    overflow: visible;
-    padding: 0.35rem 0.3rem calc(0.35rem + env(safe-area-inset-bottom));
-    border-top: 1px solid var(--color-border);
-    background: color-mix(in srgb, var(--color-surface) 96%, transparent);
-    box-shadow: 0 -0.5rem 1.5rem rgb(0 0 0 / 0.07);
-    backdrop-filter: blur(18px);
+    display: none;
   }
 
   .dashboard-nav-icon {
@@ -1673,7 +1658,7 @@ textarea.form-input {
   }
 
   .dashboard-content {
-    padding: 0.75rem 0.75rem calc(5rem + env(safe-area-inset-bottom));
+    padding: 0.75rem;
   }
 
   .dashboard-page {
@@ -1709,12 +1694,23 @@ textarea.form-input {
   .dashboard-section-tabs {
     display: grid;
     width: 100%;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .dashboard-section-tabs a {
-    padding-inline: 0.35rem;
+    min-width: 0;
+    padding-inline: 0.25rem;
+    font-size: 0.68rem;
     text-align: center;
+    white-space: nowrap;
+  }
+
+  .dashboard-section-label-full {
+    display: none;
+  }
+
+  .dashboard-section-label-compact {
+    display: inline;
   }
 
   .organization-toolbar {

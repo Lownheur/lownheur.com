@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import type { User } from "@supabase/supabase-js";
 import type { AppLocale } from "@/i18n/routing";
 import { DashboardNavigation } from "./dashboard-navigation";
+import { DashboardSectionTabs } from "./dashboard-section-tabs";
 import { LanguageSwitcher } from "./language-switcher";
 import { Logo } from "./logo";
 import { ThemeToggle } from "./theme-toggle";
@@ -40,7 +41,10 @@ export async function DashboardShell({
         </div>
       </aside>
       <div className="dashboard-main">
-        <main className="dashboard-content">{children}</main>
+        <main className="dashboard-content">
+          <DashboardSectionTabs />
+          {children}
+        </main>
       </div>
     </div>
   );

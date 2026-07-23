@@ -382,19 +382,6 @@ export default async function DashboardPage({
 
   return (
     <div className="dashboard-page unified-dashboard">
-      <nav className="dashboard-section-tabs" aria-label={t("unified.sectionLabel")}>
-        {(["today", "organize", "calendar"] as const).map((item) => (
-          <Link
-            key={item}
-            className={section === item ? "is-active" : undefined}
-            aria-current={section === item ? "page" : undefined}
-            href={{ pathname: "/dashboard", query: { section: item } }}
-          >
-            {t("unified.sections." + item)}
-          </Link>
-        ))}
-      </nav>
-
       {section === "today" ? (
         <div className="today-layout">
           <section className="dashboard-panel">

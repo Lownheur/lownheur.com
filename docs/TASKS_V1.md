@@ -90,6 +90,9 @@ Statuts autorisés : `À FAIRE`, `EN COURS`, `BLOQUÉ`, `TERMINÉ`. Une preuve e
 - [x] **V1-049 — Finaliser l’exploration visuelle du Dashboard** — `TERMINÉ`
   - Acceptation : le Dashboard ne répète pas de grand titre marketing; Aujourd’hui et Calendrier affichent le chemin de catégorie et les objectifs liés de chaque événement; Organisation réunit catégories, événements et objectifs dans des cartes imbriquées, en commençant par les catégories parentes, avec un seul bouton d’ajout permettant de choisir le type à créer.
   - Preuve : recette navigateur authentifiée sur les trois sections; Aujourd’hui et Calendrier affichent les chemins complets et les objectifs liés, Organisation présente six seules catégories parentes avant ouverture puis les cartes enfants avec médias ou SVG, et le sélecteur d’ajout propose exactement catégorie, événement ou objectif. Format tablette 925 × 445 sans débordement horizontal; lint, types, 34 tests et builds Next.js/Cloudflare verts.
+- [x] **V1-054 — Simplifier la navigation compacte et renforcer les labels** — `TERMINÉ`
+  - Acceptation : Paramètres rejoint Aujourd’hui, Organisation et Calendrier dans la navigation haute; aucune navigation fixe ne reste en bas sur mobile ou tablette; les labels de catégories et d’objectifs restent nettement lisibles dans les thèmes clair et sombre.
+  - Preuve : recette authentifiée à 774 × 929 px en thème sombre; les quatre onglets supérieurs restent visibles sur Dashboard et Paramètres, l’onglet actif utilise un contraste fort, la navigation inférieure est masquée, les labels catégorie/objectif utilisent des couleurs sémantiques dédiées, et aucun débordement horizontal n’est présent. Lint, types, 34 tests et builds Next.js/Cloudflare verts.
 
 ## P4 — MCP
 

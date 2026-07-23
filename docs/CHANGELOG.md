@@ -48,6 +48,7 @@ Les changements sont regroupés par version selon Keep a Changelog, sans recopie
 - Dashboard quotidien unifié en trois sections sur une seule page : tâches et objectifs à valider, arbre de catégories parent-enfants avec événements/objectifs liés, puis calendrier jour/semaine. La navigation principale ne conserve que Dashboard et Paramètres.
 - Les objectifs ne sont plus planifiés directement : les événements peuvent servir plusieurs objectifs, chaque occurrence de calendrier se coche séparément et chaque objectif conserve son historique quotidien, hebdomadaire, mensuel ou unique. Le MCP expose les mêmes règles et les 56 anciennes planifications d’objectifs ont été converties sans perte.
 - Exploration du Dashboard finalisée : suppression du grand titre répétitif, chemins de catégories et objectifs liés visibles dans Aujourd’hui et Calendrier, catégories parentes présentées en cartes ouvrables avec leurs sous-catégories, événements et objectifs, et bouton d’ajout unique pour choisir le type à créer.
+- Navigation compacte simplifiée : Paramètres rejoint Aujourd’hui, Organisation et Calendrier dans la barre d’onglets supérieure, la barre fixe inférieure est supprimée et les labels de catégories/objectifs gagnent des couleurs contrastées dans les deux thèmes.
 
 ### Documentation
 
